@@ -130,14 +130,39 @@ The datetime tool is implemented **once** (`tools/datetime_core.py`, using `pyth
 deliberately not LLM-based — once a raw date string is located, converting it to ISO is a
 parsing problem, not a reasoning problem) and wrapped two ways so both are guaranteed to
 never disagree:
-- **`tools/datetime_mcp.py`** — a real local MCP server (`mcp>=2`; note this project's
-  installed `mcp` package is v2.x, where `FastMCP` was renamed to `MCPServer` — the API is
-  otherwise identical). Verified via the actual MCP protocol layer (`mcp.list_tools()` /
-  `mcp.call_tool()`), not just imported as a plain function.
-- **`tools/datetime_fallback.py`** — the same logic as a plain LangChain `@tool`, per the
-  assignment's own fallback clause, used by `part2_pipeline.py`'s end-to-end run so the full
-  pipeline doesn't require spinning up a separate MCP server process; the MCP path is verified
-  independently in `part2_tools_reasoning.ipynb`.
+- **`tools/datetime_mcp.py`** — a real local MCP server (`mcp<2.0.0,>=1.24.0`, using the
+  `FastMCP` API — pinned below v2 because `langchain-mcp-adapters`, needed to bridge this
+  server into a LangChain-bindable tool, hard-requires `mcp<2.0.0`; installing it silently
+  downgrades an unpinned `mcp>=2` install and breaks the v2 `MCPServer` API this project
+  briefly used before that constraint was discovered).
+- **`tools/datetime_fallback.py`** — the same logic as a plain LangChain `@tool`, used
+  automatically only if the MCP connection itself fails.
+
+**The live pipeline routes through MCP as primary, not the fallback** — matching the
+assignment's literal preference order ("via local MCP... if you are not able to implement a
+local MCP, you may define as a function"). `part2_pipeline.py::_get_normalize_tool()` connects
+to the MCP server as a real subprocess (via `tools/mcp_client.py`, `langchain-mcp-adapters`),
+binds its tool to the LLM with `.bind_tools()`, and lets the model itself decide to call it
+with its own extracted arguments — this is genuine LLM-driven function calling, not Python
+code invoking the tool directly. The except clause around the MCP connection is scoped
+narrowly to just that call, so a downstream bug elsewhere can't be silently misattributed to
+"MCP unavailable." Every run prints which path (`mcp` or `fallback`) actually executed, so the
+mechanism is never asserted without evidence.
+
+**Environment-dependent behavior, disclosed rather than hidden**: from a plain Python process
+(script or `python -c`), the MCP path works and is confirmed (`tool source: mcp`). Inside the
+Jupyter kernel used for `part2_tools_reasoning.ipynb` specifically, the MCP subprocess
+connection fails with `UnsupportedOperation('fileno')` — Jupyter's kernel replaces stdin/stdout
+with custom stream objects lacking the raw file descriptors the stdio transport needs — and the
+fallback path is used automatically instead, producing identical correct results either way.
+This is the fallback design working as intended; both entry points are verified separately (see
+`part2_tools_reasoning.ipynb` for the notebook run, and this README's dev log for the standalone
+script run showing `tool source: mcp`).
+
+**Step 1's literal deliverable**: the assignment states "your final output for this step should
+be a list of these normalized dates" — `normalize_dates_via_tool_calling_async()` returns and
+prints exactly that (`['2024-02-16', '2008-02-15']`) before it's paired with original text and
+handed to classification.
 
 ### Verified results
 
@@ -162,13 +187,35 @@ date — genuinely ambiguous whether it should read as "Expired" (literal: the d
 or "Ongoing" (the policy state it describes is still in effect today). We chose **Expired**,
 the more literal reading of the field name.
 
-### Bug found and fixed during development
+### Bugs found and fixed during development
 
-The classification step initially returned `2024-02-16` as **Expired**, contradicting both
-simple date arithmetic (2024-02-16 is after the reference date 2024-01-01) and the
-assignment's own sample output, which explicitly labels this exact date "Upcoming." The model
-had substituted its own knowledge of the real current date instead of strictly using the given
-reference date as "today" for the exercise. Fixed by rewriting the classification system
-prompt to explicitly forbid using real-world date knowledge, spell out the comparison rule
-against the reference date, and include a worked example using this exact date — verified
-correct across two repeated runs afterward.
+1. **Classification used the wrong "today"**: the classification step initially returned
+   `2024-02-16` as **Expired**, contradicting both simple date arithmetic (2024-02-16 is after
+   the reference date 2024-01-01) and the assignment's own sample output, which explicitly
+   labels this exact date "Upcoming." The model had substituted its own knowledge of the real
+   current date instead of strictly using the given reference date as "today" for the exercise.
+   Fixed by rewriting the classification system prompt to explicitly forbid using real-world
+   date knowledge, spell out the comparison rule against the reference date, and include a
+   worked example using this exact date — verified correct across two repeated runs afterward.
+2. **A stricter postmortem, re-reading the literal assignment text rather than just checking
+   output correctness, found the first working version of Part 2 was incomplete**: the
+   normalization step called the tool directly from Python glue code between two LLM calls
+   (no genuine function calling was demonstrated), and the assignment's literal Step-1
+   deliverable ("a list of these normalized dates") was never surfaced as its own output.
+   Both fixed as described above (real `.bind_tools()` tool calling routed through MCP as
+   primary, and an explicit printed list before classification runs).
+3. **The `mcp` package version pin**: installing `langchain-mcp-adapters` (needed to bridge
+   the MCP server into a bindable LangChain tool) silently downgraded `mcp` from an unpinned
+   `2.2.0` to `1.30.0`, breaking the v2 `MCPServer` API this project had briefly switched to.
+   Root-caused via `langchain-mcp-adapters`' own package metadata (`Requires-Dist:
+   mcp<2.0.0,>=1.24.0`) rather than guessed at; reverted `tools/datetime_mcp.py` to the v1
+   `FastMCP` API and pinned `mcp<2.0.0,>=1.24.0` explicitly in `requirements.txt`.
+
+### Untested branch, addressed with a labeled synthetic check
+
+Both real document-derived dates are point-in-time, so neither exercises the third
+classification state ("Ongoing" — a period spanning the reference date). Rather than leave this
+branch unverified, `part2_tools_reasoning.ipynb` includes one clearly-labeled **synthetic**
+test case (a constructed period explicitly marked `[SYNTHETIC, not document-derived]`) that
+does span the reference date — confirmed the model correctly classifies it "Ongoing." This is
+never conflated with the two graded document-derived answers above.
