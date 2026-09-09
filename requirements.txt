@@ -1,0 +1,10 @@
+langchain
+langchain-openai
+pdfplumber
+pymupdf
+pydantic
+langgraph
+langgraph-supervisor
+mcp
+python-dotenv
+jupyter
