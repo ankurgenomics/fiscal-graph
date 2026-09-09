@@ -19,22 +19,31 @@ HAIKU_MODEL = "claude-haiku-4-5-20251001"  # direct Anthropic model id
 SONNET_MODEL = "claude-sonnet-5"  # direct Anthropic model id
 
 
-def get_llm(model: str | None = None, max_tokens: int = 1024, temperature: float = 0):
+def get_llm(model: str | None = None, max_tokens: int = 1024, temperature: float | None = 0):
     """Routes to direct Anthropic for real Claude models (HAIKU_MODEL/SONNET_MODEL),
     OpenRouter for everything else (free/dev models). Model-agnostic: any OpenRouter
     model id works for the dev path with zero code changes.
+
+    temperature=None omits the parameter entirely -- some newer Anthropic models
+    (confirmed: claude-sonnet-5) reject `temperature` as deprecated/unsupported and
+    error with a 400 if it's passed at all, even 0. Haiku 4.5 accepts it fine.
     """
     model = model or DEV_MODEL
     if model in (HAIKU_MODEL, SONNET_MODEL):
         if not _ANTHROPIC_KEY:
             raise RuntimeError("ANTHROPIC_API_KEY not set in .env")
-        return ChatAnthropic(api_key=_ANTHROPIC_KEY, model=model, max_tokens=max_tokens, temperature=temperature)
+        kwargs = {"api_key": _ANTHROPIC_KEY, "model": model, "max_tokens": max_tokens}
+        if temperature is not None:
+            kwargs["temperature"] = temperature
+        return ChatAnthropic(**kwargs)
     if not _OPENROUTER_KEY:
         raise RuntimeError("OPENROUTER_API_KEY not set in .env")
-    return ChatOpenAI(
-        base_url=OPENROUTER_BASE_URL,
-        api_key=_OPENROUTER_KEY,
-        model=model,
-        max_tokens=max_tokens,
-        temperature=temperature,
-    )
+    kwargs = {
+        "base_url": OPENROUTER_BASE_URL,
+        "api_key": _OPENROUTER_KEY,
+        "model": model,
+        "max_tokens": max_tokens,
+    }
+    if temperature is not None:
+        kwargs["temperature"] = temperature
+    return ChatOpenAI(**kwargs)

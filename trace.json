@@ -1,0 +1,447 @@
+{
+  "Q1 (assignment's exact query, dual-agent)": {
+    "query": "What are the key government revenue streams, and how will the Budget for the Future Energy Fund be supported?",
+    "trace": [
+      {
+        "type": "HumanMessage",
+        "actor": "user",
+        "content": "What are the key government revenue streams, and how will the Budget for the Future Energy Fund be supported?"
+      },
+      {
+        "type": "AIMessage",
+        "actor": "supervisor",
+        "content": [
+          {
+            "signature": "EsUCCpABCBEYAipAvHeC62NG/hVCq6VPJ8kyamwZUiKKtVg4AsMl+9B0WhF3z9ByI9ZsUjcUnyYYJrfexQY0qG842FD51+iFORHz8DIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRhZTkxZjkwYS0zOGFmLTQ2YTktOTdkNy0wNjg1YThlMDllZTKoAf+OhtUGEgytofaAdDM/l4+Xy7UaDN1fueAaWoafqJhOViIw9oQN7OA1KvXlcQcuT/JSMLQsf7+XW/bJTvnU87FdY8sQMaAaq01waZf+3tr6PBqmKmLPWUbuEhK7lleENuxDWejmJnMOlGqPseQqsI3JZQlAQNhWF9bpUy1Xaa22jTnTCDY39Px0suW1YXKaFy7ZT/eLmlTAnBLXYJgfzBO4/GHmfwIOmnD3R7PTcp/sUmPcyNMgNRgB",
+            "thinking": "",
+            "type": "thinking"
+          },
+          {
+            "id": "toolu_01F6foxmSz1D7AMqh2gbNwAk",
+            "caller": {
+              "type": "direct"
+            },
+            "input": {},
+            "name": "transfer_to_revenue_agent",
+            "type": "tool_use",
+            "toolset_name": null
+          }
+        ]
+      },
+      {
+        "type": "ToolMessage",
+        "actor": "transfer_to_revenue_agent",
+        "content": "Successfully transferred to revenue_agent"
+      },
+      {
+        "type": "AIMessage",
+        "actor": "revenue_agent",
+        "content": [
+          {
+            "text": "I'll help you with information about government revenue streams. Let me retrieve the relevant context.",
+            "type": "text"
+          },
+          {
+            "id": "toolu_01E6VkdR8w7KVCgMqRynMYhn",
+            "caller": {
+              "type": "direct"
+            },
+            "input": {},
+            "name": "revenue_context",
+            "type": "tool_use",
+            "toolset_name": null
+          }
+        ]
+      },
+      {
+        "type": "ToolMessage",
+        "actor": "revenue_context",
+        "content": "--- PAGE 5 ---\nMINISTRY OF FINANCE \n \n5 \n \n01 Update on Financial Year 2023 \n \n1.1 \nExpected Overall Fiscal Position for FY2023  \n \nThe basic deficit is revised to $5.4 billion (0.8% of GDP). After factoring in Top-\nups to Endowment and Trust Funds of $24.3 billion, Net Investment Returns \nContribution (NIRC) of $22.9 billion, Capitalisation of Nationally Significant \nInfrastructure of $3.5 billion, and Significant Infrastructure Government Loan \nAct (SINGA) Interest Costs and Loan Expenses of $0.2 billion, the Overall Fiscal \nPosition for Revised FY2023 is a deficit of $3.6 billion (0.5% of GDP). This is larger \nthan the $0.4 billion deficit estimated at Budget 2023. This is due to higher Total \nExpenditure to meet priority areas such as catching up of projects deferred due \nto COVID-19; funding for public healthcare institutions; and a top-up to the \nMajulah Package Fund to boost the retirement and healthcare adequacy of \nSingaporeans, as announced by Prime Minister Lee Hsien Loong at the National \nDay Rally 2023; partially offset by higher-than-expected Operating Revenue, \nmainly due to stronger-than-expected economic growth.  \n \nThe Revised FY2023 fiscal position is shown in Table 1.1. \n \n1.2 \nOperating Revenue \n \nRevised FY2023 Operating Revenue is $104.3 billion, which is $7.6 billion (7.9%) \nhigher than the Estimated FY2023 figure. This increase is mainly due to higher \ncollections from Corporate Income Tax, Other Taxes, Vehicle Quota Premiums, \nPersonal Income Tax, Assets Taxes, and Betting Taxes, partially offset by lower \ncollections from the Goods and Services Tax. \n \nCorporate Income Tax collections are revised to $28.4 billion, which is                \n$4.1 billion (17.0%) higher than the Estimated FY2023 figure due to stronger-\nthan-expected economic growth in 2022. Collections from Other Taxes, which \ninclude the Foreign Worker Levy, Water Conservation Tax, Land Betterment \nCharge, and Annual Tonnage Tax, are revised to $8.8 billion, which is $2.1 billion \n(32.3%) higher than the Estimated FY2023 figure. This is mainly due to higher \nLand Betterment Charge collections from unforeseen redevelopment projects. \nVehicle Quota Premiums collections are revised to $4.7 billion, which is             \n$0.8 billion (20.1%) higher than the Estimated FY2023 figure due to the \nGovernment bringing forward COE quota from future years. Personal Income \n\n\n--- PAGE 6 ---\nMINISTRY OF FINANCE \n \n6 \n \nTax collections are revised to $17.5 billion, which is $0.7 billion (4.1%) higher \nthan the Estimated FY2023 figure due to stronger-than-expected nominal wage \ngrowth in 2022. Assets Taxes collections are revised to $5.9 billion, which is      \n$0.4 billion (6.7%) higher than the Estimated FY2023 figure due to upward \nadjustments to Annual Values for residential properties. Betting Taxes \ncollections are revised to $3.2 billion, which is $0.3 billion (10.8%) higher than \nthe Estimated FY2023 figure due to stronger-than-expected collections for \nCasino Taxes.  \n \nGoods and Services Tax collections are revised to $16.4 billion, which is             \n$1.0 billion (5.8%) lower than the Estimated FY2023 figure due to weaker \nimports.  \n \nThe breakdown of Operating Revenue in FY2023 by its components is shown in \nChart 1.1. \n \n1.3 \nTotal Expenditure  \n \nRevised FY2023 Total Expenditure is $106.9 billion, which is $2.7 billion (2.6%) \nhigher than the Estimated FY2023 figure. The breakdown of Government \nspending by sector is shown in Chart 1.2. \n \nOperating Expenditure is revised to $85.4 billion, which is $1.7 billion (2.1%) \nhigher than the Estimated FY2023 figure. The higher expenditure is mainly \ndriven by (i) MINDEF due to catching up of projects deferred or disrupted due \nto COVID-19, acceleration of the SAF\u2019s digitalisation and build-up of non-kinetic \ncapabilities, as well as heightened inflationary pressures; and (ii) MOH due to \nhigher funding to public healthcare institutions and implementation of \nHealthier SG. These increases in expenditure are partly offset by lower \nexpenditure by (i) MOM due to lower utilisation for the Jobs Growth Incentive; \n(ii) MOE due to lower expenditure on manpower; and (iii) MHA due to lower \nmanpower costs, expected delays in IT projects, and savings in systems \nmaintenance. \n \nDevelopment Expenditure is revised to $21.5 billion, which is $1.0 billion (4.9%) \nhigher than the Estimated FY2023 figure. The higher expenditure is mainly \ndriven by (i) MOT mainly due to the development of the domestic rail network; \n(ii) MTI due to higher requirements for EDB\u2019s Economic Development Assistance \n\n\n--- PAGE 9 ---\nMINISTRY OF FINANCE \n \n9 \n \nChart 1.1 \nBreakdown of Government Operating Revenue in FY20231 \n \n \nNote: Figures may not add up to 100% due to rounding. \n1 Total Revenue comprises Operating Revenue and NIRC. Operating Revenue, which includes tax and non-tax revenues (shown \nabove), comprises 82.0% of Total Revenue in FY2023 while NIRC makes up the remaining 18.0%.  \n \n \n \nCorporate Income Tax\n27.2%\nPersonal Income Tax\n16.8%\nGoods and Services Tax\n15.7%\nOther Taxes\n8.4%\nStamp Duty\n5.7%\nAssets Taxes\n5.7%\nVehicle Quota \nPremiums\n4.5%\nFees and Charges \n(Excluding Vehicle Quota \nPremiums), 3.9%\nCustoms, Excise and \nCarbon Taxes, 3.3%\nBetting Taxes, 3.0%\nMotor Vehicle Taxes, 2.5%\nWithholding Tax, 2.1%\nStatutory Boards\u2019 Contributions, 0.7%\nOthers, 0.6%\n\n\n--- PAGE 16 (no bordered table detected, using cleaned raw text) ---\nMINISTRY OF FINANCE \n \n16 \n \nTable 2.1 \nBudget for FY2024 \nBLANK \nRevised  \nFY2023 \n Estimated  \nFY2024 \nChange Over \nRevised FY2023 \nBLANK \n$billion \n$billion \n$billion \n%change \nOPERATING REVENUE \n104.30 \n108.64 \n4.34 \n4.2 \nCorporate Income Tax \n28.38 \n28.03 \n(0.35) \n(1.2) \nPersonal Income Tax \n17.53 \n18.07 \n0.55 \n3.1 \nWithholding Tax \n2.19 \n2.31 \n0.12 \n5.5 \nStatutory Boards' Contributions \n0.75 \n0.31 \n(0.44) \n(58.8) \nAssets Taxes \n5.92 \n6.67 \n0.76 \n12.8 \nCustoms, Excise and Carbon Taxes \n3.40 \n3.56 \n0.17 \n4.9 \nGoods and Services Tax \n16.36 \n19.39 \n3.03 \n18.5 \nMotor Vehicle Taxes \n2.60 \n2.84 \n0.24 \n9.3 \nVehicle Quota Premiums \n4.66 \n4.72 \n0.06 \n1.3 \nBetting Taxes \n3.15 \n3.26 \n0.11 \n3.4 \nStamp Duty \n5.92 \n5.73 \n(0.19) \n(3.2) \nOther Taxes1 \n8.78 \n8.86 \n0.08 \n0.9 \nFees and Charges (excluding Vehicle Quota Premiums) \n4.07 \n4.25 \n0.18 \n4.4 \nOthers \n0.61 \n0.64 \n0.03 \n4.3 \nLess: \n \n \n \n0.0 \nTOTAL EXPENDITURE \n106.89 \n111.76 \n4.87 \n4.6 \nOperating Expenditure \n85.36 \n88.43 \n3.07 \n3.6 \nDevelopment Expenditure \n21.52 \n23.33 \n1.80 \n8.4 \nPRIMARY SURPLUS / DEFICIT \n(2.59) \n(3.12) \n \n \nLess: \n \n \n \n \nSPECIAL TRANSFERS2 \n27.17 \n23.30 \n(3.87) \n(14.3) \nSpecial Transfers Excluding Top-ups to Endowment and Trust Funds \n2.85 \n2.94 \n \n \nCDC Vouchers \n0.64 \n0.85 \n \n \nCOL Special Payment \n1.55 \n0.81 \n \n \nOther Transfers3 \n0.66 \n1.28 \n \n \nBASIC SURPLUS / DEFICIT \n(5.44) \n(6.06) \n \n \nTop-ups to Endowment and Trust Funds \n24.32 \n20.35 \n \n \nMajulah Package Fund \n7.50 \n- \n \n \nGST Voucher Fund \n2.40 \n6.00 \n \n \nFuture Energy Fund \n- \n5.00 \n \n \nFinancial Sector Development Fund \n- \n2.00 \n \n \nNational Productivity Fund \n4.00 \n2.00 \n \n \nTop-up to Endowment Funds4 \n2.30 \n2.00 \n \n \nOther Funds5 \n8.12 \n3.35 \n \n \nAdd: \n \n \n \n \nNET INVESTMENT RETURNS CONTRIBUTION \n22.92 \n23.50 \n0.59 \n2.6 \nOVERALL BUDGET SURPLUS / DEFICIT \n(6.84) \n(2.91) \n \n \nAdd: \n \n \n \n \nCAPITALISATION OF NATIONALLY SIGNIFICANT INFRASTRUCTURE \n3.49 \n4.09 \n0.60 \n17.1 \nLess: \n \n \n \n \nDEPRECIATION OF NATIONALLY SIGNIFICANT INFRASTRUCTURE \n- \n- \n- \n- \nSINGA INTEREST COSTS AND LOAN EXPENSES6 \n0.23 \n0.40 \n0.18 \n78.6 \nOVERALL FISCAL POSITION \n(3.57) \n0.78 \n \n \nNote: Figures may not add up due to rounding. Negative figures are shown in parentheses. \n1 \nOther Taxes include the Foreign Worker Levy, Water Conservation Tax, Land Betterment Charge and Annual Tonnage Tax.  \n2 \nSpecial Transfers include Top-ups to Endowment and Trust Funds. \n3 \nOther Transfers in FY2024 include MediSave Bonus, U-Save rebates, CIT Rebate Cash Grant, NS LifeSG Credits, CPF Transition Offset, S&CC \nrebates, Enterprise Innovation Scheme, GST Voucher Special Payment, Top-ups to self-help groups, Top-ups to Edusave and Post-Secondary \nEducation Accounts, Top-ups to Child Development Accounts, Jobs Support Scheme, Rental Support Scheme, Productivity and Innovation Credit, \nWage Credit Scheme and Cash Grant to Mitigate Rental Costs. \n4 \nConsists of Edusave Endowment Fund, Medical Endowment Fund, ElderCare Fund and Community Care Endowment Fund. \n5 \nOther Funds include National Research Fund, Progressive Wage Credit Scheme Fund, Changi Airport Development Fund, Community Silver Trust \nFund, Trust Fund for the Employment Credit Schemes, Public Transport Fund, Skills Development Fund, and Legal Aid Fund.  \n6 \nSINGA Interest Costs and Loan Expenses include the annual effective interest costs (which is computed based on the yield to maturity multiplied by \nthe face value of the bond) and other ancillary loan expenses incurred in connection with the SINGA. It excludes principal repayment and transfer of \nloan discount to Development Fund. It is different from the Debt Servicing and Related Costs presented in the Expenditure Estimates and Annex to \nExpenditure Estimates for Head Y.  \n"
+      },
+      {
+        "type": "AIMessage",
+        "actor": "revenue_agent",
+        "content": "Based on the government revenue context, here are the key findings:\n\n## Key Government Revenue Streams (FY2024)\n\nThe government's **Operating Revenue is estimated at $108.64 billion** for FY2024, with the following major components:\n\n1. **Corporate Income Tax** - $28.03 billion (25.8% of operating revenue)\n2. **Personal Income Tax** - $18.07 billion (16.6%)\n3. **Goods and Services Tax** - $19.39 billion (17.8%)\n4. **Assets Taxes** - $6.67 billion (6.1%)\n5. **Stamp Duty** - $5.73 billion (5.3%)\n6. **Other Taxes** - $8.86 billion (8.2%) - includes Foreign Worker Levy, Water Conservation Tax, Land Betterment Charge, and Annual Tonnage Tax\n7. **Vehicle Quota Premiums** - $4.72 billion (4.3%)\n8. **Betting Taxes** - $3.26 billion (3.0%)\n9. **Motor Vehicle Taxes** - $2.84 billion (2.6%)\n10. **Customs, Excise and Carbon Taxes** - $3.56 billion (3.3%)\n\n## Future Energy Fund Support\n\nAccording to Table 2.1, the **Future Energy Fund will receive a $5.00 billion top-up in FY2024**. This funding comes from the government's overall budget allocation for endowment and trust funds, which is supported by:\n\n- **Operating Revenue**: $108.64 billion\n- **Net Investment Returns Contribution (NIRC)**: $23.50 billion\n\nThe Future Energy Fund is one of several strategic funds receiving top-ups, alongside the GST Voucher Fund ($6.00 billion) and Financial Sector Development Fund ($2.00 billion)."
+      },
+      {
+        "type": "AIMessage",
+        "actor": "revenue_agent",
+        "content": "Transferring back to supervisor"
+      },
+      {
+        "type": "ToolMessage",
+        "actor": "transfer_back_to_supervisor",
+        "content": "Successfully transferred back to supervisor"
+      },
+      {
+        "type": "AIMessage",
+        "actor": "supervisor",
+        "content": [
+          {
+            "id": "toolu_01U4q2icdgZNMMbiUdVp7Lfo",
+            "caller": {
+              "type": "direct"
+            },
+            "input": {},
+            "name": "transfer_to_expenditure_agent",
+            "type": "tool_use",
+            "toolset_name": null
+          }
+        ]
+      },
+      {
+        "type": "ToolMessage",
+        "actor": "transfer_to_expenditure_agent",
+        "content": "Successfully transferred to expenditure_agent"
+      },
+      {
+        "type": "AIMessage",
+        "actor": "expenditure_agent",
+        "content": [
+          {
+            "text": "Now let me get the expenditure context to provide more details on the Future Energy Fund:",
+            "type": "text"
+          },
+          {
+            "id": "toolu_0117HpczgWdT2JFoKYXLYhzi",
+            "caller": {
+              "type": "direct"
+            },
+            "input": {},
+            "name": "expenditure_context",
+            "type": "tool_use",
+            "toolset_name": null
+          }
+        ]
+      },
+      {
+        "type": "ToolMessage",
+        "actor": "expenditure_context",
+        "content": "--- PAGE 14 ---\nMINISTRY OF FINANCE \n \n14 \n \n2.3 \nTotal Expenditure \n \nEstimated FY2024 Total Expenditure is $111.8 billion (15.5% of GDP). This is an \nincrease of $4.9 billion (4.6%) from the Revised FY2023 Total Expenditure of \n$106.9 billion. The main increases over Revised FY2023 Expenditure are for \nMOT, MOH, MOE, MSF, MINDEF, MND and MinLaw (see Chart 2.1).  \n \nMOT expenditure is expected to increase by $1.3 billion (9.8%), mainly due to \nthe development of the domestic rail network, and upgrading of infrastructure \nand systems to support our air hub.  \n \nMOH expenditure is expected to increase by $0.8 billion (4.6%) mainly due to \nthe opening of new facilities such as Sembawang and Tampines North \npolyclinics, ramping up of capacity in the new Woodlands Health campus, and \nprojected capacity increases in the long-term care sector.  \n \nMOE expenditure is expected to increase by $0.7 billion (4.8%), mainly due to \nannual cost adjustments, initiatives to improve the quality of education, and the \nresumption of school building projects that were previously delayed by  \nCOVID-19.  \n \nMSF expenditure is expected to increase by $0.5 billion (12.6%) mainly due to \nhigher spending on programmes in the preschool and social service sector.  \n \nMINDEF expenditure is expected to increase by $0.5 billion (2.5%) mainly due \nto inflation. \n \nMND expenditure is expected to increase by $0.4 billion (4.7%) mainly due to \nfaster work progress for HDB\u2019s public housing development and upgrading \nprogrammes, and higher operating grant to HDB.  \n \nMinLaw expenditure is expected to increase by $0.4 billion (120.8%) mainly due \nto projected land acquisition and development.  \n \nThere were decreases from Revised FY2023 Expenditure for MOM by $0.3 billion \n(8.3%) mainly due to the cessation of the Jobs Growth Incentive, and MTI by \n$0.1 billion (1.6%) due to lower requirements for EDB\u2019s Economic Development \nAssistance Scheme.   \n\n\n--- PAGE 17 ---\nMINISTRY OF FINANCE \n \n17 \n \nChart 2.1 \nBreakdown of Total Expenditure by Ministry1  \n(FY2023 and FY2024)  \n \n1With effect from 23 October 2023, the Smart Nation and Digital Government Group (SNDGG), previously under Prime Minister\u2019s \nOffice (PMO), merged with the Ministry of Communications and Information (MCI)\u2019s digital development functions to form an \nenlarged Smart Nation Group to better position the Government to advance the full range of the digital agenda. The new Smart \nNation Group programme and Government Technology Agency programme will be reported under MCI from FY2024. Figures before \nFY2024 are still reported under PMO. \n0.5\n0.3\n1.4\n0.8\n1.2\n2.4\n1.9\n3.5\n3.3\n4.2\n6.1\n8.1\n8.6\n13.0\n14.1\n17.9\n19.8\n0.6\n0.7\n0.7\n0.8\n1.3\n2.4\n2.7\n3.2\n3.4\n4.7\n6.0\n8.3\n9.0\n14.2\n14.8\n18.8\n20.2\n0.0\n5.0\n10.0\n15.0\n20.0\n25.0\nMFA\nMinLaw\nPMO\nOrgans of State\nMOF\nMCCY\nMCI\nMOM\nMSE\nMSF\nMTI\nMHA\nMND\nMOT\nMOE\nMOH\nMINDEF\n$ Billion\nEstimated FY2024\nRevised FY2023\n\n\n--- PAGE 18 ---\nMINISTRY OF FINANCE \n \n18 \n \n2.6 \nSpecial Transfers \n \nSpecial Transfers to Households ($2.6 billion)  \n \nIn addition to transfers from the Government\u2019s Operating Expenditure and \nspending from Endowment and Trust Funds, Special Transfers to Households \nare estimated to be $2.6 billion in Budget 2024. This includes $0.9 billion for \nCDC vouchers, $0.8 billion for COL Special Payment and $0.9 billion for other \ntransfers (see Table 2.2). \n  \nSpecial Transfers to Businesses ($0.4 billion)  \n \nSpecial Transfers to Businesses are estimated to be $0.4 billion, with the majority \nbeing a $0.3 billion CIT Rebate Cash Grant1 (see Table 2.3). \n \nTop-ups to Endowment and Trust Funds ($20.4 billion) \n \nIn Budget 2024, the Government will top up the GST Voucher Fund by               \n$6.0 billion to meet the steady state cashflow needs for the enhanced \npermanent GST Voucher scheme. To support Budget 2024 enhancements to the \nProgressive Wage Credit Scheme (PWCS) and Edusave Awards, the Government \nwill top up the PWCS Fund by $1.0 billion and the Edusave Endowment Fund by \n$2.0 billion respectively. The Government will top up the National Research \nFund by $1.8 billion to support Research, Innovation and Enterprise, and the \nNational Productivity Fund by $2.0 billion to boost productivity, Continuing \nEducation and Training, and investment promotion. The Government will also \ntop up the Financial Sector Development Fund by $2.0 billion to strengthen \nSingapore\u2019s position as an international financial centre. The Government will \nestablish the Future Energy Fund with an initial injection of $5.0 billion to invest \nin critical infrastructure for the energy transition. Other Fund top-ups are to the \nSkills Development Fund ($500 million), Public Transport Fund ($50 million), and \nthe Legal Aid Fund ($2 million).  \n \nIn total, $20.4 billion will be committed to Fund top-ups (see Table 2.4). \n \n \n1 The CIT Rebate Cash Grant is a component of the CIT Rebate of 50% tax payable granted for Year of Assessment (YA) 2024 \nunder the Enterprise Support Package. Companies that employed at least 1 local employee in 2023 will receive a $2,000 CIT \nRebate Cash Grant. The CIT Rebate, less any CIT Rebate Cash Grant received, will be automatically incorporated in companies\u2019 tax \nassessment raised after they file their CIT return for YA 2024, thereby reducing their tax payable. \n \n\n\n--- PAGE 20 TABLE ---\n |  |  |  | Estimated FY2024 | \n |  |  |  | ($ million) | \nGoods and Services Tax Voucher Fund |  |  | 6,000 |  | \nFuture Energy Fund |  |  | 5,000 |  | \nEdusave Endowment Fund |  |  | 2,000 |  | \nFinancial Sector Development Fund |  |  | 2,000 |  | \nNational Productivity Fund |  |  | 2,000 |  | \nNational Research Fund |  |  | 1,800 |  | \nProgressive Wage Credit Scheme Fund |  |  | 1,000 |  | \nSkills Development Fund |  |  | 500 |  | \nPublic Transport Fund |  |  | 50 |  | \nLegal Aid Fund |  |  | 2 |  | \n | Total |  |  | 20,352 | "
+      },
+      {
+        "type": "AIMessage",
+        "actor": "expenditure_agent",
+        "content": "Perfect! Now I have complete information. Here's the comprehensive answer:\n\n## Summary: Government Revenue Streams and Future Energy Fund Support\n\n### Key Government Revenue Streams (FY2024: $108.64 billion)\n\nThe government's operating revenue is diversified across multiple sources:\n\n**Major Tax Revenue Sources:**\n- **Corporate Income Tax**: $28.03 billion (25.8%)\n- **Goods and Services Tax**: $19.39 billion (17.8%)\n- **Personal Income Tax**: $18.07 billion (16.6%)\n- **Other Taxes**: $8.86 billion (8.2%)\n- **Assets Taxes**: $6.67 billion (6.1%)\n- **Stamp Duty**: $5.73 billion (5.3%)\n- **Vehicle Quota Premiums**: $4.72 billion (4.3%)\n- **Betting Taxes**: $3.26 billion (3.0%)\n- **Customs, Excise and Carbon Taxes**: $3.56 billion (3.3%)\n- **Motor Vehicle Taxes**: $2.84 billion (2.6%)\n\n**Additional Revenue:**\n- **Net Investment Returns Contribution (NIRC)**: $23.50 billion (supplementing operating revenue)\n\n---\n\n### Future Energy Fund Support\n\n**Budget Allocation:** The government will establish the **Future Energy Fund with an initial injection of $5.0 billion** in FY2024.\n\n**Purpose:** According to the expenditure context, the Future Energy Fund is established \"to invest in critical infrastructure for the energy transition.\"\n\n**Funding Source:** This $5.0 billion top-up comes from the government's overall budget allocation for endowment and trust funds, which is supported by the combined operating revenue ($108.64 billion) and net investment returns contribution ($23.50 billion).\n\nThe Future Energy Fund is one of 10 strategic funds receiving top-ups in FY2024, with total fund top-ups amounting to **$20.352 billion** (as shown in Table 2.4)."
+      },
+      {
+        "type": "AIMessage",
+        "actor": "expenditure_agent",
+        "content": "Transferring back to supervisor"
+      },
+      {
+        "type": "ToolMessage",
+        "actor": "transfer_back_to_supervisor",
+        "content": "Successfully transferred back to supervisor"
+      },
+      {
+        "type": "AIMessage",
+        "actor": "supervisor",
+        "content": "## Comprehensive Answer\n\n### Key Government Revenue Streams (FY2024)\n\nSingapore's Estimated FY2024 Operating Revenue totals **$108.64 billion**, drawn from a diversified mix of tax and non-tax sources:\n\n| Revenue Source | Amount ($B) | % of Total |\n|---|---|---|\n| Corporate Income Tax | 28.03 | 25.8% |\n| Goods and Services Tax | 19.39 | 17.8% |\n| Personal Income Tax | 18.07 | 16.6% |\n| Other Taxes (Foreign Worker Levy, Water Conservation Tax, Land Betterment Charge, Annual Tonnage Tax) | 8.86 | 8.2% |\n| Assets Taxes | 6.67 | 6.1% |\n| Stamp Duty | 5.73 | 5.3% |\n| Vehicle Quota Premiums | 4.72 | 4.3% |\n| Customs, Excise and Carbon Taxes | 3.56 | 3.3% |\n| Betting Taxes | 3.26 | 3.0% |\n| Motor Vehicle Taxes | 2.84 | 2.6% |\n\nAdditionally, the **Net Investment Returns Contribution (NIRC)** of $23.50 billion supplements Operating Revenue to fund total government spending, including special transfers.\n\n---\n\n### Future Energy Fund Support\n\nThe Government will **establish the Future Energy Fund with an initial injection of $5.0 billion** in Budget FY2024. Its stated purpose is **to invest in critical infrastructure for the energy transition**.\n\nThis allocation is part of a broader package of **$20.4 billion in Top-ups to Endowment and Trust Funds** for FY2024, which is financed by the government's overall fiscal resources \u2014 namely Operating Revenue and NIRC described above. Among the fund top-ups, the Future Energy Fund receives the **second-largest allocation**, just behind the GST Voucher Fund ($6.0 billion), and ahead of other funds like the Edusave Endowment Fund and Financial Sector Development Fund (each $2.0 billion).\n\n**In short:** The diversified tax revenue base (led by Corporate Income Tax, GST, and Personal Income Tax) combined with NIRC generates the fiscal capacity that allows the Government to commit $5.0 billion toward launching the Future Energy Fund, supporting Singapore's energy transition infrastructure needs."
+      }
+    ],
+    "final_answer": "## Comprehensive Answer\n\n### Key Government Revenue Streams (FY2024)\n\nSingapore's Estimated FY2024 Operating Revenue totals **$108.64 billion**, drawn from a diversified mix of tax and non-tax sources:\n\n| Revenue Source | Amount ($B) | % of Total |\n|---|---|---|\n| Corporate Income Tax | 28.03 | 25.8% |\n| Goods and Services Tax | 19.39 | 17.8% |\n| Personal Income Tax | 18.07 | 16.6% |\n| Other Taxes (Foreign Worker Levy, Water Conservation Tax, Land Betterment Charge, Annual Tonnage Tax) | 8.86 | 8.2% |\n| Assets Taxes | 6.67 | 6.1% |\n| Stamp Duty | 5.73 | 5.3% |\n| Vehicle Quota Premiums | 4.72 | 4.3% |\n| Customs, Excise and Carbon Taxes | 3.56 | 3.3% |\n| Betting Taxes | 3.26 | 3.0% |\n| Motor Vehicle Taxes | 2.84 | 2.6% |\n\nAdditionally, the **Net Investment Returns Contribution (NIRC)** of $23.50 billion supplements Operating Revenue to fund total government spending, including special transfers.\n\n---\n\n### Future Energy Fund Support\n\nThe Government will **establish the Future Energy Fund with an initial injection of $5.0 billion** in Budget FY2024. Its stated purpose is **to invest in critical infrastructure for the energy transition**.\n\nThis allocation is part of a broader package of **$20.4 billion in Top-ups to Endowment and Trust Funds** for FY2024, which is financed by the government's overall fiscal resources \u2014 namely Operating Revenue and NIRC described above. Among the fund top-ups, the Future Energy Fund receives the **second-largest allocation**, just behind the GST Voucher Fund ($6.0 billion), and ahead of other funds like the Edusave Endowment Fund and Financial Sector Development Fund (each $2.0 billion).\n\n**In short:** The diversified tax revenue base (led by Corporate Income Tax, GST, and Personal Income Tax) combined with NIRC generates the fiscal capacity that allows the Government to commit $5.0 billion toward launching the Future Energy Fund, supporting Singapore's energy transition infrastructure needs."
+  },
+  "Q2 (revenue-only, tests selective routing)": {
+    "query": "What is the largest single source of government revenue?",
+    "trace": [
+      {
+        "type": "HumanMessage",
+        "actor": "user",
+        "content": "What is the largest single source of government revenue?"
+      },
+      {
+        "type": "AIMessage",
+        "actor": "supervisor",
+        "content": [
+          {
+            "id": "toolu_01FN6zNVhQEdr8xjHr5JijGa",
+            "caller": {
+              "type": "direct"
+            },
+            "input": {},
+            "name": "transfer_to_revenue_agent",
+            "type": "tool_use",
+            "toolset_name": null
+          }
+        ]
+      },
+      {
+        "type": "ToolMessage",
+        "actor": "transfer_to_revenue_agent",
+        "content": "Successfully transferred to revenue_agent"
+      },
+      {
+        "type": "AIMessage",
+        "actor": "revenue_agent",
+        "content": [
+          {
+            "text": "Let me get the revenue context to identify the largest single source of government revenue.",
+            "type": "text"
+          },
+          {
+            "id": "toolu_01786tmniTXNDPqYidVg5yH4",
+            "caller": {
+              "type": "direct"
+            },
+            "input": {},
+            "name": "revenue_context",
+            "type": "tool_use",
+            "toolset_name": null
+          }
+        ]
+      },
+      {
+        "type": "ToolMessage",
+        "actor": "revenue_context",
+        "content": "--- PAGE 5 ---\nMINISTRY OF FINANCE \n \n5 \n \n01 Update on Financial Year 2023 \n \n1.1 \nExpected Overall Fiscal Position for FY2023  \n \nThe basic deficit is revised to $5.4 billion (0.8% of GDP). After factoring in Top-\nups to Endowment and Trust Funds of $24.3 billion, Net Investment Returns \nContribution (NIRC) of $22.9 billion, Capitalisation of Nationally Significant \nInfrastructure of $3.5 billion, and Significant Infrastructure Government Loan \nAct (SINGA) Interest Costs and Loan Expenses of $0.2 billion, the Overall Fiscal \nPosition for Revised FY2023 is a deficit of $3.6 billion (0.5% of GDP). This is larger \nthan the $0.4 billion deficit estimated at Budget 2023. This is due to higher Total \nExpenditure to meet priority areas such as catching up of projects deferred due \nto COVID-19; funding for public healthcare institutions; and a top-up to the \nMajulah Package Fund to boost the retirement and healthcare adequacy of \nSingaporeans, as announced by Prime Minister Lee Hsien Loong at the National \nDay Rally 2023; partially offset by higher-than-expected Operating Revenue, \nmainly due to stronger-than-expected economic growth.  \n \nThe Revised FY2023 fiscal position is shown in Table 1.1. \n \n1.2 \nOperating Revenue \n \nRevised FY2023 Operating Revenue is $104.3 billion, which is $7.6 billion (7.9%) \nhigher than the Estimated FY2023 figure. This increase is mainly due to higher \ncollections from Corporate Income Tax, Other Taxes, Vehicle Quota Premiums, \nPersonal Income Tax, Assets Taxes, and Betting Taxes, partially offset by lower \ncollections from the Goods and Services Tax. \n \nCorporate Income Tax collections are revised to $28.4 billion, which is                \n$4.1 billion (17.0%) higher than the Estimated FY2023 figure due to stronger-\nthan-expected economic growth in 2022. Collections from Other Taxes, which \ninclude the Foreign Worker Levy, Water Conservation Tax, Land Betterment \nCharge, and Annual Tonnage Tax, are revised to $8.8 billion, which is $2.1 billion \n(32.3%) higher than the Estimated FY2023 figure. This is mainly due to higher \nLand Betterment Charge collections from unforeseen redevelopment projects. \nVehicle Quota Premiums collections are revised to $4.7 billion, which is             \n$0.8 billion (20.1%) higher than the Estimated FY2023 figure due to the \nGovernment bringing forward COE quota from future years. Personal Income \n\n\n--- PAGE 6 ---\nMINISTRY OF FINANCE \n \n6 \n \nTax collections are revised to $17.5 billion, which is $0.7 billion (4.1%) higher \nthan the Estimated FY2023 figure due to stronger-than-expected nominal wage \ngrowth in 2022. Assets Taxes collections are revised to $5.9 billion, which is      \n$0.4 billion (6.7%) higher than the Estimated FY2023 figure due to upward \nadjustments to Annual Values for residential properties. Betting Taxes \ncollections are revised to $3.2 billion, which is $0.3 billion (10.8%) higher than \nthe Estimated FY2023 figure due to stronger-than-expected collections for \nCasino Taxes.  \n \nGoods and Services Tax collections are revised to $16.4 billion, which is             \n$1.0 billion (5.8%) lower than the Estimated FY2023 figure due to weaker \nimports.  \n \nThe breakdown of Operating Revenue in FY2023 by its components is shown in \nChart 1.1. \n \n1.3 \nTotal Expenditure  \n \nRevised FY2023 Total Expenditure is $106.9 billion, which is $2.7 billion (2.6%) \nhigher than the Estimated FY2023 figure. The breakdown of Government \nspending by sector is shown in Chart 1.2. \n \nOperating Expenditure is revised to $85.4 billion, which is $1.7 billion (2.1%) \nhigher than the Estimated FY2023 figure. The higher expenditure is mainly \ndriven by (i) MINDEF due to catching up of projects deferred or disrupted due \nto COVID-19, acceleration of the SAF\u2019s digitalisation and build-up of non-kinetic \ncapabilities, as well as heightened inflationary pressures; and (ii) MOH due to \nhigher funding to public healthcare institutions and implementation of \nHealthier SG. These increases in expenditure are partly offset by lower \nexpenditure by (i) MOM due to lower utilisation for the Jobs Growth Incentive; \n(ii) MOE due to lower expenditure on manpower; and (iii) MHA due to lower \nmanpower costs, expected delays in IT projects, and savings in systems \nmaintenance. \n \nDevelopment Expenditure is revised to $21.5 billion, which is $1.0 billion (4.9%) \nhigher than the Estimated FY2023 figure. The higher expenditure is mainly \ndriven by (i) MOT mainly due to the development of the domestic rail network; \n(ii) MTI due to higher requirements for EDB\u2019s Economic Development Assistance \n\n\n--- PAGE 9 ---\nMINISTRY OF FINANCE \n \n9 \n \nChart 1.1 \nBreakdown of Government Operating Revenue in FY20231 \n \n \nNote: Figures may not add up to 100% due to rounding. \n1 Total Revenue comprises Operating Revenue and NIRC. Operating Revenue, which includes tax and non-tax revenues (shown \nabove), comprises 82.0% of Total Revenue in FY2023 while NIRC makes up the remaining 18.0%.  \n \n \n \nCorporate Income Tax\n27.2%\nPersonal Income Tax\n16.8%\nGoods and Services Tax\n15.7%\nOther Taxes\n8.4%\nStamp Duty\n5.7%\nAssets Taxes\n5.7%\nVehicle Quota \nPremiums\n4.5%\nFees and Charges \n(Excluding Vehicle Quota \nPremiums), 3.9%\nCustoms, Excise and \nCarbon Taxes, 3.3%\nBetting Taxes, 3.0%\nMotor Vehicle Taxes, 2.5%\nWithholding Tax, 2.1%\nStatutory Boards\u2019 Contributions, 0.7%\nOthers, 0.6%\n\n\n--- PAGE 16 (no bordered table detected, using cleaned raw text) ---\nMINISTRY OF FINANCE \n \n16 \n \nTable 2.1 \nBudget for FY2024 \nBLANK \nRevised  \nFY2023 \n Estimated  \nFY2024 \nChange Over \nRevised FY2023 \nBLANK \n$billion \n$billion \n$billion \n%change \nOPERATING REVENUE \n104.30 \n108.64 \n4.34 \n4.2 \nCorporate Income Tax \n28.38 \n28.03 \n(0.35) \n(1.2) \nPersonal Income Tax \n17.53 \n18.07 \n0.55 \n3.1 \nWithholding Tax \n2.19 \n2.31 \n0.12 \n5.5 \nStatutory Boards' Contributions \n0.75 \n0.31 \n(0.44) \n(58.8) \nAssets Taxes \n5.92 \n6.67 \n0.76 \n12.8 \nCustoms, Excise and Carbon Taxes \n3.40 \n3.56 \n0.17 \n4.9 \nGoods and Services Tax \n16.36 \n19.39 \n3.03 \n18.5 \nMotor Vehicle Taxes \n2.60 \n2.84 \n0.24 \n9.3 \nVehicle Quota Premiums \n4.66 \n4.72 \n0.06 \n1.3 \nBetting Taxes \n3.15 \n3.26 \n0.11 \n3.4 \nStamp Duty \n5.92 \n5.73 \n(0.19) \n(3.2) \nOther Taxes1 \n8.78 \n8.86 \n0.08 \n0.9 \nFees and Charges (excluding Vehicle Quota Premiums) \n4.07 \n4.25 \n0.18 \n4.4 \nOthers \n0.61 \n0.64 \n0.03 \n4.3 \nLess: \n \n \n \n0.0 \nTOTAL EXPENDITURE \n106.89 \n111.76 \n4.87 \n4.6 \nOperating Expenditure \n85.36 \n88.43 \n3.07 \n3.6 \nDevelopment Expenditure \n21.52 \n23.33 \n1.80 \n8.4 \nPRIMARY SURPLUS / DEFICIT \n(2.59) \n(3.12) \n \n \nLess: \n \n \n \n \nSPECIAL TRANSFERS2 \n27.17 \n23.30 \n(3.87) \n(14.3) \nSpecial Transfers Excluding Top-ups to Endowment and Trust Funds \n2.85 \n2.94 \n \n \nCDC Vouchers \n0.64 \n0.85 \n \n \nCOL Special Payment \n1.55 \n0.81 \n \n \nOther Transfers3 \n0.66 \n1.28 \n \n \nBASIC SURPLUS / DEFICIT \n(5.44) \n(6.06) \n \n \nTop-ups to Endowment and Trust Funds \n24.32 \n20.35 \n \n \nMajulah Package Fund \n7.50 \n- \n \n \nGST Voucher Fund \n2.40 \n6.00 \n \n \nFuture Energy Fund \n- \n5.00 \n \n \nFinancial Sector Development Fund \n- \n2.00 \n \n \nNational Productivity Fund \n4.00 \n2.00 \n \n \nTop-up to Endowment Funds4 \n2.30 \n2.00 \n \n \nOther Funds5 \n8.12 \n3.35 \n \n \nAdd: \n \n \n \n \nNET INVESTMENT RETURNS CONTRIBUTION \n22.92 \n23.50 \n0.59 \n2.6 \nOVERALL BUDGET SURPLUS / DEFICIT \n(6.84) \n(2.91) \n \n \nAdd: \n \n \n \n \nCAPITALISATION OF NATIONALLY SIGNIFICANT INFRASTRUCTURE \n3.49 \n4.09 \n0.60 \n17.1 \nLess: \n \n \n \n \nDEPRECIATION OF NATIONALLY SIGNIFICANT INFRASTRUCTURE \n- \n- \n- \n- \nSINGA INTEREST COSTS AND LOAN EXPENSES6 \n0.23 \n0.40 \n0.18 \n78.6 \nOVERALL FISCAL POSITION \n(3.57) \n0.78 \n \n \nNote: Figures may not add up due to rounding. Negative figures are shown in parentheses. \n1 \nOther Taxes include the Foreign Worker Levy, Water Conservation Tax, Land Betterment Charge and Annual Tonnage Tax.  \n2 \nSpecial Transfers include Top-ups to Endowment and Trust Funds. \n3 \nOther Transfers in FY2024 include MediSave Bonus, U-Save rebates, CIT Rebate Cash Grant, NS LifeSG Credits, CPF Transition Offset, S&CC \nrebates, Enterprise Innovation Scheme, GST Voucher Special Payment, Top-ups to self-help groups, Top-ups to Edusave and Post-Secondary \nEducation Accounts, Top-ups to Child Development Accounts, Jobs Support Scheme, Rental Support Scheme, Productivity and Innovation Credit, \nWage Credit Scheme and Cash Grant to Mitigate Rental Costs. \n4 \nConsists of Edusave Endowment Fund, Medical Endowment Fund, ElderCare Fund and Community Care Endowment Fund. \n5 \nOther Funds include National Research Fund, Progressive Wage Credit Scheme Fund, Changi Airport Development Fund, Community Silver Trust \nFund, Trust Fund for the Employment Credit Schemes, Public Transport Fund, Skills Development Fund, and Legal Aid Fund.  \n6 \nSINGA Interest Costs and Loan Expenses include the annual effective interest costs (which is computed based on the yield to maturity multiplied by \nthe face value of the bond) and other ancillary loan expenses incurred in connection with the SINGA. It excludes principal repayment and transfer of \nloan discount to Development Fund. It is different from the Debt Servicing and Related Costs presented in the Expenditure Estimates and Annex to \nExpenditure Estimates for Head Y.  \n"
+      },
+      {
+        "type": "AIMessage",
+        "actor": "revenue_agent",
+        "content": "Based on the revenue context, **Corporate Income Tax is the largest single source of government revenue**.\n\nAccording to the FY2023 data:\n- **Corporate Income Tax: $28.38 billion** (27.2% of Operating Revenue)\n\nThis is followed by:\n- Personal Income Tax: $17.53 billion (16.8%)\n- Goods and Services Tax: $16.36 billion (15.7%)\n\nFor FY2024, Corporate Income Tax is estimated at $28.03 billion, maintaining its position as the largest revenue source, though with a slight decrease of $0.35 billion compared to FY2023."
+      },
+      {
+        "type": "AIMessage",
+        "actor": "revenue_agent",
+        "content": "Transferring back to supervisor"
+      },
+      {
+        "type": "ToolMessage",
+        "actor": "transfer_back_to_supervisor",
+        "content": "Successfully transferred back to supervisor"
+      },
+      {
+        "type": "AIMessage",
+        "actor": "supervisor",
+        "content": "## Summary\n\n**The largest single source of government revenue is Corporate Income Tax.**\n\nKey figures from the Ministry of Finance data:\n\n- **FY2023 (Revised):** Corporate Income Tax collections were **$28.4 billion**, representing **27.2%** of Operating Revenue \u2014 by far the largest component.\n- **FY2024 (Estimated):** Corporate Income Tax is projected at **$28.03 billion**, still the top revenue source, though slightly lower than FY2023 (a decrease of $0.35 billion, or -1.2%).\n\nFor context, the next largest sources of revenue are:\n1. **Personal Income Tax** \u2013 $17.53 billion (16.8% of revenue) in FY2023\n2. **Goods and Services Tax** \u2013 $16.36 billion (15.7% of revenue) in FY2023\n\nCorporate Income Tax revenue rose sharply in FY2023 due to stronger-than-expected economic growth in 2022, which continues to make it the dominant contributor to total government operating revenue."
+      }
+    ],
+    "final_answer": "## Summary\n\n**The largest single source of government revenue is Corporate Income Tax.**\n\nKey figures from the Ministry of Finance data:\n\n- **FY2023 (Revised):** Corporate Income Tax collections were **$28.4 billion**, representing **27.2%** of Operating Revenue \u2014 by far the largest component.\n- **FY2024 (Estimated):** Corporate Income Tax is projected at **$28.03 billion**, still the top revenue source, though slightly lower than FY2023 (a decrease of $0.35 billion, or -1.2%).\n\nFor context, the next largest sources of revenue are:\n1. **Personal Income Tax** \u2013 $17.53 billion (16.8% of revenue) in FY2023\n2. **Goods and Services Tax** \u2013 $16.36 billion (15.7% of revenue) in FY2023\n\nCorporate Income Tax revenue rose sharply in FY2023 due to stronger-than-expected economic growth in 2022, which continues to make it the dominant contributor to total government operating revenue."
+  },
+  "Q3 (expenditure-only, tests selective routing)": {
+    "query": "How much is being spent on the GST Voucher Fund top-up, and why?",
+    "trace": [
+      {
+        "type": "HumanMessage",
+        "actor": "user",
+        "content": "How much is being spent on the GST Voucher Fund top-up, and why?"
+      },
+      {
+        "type": "AIMessage",
+        "actor": "supervisor",
+        "content": [
+          {
+            "signature": "EtsCCpABCBEYAipAbi3tU19RtBy/TZ0l2Jsdyc+E+f/f2vpXrhfc5rBlMVJnU8+c5gFFLSKZZ9pjKniitbirPbJJo13aQxp3f89sgTIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRhZTkxZjkwYS0zOGFmLTQ2YTktOTdkNy0wNjg1YThlMDllZTKoAaePhtUGEgzNGTQ8OUfgqVT3eCIaDNSyxCZOWUXCQu/gYSIwcbIr+jixS5SwnJw+BzvsQWPYGPglHTQu5ZhhaMcwdZALRf147V6b+w/vJUMugYO0KnjJZoUcRmlwt3bWusuuNSAViiiLrOQlJxmduL4rQF5057/Tlg+ggzhq2mxV4cbm/DgvEHXKX5iS29ZOeJsrmZYwtFg3wN3F1FXDhiysOet8oauNo8KymVLAWLkT/kK8weeJn0mxiSG2Q1BFTx1AGj4WGpLZdC6IroIYAQ==",
+            "thinking": "",
+            "type": "thinking"
+          },
+          {
+            "id": "toolu_01NUPKUWZXGeuhNjJs9FwbWp",
+            "caller": {
+              "type": "direct"
+            },
+            "input": {},
+            "name": "transfer_to_expenditure_agent",
+            "type": "tool_use",
+            "toolset_name": null
+          }
+        ]
+      },
+      {
+        "type": "ToolMessage",
+        "actor": "transfer_to_expenditure_agent",
+        "content": "Successfully transferred to expenditure_agent"
+      },
+      {
+        "type": "AIMessage",
+        "actor": "expenditure_agent",
+        "content": [
+          {
+            "text": "Let me get the expenditure context for you.",
+            "type": "text"
+          },
+          {
+            "id": "toolu_01GTb3H6LcZYfhP1MBpk9LB2",
+            "caller": {
+              "type": "direct"
+            },
+            "input": {},
+            "name": "expenditure_context",
+            "type": "tool_use",
+            "toolset_name": null
+          }
+        ]
+      },
+      {
+        "type": "ToolMessage",
+        "actor": "expenditure_context",
+        "content": "--- PAGE 14 ---\nMINISTRY OF FINANCE \n \n14 \n \n2.3 \nTotal Expenditure \n \nEstimated FY2024 Total Expenditure is $111.8 billion (15.5% of GDP). This is an \nincrease of $4.9 billion (4.6%) from the Revised FY2023 Total Expenditure of \n$106.9 billion. The main increases over Revised FY2023 Expenditure are for \nMOT, MOH, MOE, MSF, MINDEF, MND and MinLaw (see Chart 2.1).  \n \nMOT expenditure is expected to increase by $1.3 billion (9.8%), mainly due to \nthe development of the domestic rail network, and upgrading of infrastructure \nand systems to support our air hub.  \n \nMOH expenditure is expected to increase by $0.8 billion (4.6%) mainly due to \nthe opening of new facilities such as Sembawang and Tampines North \npolyclinics, ramping up of capacity in the new Woodlands Health campus, and \nprojected capacity increases in the long-term care sector.  \n \nMOE expenditure is expected to increase by $0.7 billion (4.8%), mainly due to \nannual cost adjustments, initiatives to improve the quality of education, and the \nresumption of school building projects that were previously delayed by  \nCOVID-19.  \n \nMSF expenditure is expected to increase by $0.5 billion (12.6%) mainly due to \nhigher spending on programmes in the preschool and social service sector.  \n \nMINDEF expenditure is expected to increase by $0.5 billion (2.5%) mainly due \nto inflation. \n \nMND expenditure is expected to increase by $0.4 billion (4.7%) mainly due to \nfaster work progress for HDB\u2019s public housing development and upgrading \nprogrammes, and higher operating grant to HDB.  \n \nMinLaw expenditure is expected to increase by $0.4 billion (120.8%) mainly due \nto projected land acquisition and development.  \n \nThere were decreases from Revised FY2023 Expenditure for MOM by $0.3 billion \n(8.3%) mainly due to the cessation of the Jobs Growth Incentive, and MTI by \n$0.1 billion (1.6%) due to lower requirements for EDB\u2019s Economic Development \nAssistance Scheme.   \n\n\n--- PAGE 17 ---\nMINISTRY OF FINANCE \n \n17 \n \nChart 2.1 \nBreakdown of Total Expenditure by Ministry1  \n(FY2023 and FY2024)  \n \n1With effect from 23 October 2023, the Smart Nation and Digital Government Group (SNDGG), previously under Prime Minister\u2019s \nOffice (PMO), merged with the Ministry of Communications and Information (MCI)\u2019s digital development functions to form an \nenlarged Smart Nation Group to better position the Government to advance the full range of the digital agenda. The new Smart \nNation Group programme and Government Technology Agency programme will be reported under MCI from FY2024. Figures before \nFY2024 are still reported under PMO. \n0.5\n0.3\n1.4\n0.8\n1.2\n2.4\n1.9\n3.5\n3.3\n4.2\n6.1\n8.1\n8.6\n13.0\n14.1\n17.9\n19.8\n0.6\n0.7\n0.7\n0.8\n1.3\n2.4\n2.7\n3.2\n3.4\n4.7\n6.0\n8.3\n9.0\n14.2\n14.8\n18.8\n20.2\n0.0\n5.0\n10.0\n15.0\n20.0\n25.0\nMFA\nMinLaw\nPMO\nOrgans of State\nMOF\nMCCY\nMCI\nMOM\nMSE\nMSF\nMTI\nMHA\nMND\nMOT\nMOE\nMOH\nMINDEF\n$ Billion\nEstimated FY2024\nRevised FY2023\n\n\n--- PAGE 18 ---\nMINISTRY OF FINANCE \n \n18 \n \n2.6 \nSpecial Transfers \n \nSpecial Transfers to Households ($2.6 billion)  \n \nIn addition to transfers from the Government\u2019s Operating Expenditure and \nspending from Endowment and Trust Funds, Special Transfers to Households \nare estimated to be $2.6 billion in Budget 2024. This includes $0.9 billion for \nCDC vouchers, $0.8 billion for COL Special Payment and $0.9 billion for other \ntransfers (see Table 2.2). \n  \nSpecial Transfers to Businesses ($0.4 billion)  \n \nSpecial Transfers to Businesses are estimated to be $0.4 billion, with the majority \nbeing a $0.3 billion CIT Rebate Cash Grant1 (see Table 2.3). \n \nTop-ups to Endowment and Trust Funds ($20.4 billion) \n \nIn Budget 2024, the Government will top up the GST Voucher Fund by               \n$6.0 billion to meet the steady state cashflow needs for the enhanced \npermanent GST Voucher scheme. To support Budget 2024 enhancements to the \nProgressive Wage Credit Scheme (PWCS) and Edusave Awards, the Government \nwill top up the PWCS Fund by $1.0 billion and the Edusave Endowment Fund by \n$2.0 billion respectively. The Government will top up the National Research \nFund by $1.8 billion to support Research, Innovation and Enterprise, and the \nNational Productivity Fund by $2.0 billion to boost productivity, Continuing \nEducation and Training, and investment promotion. The Government will also \ntop up the Financial Sector Development Fund by $2.0 billion to strengthen \nSingapore\u2019s position as an international financial centre. The Government will \nestablish the Future Energy Fund with an initial injection of $5.0 billion to invest \nin critical infrastructure for the energy transition. Other Fund top-ups are to the \nSkills Development Fund ($500 million), Public Transport Fund ($50 million), and \nthe Legal Aid Fund ($2 million).  \n \nIn total, $20.4 billion will be committed to Fund top-ups (see Table 2.4). \n \n \n1 The CIT Rebate Cash Grant is a component of the CIT Rebate of 50% tax payable granted for Year of Assessment (YA) 2024 \nunder the Enterprise Support Package. Companies that employed at least 1 local employee in 2023 will receive a $2,000 CIT \nRebate Cash Grant. The CIT Rebate, less any CIT Rebate Cash Grant received, will be automatically incorporated in companies\u2019 tax \nassessment raised after they file their CIT return for YA 2024, thereby reducing their tax payable. \n \n\n\n--- PAGE 20 TABLE ---\n |  |  |  | Estimated FY2024 | \n |  |  |  | ($ million) | \nGoods and Services Tax Voucher Fund |  |  | 6,000 |  | \nFuture Energy Fund |  |  | 5,000 |  | \nEdusave Endowment Fund |  |  | 2,000 |  | \nFinancial Sector Development Fund |  |  | 2,000 |  | \nNational Productivity Fund |  |  | 2,000 |  | \nNational Research Fund |  |  | 1,800 |  | \nProgressive Wage Credit Scheme Fund |  |  | 1,000 |  | \nSkills Development Fund |  |  | 500 |  | \nPublic Transport Fund |  |  | 50 |  | \nLegal Aid Fund |  |  | 2 |  | \n | Total |  |  | 20,352 | "
+      },
+      {
+        "type": "AIMessage",
+        "actor": "expenditure_agent",
+        "content": "Based on the expenditure context, **$6.0 billion** is being spent on the GST Voucher Fund top-up in FY2024.\n\n**Why:** The Government is topping up the GST Voucher Fund by $6.0 billion **to meet the steady state cashflow needs for the enhanced permanent GST Voucher scheme**. This represents the largest single fund top-up in Budget 2024 and reflects the Government's commitment to providing ongoing support through the GST Voucher scheme."
+      },
+      {
+        "type": "AIMessage",
+        "actor": "expenditure_agent",
+        "content": "Transferring back to supervisor"
+      },
+      {
+        "type": "ToolMessage",
+        "actor": "transfer_back_to_supervisor",
+        "content": "Successfully transferred back to supervisor"
+      },
+      {
+        "type": "AIMessage",
+        "actor": "supervisor",
+        "content": "## Summary: GST Voucher Fund Top-up\n\n**Amount:** $6.0 billion (this is the largest single fund top-up among all the Endowment and Trust Fund top-ups in Budget 2024, which total $20.4 billion overall)\n\n**Reason:** The top-up is meant **to meet the steady state cashflow needs for the enhanced permanent GST Voucher scheme**. In other words, the Government is injecting this sum into the fund to ensure it can sustainably finance the GST Voucher payouts to Singaporeans on an ongoing basis, now that the scheme has been made permanent and enhanced.\n\nFor context, this $6.0 billion top-up is part of a broader set of Endowment and Trust Fund injections in Budget 2024, which also include top-ups to the Future Energy Fund ($5.0 billion), Edusave Endowment Fund ($2.0 billion), Financial Sector Development Fund ($2.0 billion), National Productivity Fund ($2.0 billion), National Research Fund ($1.8 billion), Progressive Wage Credit Scheme Fund ($1.0 billion), and smaller amounts for the Skills Development Fund, Public Transport Fund, and Legal Aid Fund."
+      }
+    ],
+    "final_answer": "## Summary: GST Voucher Fund Top-up\n\n**Amount:** $6.0 billion (this is the largest single fund top-up among all the Endowment and Trust Fund top-ups in Budget 2024, which total $20.4 billion overall)\n\n**Reason:** The top-up is meant **to meet the steady state cashflow needs for the enhanced permanent GST Voucher scheme**. In other words, the Government is injecting this sum into the fund to ensure it can sustainably finance the GST Voucher payouts to Singaporeans on an ongoing basis, now that the scheme has been made permanent and enhanced.\n\nFor context, this $6.0 billion top-up is part of a broader set of Endowment and Trust Fund injections in Budget 2024, which also include top-ups to the Future Energy Fund ($5.0 billion), Edusave Endowment Fund ($2.0 billion), Financial Sector Development Fund ($2.0 billion), National Productivity Fund ($2.0 billion), National Research Fund ($1.8 billion), Progressive Wage Credit Scheme Fund ($1.0 billion), and smaller amounts for the Skills Development Fund, Public Transport Fund, and Legal Aid Fund."
+  },
+  "Q4 (second dual-agent query, different phrasing)": {
+    "query": "What is the largest source of tax revenue, and separately, what specific purpose will the Future Energy Fund infrastructure spending serve according to the budget document?",
+    "trace": [
+      {
+        "type": "HumanMessage",
+        "actor": "user",
+        "content": "What is the largest source of tax revenue, and separately, what specific purpose will the Future Energy Fund infrastructure spending serve according to the budget document?"
+      },
+      {
+        "type": "AIMessage",
+        "actor": "supervisor",
+        "content": [
+          {
+            "signature": "EssCCpABCBEYAipAKlfeVQCxV2ifX9a969mIpk1//7eWVSNKTDWH8MLhHxQB72TOvTTpNcC1LdN+CNx5IW2MJpqfoRX1JgCBNXIHxzIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRhZTkxZjkwYS0zOGFmLTQ2YTktOTdkNy0wNjg1YThlMDllZTKoAbKPhtUGEgyVe+2jkRW8sEsg6Q8aDPiOtpS/TS0X0QNWFCIw3ztnDw9m9KbvgPD+eO6Bx+sQzcykh+0KzuJklhvjaM7WgGPlq3Z8in1xYAJmSgZnKmjXZxZRHGypZ2oTxiKvK86XyEmOJft5J1RJH3wntnvMbnobvy/6atOuJJshRiGmVOMh1SukEesBXTIWLejRGz4TCndxdzfsjb62WL7rJgMon6zB8qZmMYuokM4CVQhYPOFl/UpCfv0nNhgB",
+            "thinking": "",
+            "type": "thinking"
+          },
+          {
+            "id": "toolu_0134b3kHFRgBPmLA1ez7mHiG",
+            "caller": {
+              "type": "direct"
+            },
+            "input": {},
+            "name": "transfer_to_revenue_agent",
+            "type": "tool_use",
+            "toolset_name": null
+          }
+        ]
+      },
+      {
+        "type": "ToolMessage",
+        "actor": "transfer_to_revenue_agent",
+        "content": "Successfully transferred to revenue_agent"
+      },
+      {
+        "type": "AIMessage",
+        "actor": "revenue_agent",
+        "content": [
+          {
+            "text": "I need to clarify that I'm the Revenue Agent, and I can help you with the first part of your question about the largest source of tax revenue. However, your second question about the Future Energy Fund infrastructure spending is an expenditure/budget allocation question, which falls outside my revenue specialization.\n\nLet me get the revenue information for you:",
+            "type": "text"
+          },
+          {
+            "id": "toolu_01A3iPwTVFaWMs18Z9nUxQfz",
+            "caller": {
+              "type": "direct"
+            },
+            "input": {},
+            "name": "revenue_context",
+            "type": "tool_use",
+            "toolset_name": null
+          }
+        ]
+      },
+      {
+        "type": "ToolMessage",
+        "actor": "revenue_context",
+        "content": "--- PAGE 5 ---\nMINISTRY OF FINANCE \n \n5 \n \n01 Update on Financial Year 2023 \n \n1.1 \nExpected Overall Fiscal Position for FY2023  \n \nThe basic deficit is revised to $5.4 billion (0.8% of GDP). After factoring in Top-\nups to Endowment and Trust Funds of $24.3 billion, Net Investment Returns \nContribution (NIRC) of $22.9 billion, Capitalisation of Nationally Significant \nInfrastructure of $3.5 billion, and Significant Infrastructure Government Loan \nAct (SINGA) Interest Costs and Loan Expenses of $0.2 billion, the Overall Fiscal \nPosition for Revised FY2023 is a deficit of $3.6 billion (0.5% of GDP). This is larger \nthan the $0.4 billion deficit estimated at Budget 2023. This is due to higher Total \nExpenditure to meet priority areas such as catching up of projects deferred due \nto COVID-19; funding for public healthcare institutions; and a top-up to the \nMajulah Package Fund to boost the retirement and healthcare adequacy of \nSingaporeans, as announced by Prime Minister Lee Hsien Loong at the National \nDay Rally 2023; partially offset by higher-than-expected Operating Revenue, \nmainly due to stronger-than-expected economic growth.  \n \nThe Revised FY2023 fiscal position is shown in Table 1.1. \n \n1.2 \nOperating Revenue \n \nRevised FY2023 Operating Revenue is $104.3 billion, which is $7.6 billion (7.9%) \nhigher than the Estimated FY2023 figure. This increase is mainly due to higher \ncollections from Corporate Income Tax, Other Taxes, Vehicle Quota Premiums, \nPersonal Income Tax, Assets Taxes, and Betting Taxes, partially offset by lower \ncollections from the Goods and Services Tax. \n \nCorporate Income Tax collections are revised to $28.4 billion, which is                \n$4.1 billion (17.0%) higher than the Estimated FY2023 figure due to stronger-\nthan-expected economic growth in 2022. Collections from Other Taxes, which \ninclude the Foreign Worker Levy, Water Conservation Tax, Land Betterment \nCharge, and Annual Tonnage Tax, are revised to $8.8 billion, which is $2.1 billion \n(32.3%) higher than the Estimated FY2023 figure. This is mainly due to higher \nLand Betterment Charge collections from unforeseen redevelopment projects. \nVehicle Quota Premiums collections are revised to $4.7 billion, which is             \n$0.8 billion (20.1%) higher than the Estimated FY2023 figure due to the \nGovernment bringing forward COE quota from future years. Personal Income \n\n\n--- PAGE 6 ---\nMINISTRY OF FINANCE \n \n6 \n \nTax collections are revised to $17.5 billion, which is $0.7 billion (4.1%) higher \nthan the Estimated FY2023 figure due to stronger-than-expected nominal wage \ngrowth in 2022. Assets Taxes collections are revised to $5.9 billion, which is      \n$0.4 billion (6.7%) higher than the Estimated FY2023 figure due to upward \nadjustments to Annual Values for residential properties. Betting Taxes \ncollections are revised to $3.2 billion, which is $0.3 billion (10.8%) higher than \nthe Estimated FY2023 figure due to stronger-than-expected collections for \nCasino Taxes.  \n \nGoods and Services Tax collections are revised to $16.4 billion, which is             \n$1.0 billion (5.8%) lower than the Estimated FY2023 figure due to weaker \nimports.  \n \nThe breakdown of Operating Revenue in FY2023 by its components is shown in \nChart 1.1. \n \n1.3 \nTotal Expenditure  \n \nRevised FY2023 Total Expenditure is $106.9 billion, which is $2.7 billion (2.6%) \nhigher than the Estimated FY2023 figure. The breakdown of Government \nspending by sector is shown in Chart 1.2. \n \nOperating Expenditure is revised to $85.4 billion, which is $1.7 billion (2.1%) \nhigher than the Estimated FY2023 figure. The higher expenditure is mainly \ndriven by (i) MINDEF due to catching up of projects deferred or disrupted due \nto COVID-19, acceleration of the SAF\u2019s digitalisation and build-up of non-kinetic \ncapabilities, as well as heightened inflationary pressures; and (ii) MOH due to \nhigher funding to public healthcare institutions and implementation of \nHealthier SG. These increases in expenditure are partly offset by lower \nexpenditure by (i) MOM due to lower utilisation for the Jobs Growth Incentive; \n(ii) MOE due to lower expenditure on manpower; and (iii) MHA due to lower \nmanpower costs, expected delays in IT projects, and savings in systems \nmaintenance. \n \nDevelopment Expenditure is revised to $21.5 billion, which is $1.0 billion (4.9%) \nhigher than the Estimated FY2023 figure. The higher expenditure is mainly \ndriven by (i) MOT mainly due to the development of the domestic rail network; \n(ii) MTI due to higher requirements for EDB\u2019s Economic Development Assistance \n\n\n--- PAGE 9 ---\nMINISTRY OF FINANCE \n \n9 \n \nChart 1.1 \nBreakdown of Government Operating Revenue in FY20231 \n \n \nNote: Figures may not add up to 100% due to rounding. \n1 Total Revenue comprises Operating Revenue and NIRC. Operating Revenue, which includes tax and non-tax revenues (shown \nabove), comprises 82.0% of Total Revenue in FY2023 while NIRC makes up the remaining 18.0%.  \n \n \n \nCorporate Income Tax\n27.2%\nPersonal Income Tax\n16.8%\nGoods and Services Tax\n15.7%\nOther Taxes\n8.4%\nStamp Duty\n5.7%\nAssets Taxes\n5.7%\nVehicle Quota \nPremiums\n4.5%\nFees and Charges \n(Excluding Vehicle Quota \nPremiums), 3.9%\nCustoms, Excise and \nCarbon Taxes, 3.3%\nBetting Taxes, 3.0%\nMotor Vehicle Taxes, 2.5%\nWithholding Tax, 2.1%\nStatutory Boards\u2019 Contributions, 0.7%\nOthers, 0.6%\n\n\n--- PAGE 16 (no bordered table detected, using cleaned raw text) ---\nMINISTRY OF FINANCE \n \n16 \n \nTable 2.1 \nBudget for FY2024 \nBLANK \nRevised  \nFY2023 \n Estimated  \nFY2024 \nChange Over \nRevised FY2023 \nBLANK \n$billion \n$billion \n$billion \n%change \nOPERATING REVENUE \n104.30 \n108.64 \n4.34 \n4.2 \nCorporate Income Tax \n28.38 \n28.03 \n(0.35) \n(1.2) \nPersonal Income Tax \n17.53 \n18.07 \n0.55 \n3.1 \nWithholding Tax \n2.19 \n2.31 \n0.12 \n5.5 \nStatutory Boards' Contributions \n0.75 \n0.31 \n(0.44) \n(58.8) \nAssets Taxes \n5.92 \n6.67 \n0.76 \n12.8 \nCustoms, Excise and Carbon Taxes \n3.40 \n3.56 \n0.17 \n4.9 \nGoods and Services Tax \n16.36 \n19.39 \n3.03 \n18.5 \nMotor Vehicle Taxes \n2.60 \n2.84 \n0.24 \n9.3 \nVehicle Quota Premiums \n4.66 \n4.72 \n0.06 \n1.3 \nBetting Taxes \n3.15 \n3.26 \n0.11 \n3.4 \nStamp Duty \n5.92 \n5.73 \n(0.19) \n(3.2) \nOther Taxes1 \n8.78 \n8.86 \n0.08 \n0.9 \nFees and Charges (excluding Vehicle Quota Premiums) \n4.07 \n4.25 \n0.18 \n4.4 \nOthers \n0.61 \n0.64 \n0.03 \n4.3 \nLess: \n \n \n \n0.0 \nTOTAL EXPENDITURE \n106.89 \n111.76 \n4.87 \n4.6 \nOperating Expenditure \n85.36 \n88.43 \n3.07 \n3.6 \nDevelopment Expenditure \n21.52 \n23.33 \n1.80 \n8.4 \nPRIMARY SURPLUS / DEFICIT \n(2.59) \n(3.12) \n \n \nLess: \n \n \n \n \nSPECIAL TRANSFERS2 \n27.17 \n23.30 \n(3.87) \n(14.3) \nSpecial Transfers Excluding Top-ups to Endowment and Trust Funds \n2.85 \n2.94 \n \n \nCDC Vouchers \n0.64 \n0.85 \n \n \nCOL Special Payment \n1.55 \n0.81 \n \n \nOther Transfers3 \n0.66 \n1.28 \n \n \nBASIC SURPLUS / DEFICIT \n(5.44) \n(6.06) \n \n \nTop-ups to Endowment and Trust Funds \n24.32 \n20.35 \n \n \nMajulah Package Fund \n7.50 \n- \n \n \nGST Voucher Fund \n2.40 \n6.00 \n \n \nFuture Energy Fund \n- \n5.00 \n \n \nFinancial Sector Development Fund \n- \n2.00 \n \n \nNational Productivity Fund \n4.00 \n2.00 \n \n \nTop-up to Endowment Funds4 \n2.30 \n2.00 \n \n \nOther Funds5 \n8.12 \n3.35 \n \n \nAdd: \n \n \n \n \nNET INVESTMENT RETURNS CONTRIBUTION \n22.92 \n23.50 \n0.59 \n2.6 \nOVERALL BUDGET SURPLUS / DEFICIT \n(6.84) \n(2.91) \n \n \nAdd: \n \n \n \n \nCAPITALISATION OF NATIONALLY SIGNIFICANT INFRASTRUCTURE \n3.49 \n4.09 \n0.60 \n17.1 \nLess: \n \n \n \n \nDEPRECIATION OF NATIONALLY SIGNIFICANT INFRASTRUCTURE \n- \n- \n- \n- \nSINGA INTEREST COSTS AND LOAN EXPENSES6 \n0.23 \n0.40 \n0.18 \n78.6 \nOVERALL FISCAL POSITION \n(3.57) \n0.78 \n \n \nNote: Figures may not add up due to rounding. Negative figures are shown in parentheses. \n1 \nOther Taxes include the Foreign Worker Levy, Water Conservation Tax, Land Betterment Charge and Annual Tonnage Tax.  \n2 \nSpecial Transfers include Top-ups to Endowment and Trust Funds. \n3 \nOther Transfers in FY2024 include MediSave Bonus, U-Save rebates, CIT Rebate Cash Grant, NS LifeSG Credits, CPF Transition Offset, S&CC \nrebates, Enterprise Innovation Scheme, GST Voucher Special Payment, Top-ups to self-help groups, Top-ups to Edusave and Post-Secondary \nEducation Accounts, Top-ups to Child Development Accounts, Jobs Support Scheme, Rental Support Scheme, Productivity and Innovation Credit, \nWage Credit Scheme and Cash Grant to Mitigate Rental Costs. \n4 \nConsists of Edusave Endowment Fund, Medical Endowment Fund, ElderCare Fund and Community Care Endowment Fund. \n5 \nOther Funds include National Research Fund, Progressive Wage Credit Scheme Fund, Changi Airport Development Fund, Community Silver Trust \nFund, Trust Fund for the Employment Credit Schemes, Public Transport Fund, Skills Development Fund, and Legal Aid Fund.  \n6 \nSINGA Interest Costs and Loan Expenses include the annual effective interest costs (which is computed based on the yield to maturity multiplied by \nthe face value of the bond) and other ancillary loan expenses incurred in connection with the SINGA. It excludes principal repayment and transfer of \nloan discount to Development Fund. It is different from the Debt Servicing and Related Costs presented in the Expenditure Estimates and Annex to \nExpenditure Estimates for Head Y.  \n"
+      },
+      {
+        "type": "AIMessage",
+        "actor": "revenue_agent",
+        "content": "Based on the revenue context provided, I can answer your first question:\n\n## Largest Source of Tax Revenue\n\n**Corporate Income Tax** is the largest source of tax revenue. According to the FY2024 budget figures in Table 2.1, Corporate Income Tax is estimated at **$28.03 billion** for FY2024. This is also confirmed in Chart 1.1 showing the FY2023 breakdown, where Corporate Income Tax represents **27.2%** of Operating Revenue.\n\n---\n\n## Regarding the Future Energy Fund\n\nRegarding your second question about the Future Energy Fund infrastructure spending, I can see from Table 2.1 that **$5.00 billion** is allocated as a top-up to the Future Energy Fund in FY2024. However, the specific purpose this infrastructure spending will serve is not detailed in the revenue context document I have access to. \n\nTo answer that part of your question, you would need to consult the expenditure or policy sections of the budget document, which fall outside my revenue specialization. I recommend checking the budget narrative or expenditure estimates for details on the Future Energy Fund's specific infrastructure objectives."
+      },
+      {
+        "type": "AIMessage",
+        "actor": "revenue_agent",
+        "content": "Transferring back to supervisor"
+      },
+      {
+        "type": "ToolMessage",
+        "actor": "transfer_back_to_supervisor",
+        "content": "Successfully transferred back to supervisor"
+      },
+      {
+        "type": "AIMessage",
+        "actor": "supervisor",
+        "content": [
+          {
+            "id": "toolu_01A1H1ehfritbeJLCZzFr8fr",
+            "caller": {
+              "type": "direct"
+            },
+            "input": {},
+            "name": "transfer_to_expenditure_agent",
+            "type": "tool_use",
+            "toolset_name": null
+          }
+        ]
+      },
+      {
+        "type": "ToolMessage",
+        "actor": "transfer_to_expenditure_agent",
+        "content": "Successfully transferred to expenditure_agent"
+      },
+      {
+        "type": "AIMessage",
+        "actor": "expenditure_agent",
+        "content": [
+          {
+            "text": "Now let me get the expenditure information about the Future Energy Fund:",
+            "type": "text"
+          },
+          {
+            "id": "toolu_019WZbJjLHrcV2WbBLEF8K4T",
+            "caller": {
+              "type": "direct"
+            },
+            "input": {},
+            "name": "expenditure_context",
+            "type": "tool_use",
+            "toolset_name": null
+          }
+        ]
+      },
+      {
+        "type": "ToolMessage",
+        "actor": "expenditure_context",
+        "content": "--- PAGE 14 ---\nMINISTRY OF FINANCE \n \n14 \n \n2.3 \nTotal Expenditure \n \nEstimated FY2024 Total Expenditure is $111.8 billion (15.5% of GDP). This is an \nincrease of $4.9 billion (4.6%) from the Revised FY2023 Total Expenditure of \n$106.9 billion. The main increases over Revised FY2023 Expenditure are for \nMOT, MOH, MOE, MSF, MINDEF, MND and MinLaw (see Chart 2.1).  \n \nMOT expenditure is expected to increase by $1.3 billion (9.8%), mainly due to \nthe development of the domestic rail network, and upgrading of infrastructure \nand systems to support our air hub.  \n \nMOH expenditure is expected to increase by $0.8 billion (4.6%) mainly due to \nthe opening of new facilities such as Sembawang and Tampines North \npolyclinics, ramping up of capacity in the new Woodlands Health campus, and \nprojected capacity increases in the long-term care sector.  \n \nMOE expenditure is expected to increase by $0.7 billion (4.8%), mainly due to \nannual cost adjustments, initiatives to improve the quality of education, and the \nresumption of school building projects that were previously delayed by  \nCOVID-19.  \n \nMSF expenditure is expected to increase by $0.5 billion (12.6%) mainly due to \nhigher spending on programmes in the preschool and social service sector.  \n \nMINDEF expenditure is expected to increase by $0.5 billion (2.5%) mainly due \nto inflation. \n \nMND expenditure is expected to increase by $0.4 billion (4.7%) mainly due to \nfaster work progress for HDB\u2019s public housing development and upgrading \nprogrammes, and higher operating grant to HDB.  \n \nMinLaw expenditure is expected to increase by $0.4 billion (120.8%) mainly due \nto projected land acquisition and development.  \n \nThere were decreases from Revised FY2023 Expenditure for MOM by $0.3 billion \n(8.3%) mainly due to the cessation of the Jobs Growth Incentive, and MTI by \n$0.1 billion (1.6%) due to lower requirements for EDB\u2019s Economic Development \nAssistance Scheme.   \n\n\n--- PAGE 17 ---\nMINISTRY OF FINANCE \n \n17 \n \nChart 2.1 \nBreakdown of Total Expenditure by Ministry1  \n(FY2023 and FY2024)  \n \n1With effect from 23 October 2023, the Smart Nation and Digital Government Group (SNDGG), previously under Prime Minister\u2019s \nOffice (PMO), merged with the Ministry of Communications and Information (MCI)\u2019s digital development functions to form an \nenlarged Smart Nation Group to better position the Government to advance the full range of the digital agenda. The new Smart \nNation Group programme and Government Technology Agency programme will be reported under MCI from FY2024. Figures before \nFY2024 are still reported under PMO. \n0.5\n0.3\n1.4\n0.8\n1.2\n2.4\n1.9\n3.5\n3.3\n4.2\n6.1\n8.1\n8.6\n13.0\n14.1\n17.9\n19.8\n0.6\n0.7\n0.7\n0.8\n1.3\n2.4\n2.7\n3.2\n3.4\n4.7\n6.0\n8.3\n9.0\n14.2\n14.8\n18.8\n20.2\n0.0\n5.0\n10.0\n15.0\n20.0\n25.0\nMFA\nMinLaw\nPMO\nOrgans of State\nMOF\nMCCY\nMCI\nMOM\nMSE\nMSF\nMTI\nMHA\nMND\nMOT\nMOE\nMOH\nMINDEF\n$ Billion\nEstimated FY2024\nRevised FY2023\n\n\n--- PAGE 18 ---\nMINISTRY OF FINANCE \n \n18 \n \n2.6 \nSpecial Transfers \n \nSpecial Transfers to Households ($2.6 billion)  \n \nIn addition to transfers from the Government\u2019s Operating Expenditure and \nspending from Endowment and Trust Funds, Special Transfers to Households \nare estimated to be $2.6 billion in Budget 2024. This includes $0.9 billion for \nCDC vouchers, $0.8 billion for COL Special Payment and $0.9 billion for other \ntransfers (see Table 2.2). \n  \nSpecial Transfers to Businesses ($0.4 billion)  \n \nSpecial Transfers to Businesses are estimated to be $0.4 billion, with the majority \nbeing a $0.3 billion CIT Rebate Cash Grant1 (see Table 2.3). \n \nTop-ups to Endowment and Trust Funds ($20.4 billion) \n \nIn Budget 2024, the Government will top up the GST Voucher Fund by               \n$6.0 billion to meet the steady state cashflow needs for the enhanced \npermanent GST Voucher scheme. To support Budget 2024 enhancements to the \nProgressive Wage Credit Scheme (PWCS) and Edusave Awards, the Government \nwill top up the PWCS Fund by $1.0 billion and the Edusave Endowment Fund by \n$2.0 billion respectively. The Government will top up the National Research \nFund by $1.8 billion to support Research, Innovation and Enterprise, and the \nNational Productivity Fund by $2.0 billion to boost productivity, Continuing \nEducation and Training, and investment promotion. The Government will also \ntop up the Financial Sector Development Fund by $2.0 billion to strengthen \nSingapore\u2019s position as an international financial centre. The Government will \nestablish the Future Energy Fund with an initial injection of $5.0 billion to invest \nin critical infrastructure for the energy transition. Other Fund top-ups are to the \nSkills Development Fund ($500 million), Public Transport Fund ($50 million), and \nthe Legal Aid Fund ($2 million).  \n \nIn total, $20.4 billion will be committed to Fund top-ups (see Table 2.4). \n \n \n1 The CIT Rebate Cash Grant is a component of the CIT Rebate of 50% tax payable granted for Year of Assessment (YA) 2024 \nunder the Enterprise Support Package. Companies that employed at least 1 local employee in 2023 will receive a $2,000 CIT \nRebate Cash Grant. The CIT Rebate, less any CIT Rebate Cash Grant received, will be automatically incorporated in companies\u2019 tax \nassessment raised after they file their CIT return for YA 2024, thereby reducing their tax payable. \n \n\n\n--- PAGE 20 TABLE ---\n |  |  |  | Estimated FY2024 | \n |  |  |  | ($ million) | \nGoods and Services Tax Voucher Fund |  |  | 6,000 |  | \nFuture Energy Fund |  |  | 5,000 |  | \nEdusave Endowment Fund |  |  | 2,000 |  | \nFinancial Sector Development Fund |  |  | 2,000 |  | \nNational Productivity Fund |  |  | 2,000 |  | \nNational Research Fund |  |  | 1,800 |  | \nProgressive Wage Credit Scheme Fund |  |  | 1,000 |  | \nSkills Development Fund |  |  | 500 |  | \nPublic Transport Fund |  |  | 50 |  | \nLegal Aid Fund |  |  | 2 |  | \n | Total |  |  | 20,352 | "
+      },
+      {
+        "type": "AIMessage",
+        "actor": "expenditure_agent",
+        "content": "Perfect! Now I have the complete answer to your second question.\n\n## Future Energy Fund Purpose\n\nAccording to the budget document, **the Government will establish the Future Energy Fund with an initial injection of $5.0 billion to invest in critical infrastructure for the energy transition.**\n\nThis is stated explicitly in the Special Transfers section (page 18) of the budget document, which notes that the Future Energy Fund will be used to \"invest in critical infrastructure for the energy transition.\"\n\n---\n\n## Summary\n\nTo answer both parts of your question:\n\n1. **Largest source of tax revenue:** Corporate Income Tax at **$28.03 billion** (estimated FY2024)\n\n2. **Future Energy Fund purpose:** To **invest in critical infrastructure for the energy transition**, with an initial allocation of **$5.0 billion**"
+      },
+      {
+        "type": "AIMessage",
+        "actor": "expenditure_agent",
+        "content": "Transferring back to supervisor"
+      },
+      {
+        "type": "ToolMessage",
+        "actor": "transfer_back_to_supervisor",
+        "content": "Successfully transferred back to supervisor"
+      },
+      {
+        "type": "AIMessage",
+        "actor": "supervisor",
+        "content": "## Comprehensive Answer\n\n**1. Largest Source of Tax Revenue:**\n**Corporate Income Tax** is the largest source of tax revenue for the Singapore government. According to the budget document:\n- Estimated FY2024: **$28.03 billion**\n- It represented **27.2%** of total Operating Revenue in FY2023 \u2014 the single largest component, ahead of Personal Income Tax (16.8%) and Goods and Services Tax (15.7%).\n\n**2. Future Energy Fund Infrastructure Spending Purpose:**\nAccording to the budget document, the Government will establish the **Future Energy Fund with an initial injection of $5.0 billion** specifically **to invest in critical infrastructure for the energy transition**. This fund represents one of the largest new Top-ups to Endowment and Trust Funds in Budget 2024, reflecting the government's commitment to supporting Singapore's shift toward more sustainable and future-ready energy infrastructure."
+      }
+    ],
+    "final_answer": "## Comprehensive Answer\n\n**1. Largest Source of Tax Revenue:**\n**Corporate Income Tax** is the largest source of tax revenue for the Singapore government. According to the budget document:\n- Estimated FY2024: **$28.03 billion**\n- It represented **27.2%** of total Operating Revenue in FY2023 \u2014 the single largest component, ahead of Personal Income Tax (16.8%) and Goods and Services Tax (15.7%).\n\n**2. Future Energy Fund Infrastructure Spending Purpose:**\nAccording to the budget document, the Government will establish the **Future Energy Fund with an initial injection of $5.0 billion** specifically **to invest in critical infrastructure for the energy transition**. This fund represents one of the largest new Top-ups to Endowment and Trust Funds in Budget 2024, reflecting the government's commitment to supporting Singapore's shift toward more sustainable and future-ready energy infrastructure."
+  }
+}
