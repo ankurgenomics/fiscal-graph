@@ -71,6 +71,63 @@ python part3_supervisor.py     # Part 3 -- runs all 4 demo queries, writes trace
 | `data/source_budget.pdf` | The source document, tracked for reproducibility |
 | `PLAN.md` *(not in this repo — see project's working notes)* | Full build history: every bug found, premortem, and postmortem across all 3 parts |
 
+## System design
+
+One shared foundation, three progressively-built layers — matching the assignment's own framing
+that "each part builds upon the previous one":
+
+```
+source_budget.pdf
+      |
+      v
+ parser.py  (PyMuPDF prose / pdfplumber table-mode, shared by all 3 parts)
+      |
+      +---------------------------+---------------------------+
+      v                           v                           v
+  Part 1                      Part 2                      Part 3
+  extract.py                  part2_pipeline.py            agents.py + part3_supervisor.py
+  -> schemas.RevenueExtraction -> tools/datetime_*.py       -> create_react_agent x2
+     (5 structured fields)       (MCP-primary tool calling)    (revenue_context/expenditure_context
+                                 -> schemas.ClassifiedDates       tools, reusing parser.py)
+                                                              -> create_supervisor
+                                                                 (routes + synthesizes)
+      |                           |                              |
+      v                           v                              v
+  llm_config.py (single LLM factory: OpenRouter for free dev-iteration models, direct
+                 Anthropic for Haiku/Sonnet verified runs — same get_llm() call site
+                 used identically by all 3 parts)
+```
+
+**Why this shape**: `parser.py`, `schemas.py`, and `llm_config.py` are the only pieces every
+part depends on — built once in Part 1, reused unchanged by Parts 2 and 3, rather than each
+part re-implementing PDF parsing or LLM plumbing independently. Part 2 builds directly on Part
+1's extraction pattern for its own date-extraction step. Part 3's agent tools call the exact
+same `parser.py` functions Part 1 uses, just with a different page scope per agent — the whole
+system is one PDF-to-structured-answers pipeline, not three unrelated scripts that happen to
+share a folder.
+
+**API surface**: two external LLM APIs are used, both behind the single `llm_config.get_llm()`
+factory — OpenRouter's OpenAI-compatible endpoint (`https://openrouter.ai/api/v1`) for free-tier
+development models, and Anthropic's Messages API directly for the verified Haiku/Sonnet runs. No
+other external API is called at runtime (the source PDF is fetched once, manually, into
+`data/`, not re-fetched per run).
+
+## Dependencies
+
+| Library | Why |
+|---|---|
+| `pymupdf` | Fast, robust text-layer PDF extraction with correct reading order — used for narrative/prose pages (see Part 1). |
+| `pdfplumber` | Table-aware PDF extraction — used for tabular pages, chosen specifically because it can detect bordered tables cell-by-cell rather than reconstructing structure from a flat text stream (see Part 1's page-8 artifact finding). |
+| `langchain` / `langchain-openai` | Chat model abstraction + structured output (`.with_structured_output()`) and tool binding (`.bind_tools()`), used identically across all 3 parts; `langchain-openai`'s `ChatOpenAI` is what actually speaks to OpenRouter's OpenAI-compatible endpoint. |
+| `langchain-anthropic` | Direct Anthropic API access for the real Haiku/Sonnet verified runs (`llm_config.py`'s `ChatAnthropic` path). |
+| `pydantic` | Every structured-output schema across all 3 parts (`schemas.py`) is a Pydantic model — this is what makes `.with_structured_output()` type-safe rather than parsing raw JSON strings. |
+| `langgraph` / `langgraph-supervisor` | Part 3's multi-agent framework — `create_react_agent` for the two sub-agents, `create_supervisor` for the routing/synthesis layer, per the assignment's own suggested framework. |
+| `mcp` (pinned `<2.0.0,>=1.24.0`) | The local MCP server for Part 2's datetime tool, per the assignment's stated preference ("via local MCP"). Pinned below v2 because `langchain-mcp-adapters` hard-requires `mcp<2.0.0` — see Part 2's bug-fix writeup for how this was discovered. |
+| `langchain-mcp-adapters` | Bridges the MCP server into a LangChain-bindable tool object, so an LLM can genuinely call it via `.bind_tools()` rather than Python code invoking it directly (Part 2's core fix). |
+| `python-dateutil` | Deterministic date-string parsing for `tools/datetime_core.py` — deliberately not LLM-based, since normalizing an already-located date string is a parsing problem, not a reasoning problem. |
+| `python-dotenv` | Loads `.env` for API keys — keeps secrets out of source code and out of git (`.env` is gitignored). |
+| `jupyter` | Runs/executes the three `.ipynb` deliverable notebooks. |
+
 ## Part 1 — Document Extraction & Prompt Engineering
 
 ### Parsing approach and justification
