@@ -5,6 +5,8 @@ pymupdf
 pydantic
 langgraph
 langgraph-supervisor
-mcp
+mcp>=2
+langchain-anthropic
+python-dateutil
 python-dotenv
 jupyter

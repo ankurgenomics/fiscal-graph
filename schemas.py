@@ -1,3 +1,4 @@
+from typing import Literal
 from pydantic import BaseModel, Field
 
 
@@ -29,3 +30,25 @@ class RevenueExtraction(BaseModel):
         "'Actual' data. Find the column header spelled 'Actual' specifically, "
         "even if it corresponds to an older fiscal year than other columns shown."
     )
+
+
+class DateExtraction(BaseModel):
+    distribution_date_text: str = Field(
+        description="The exact raw sentence/phrase from page 1 stating the "
+        "document's distribution date (e.g. 'Distributed on Budget Day: ...')."
+    )
+    estate_duty_date_text: str = Field(
+        description="The exact raw sentence/phrase from page 36 (Glossary, "
+        "'Assets Taxes' / Estate Duty entry) stating the date after which "
+        "Estate Duty no longer applies."
+    )
+
+
+class ClassifiedDate(BaseModel):
+    original_text: str
+    normalized_date: str = Field(description="ISO 8601 YYYY-MM-DD")
+    status: Literal["Expired", "Upcoming", "Ongoing"]
+
+
+class ClassifiedDates(BaseModel):
+    dates: list[ClassifiedDate]

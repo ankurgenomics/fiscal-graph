@@ -116,3 +116,59 @@ the correct page regardless of the cited page number.
   fast, zero-cost debugging; the final numbers above are from a real `claude-haiku-4-5-20251001`
   run, not the free dev model, to avoid depending on flaky free-tier availability for the
   numbers that actually matter.
+
+## Part 2 — Tool Calling & Reasoning
+
+### Approach
+
+Pipeline (`part2_pipeline.py`): extract raw date text from pages 1 and 36 (LLM, structured
+output via `schemas.DateExtraction`) → normalize to ISO 8601 using a **deterministic**
+datetime tool → classify each date relative to reference date `2024-01-01` (LLM, structured
+output via `schemas.ClassifiedDates`).
+
+The datetime tool is implemented **once** (`tools/datetime_core.py`, using `python-dateutil`,
+deliberately not LLM-based — once a raw date string is located, converting it to ISO is a
+parsing problem, not a reasoning problem) and wrapped two ways so both are guaranteed to
+never disagree:
+- **`tools/datetime_mcp.py`** — a real local MCP server (`mcp>=2`; note this project's
+  installed `mcp` package is v2.x, where `FastMCP` was renamed to `MCPServer` — the API is
+  otherwise identical). Verified via the actual MCP protocol layer (`mcp.list_tools()` /
+  `mcp.call_tool()`), not just imported as a plain function.
+- **`tools/datetime_fallback.py`** — the same logic as a plain LangChain `@tool`, per the
+  assignment's own fallback clause, used by `part2_pipeline.py`'s end-to-end run so the full
+  pipeline doesn't require spinning up a separate MCP server process; the MCP path is verified
+  independently in `part2_tools_reasoning.ipynb`.
+
+### Verified results
+
+| Original text | Normalized date | Status |
+|---|---|---|
+| "Distributed on Budget Day: 16 February 2024" | 2024-02-16 | **Upcoming** |
+| "Estate Duty does not apply to a person who dies after 15 February 2008." | 2008-02-15 | **Expired** |
+
+The first row matches the assignment's own sample output exactly. Both were confirmed on real
+`claude-haiku-4-5-20251001`, run twice to confirm determinism (temperature=0).
+
+### Assumption
+
+The assignment's Part 2 task description says "normalize submission dates extracted **in Part
+1**," but Part 1's task list has no date fields at all — the two dates to extract (page 1,
+page 36) are only named here in Part 2, as if for the first time. Treated as a continuation
+that extracts these two dates directly (using the same LLM-extraction pattern as Part 1),
+rather than assuming Part 1 already produced them.
+
+The estate-duty date (`2008-02-15`) is a policy-abolition cutoff, not an event/submission
+date — genuinely ambiguous whether it should read as "Expired" (literal: the date has passed)
+or "Ongoing" (the policy state it describes is still in effect today). We chose **Expired**,
+the more literal reading of the field name.
+
+### Bug found and fixed during development
+
+The classification step initially returned `2024-02-16` as **Expired**, contradicting both
+simple date arithmetic (2024-02-16 is after the reference date 2024-01-01) and the
+assignment's own sample output, which explicitly labels this exact date "Upcoming." The model
+had substituted its own knowledge of the real current date instead of strictly using the given
+reference date as "today" for the exercise. Fixed by rewriting the classification system
+prompt to explicitly forbid using real-world date knowledge, spell out the comparison rule
+against the reference date, and include a worked example using this exact date — verified
+correct across two repeated runs afterward.
