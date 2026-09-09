@@ -211,6 +211,16 @@ the more literal reading of the field name.
    mcp<2.0.0,>=1.24.0`) rather than guessed at; reverted `tools/datetime_mcp.py` to the v1
    `FastMCP` API and pinned `mcp<2.0.0,>=1.24.0` explicitly in `requirements.txt`.
 
+### Output format matched to the literal sample, not the internal schema
+
+A re-postmortem (re-reading the literal assignment text once more against the *current* code,
+per this project's working agreement) found the printed final output was `{"dates": [...]}`, an
+object wrapper — but the assignment's own sample output is a **bare array**. The wrapper exists
+for a real reason (structured-output/tool-calling APIs require an object root schema, `dates`
+wraps `list[ClassifiedDate]` to satisfy that), but the *presented* output shouldn't leak that
+internal detail. Added `to_sample_format()` to unwrap for display only — the printed/notebook
+output now matches the literal sample shape exactly, without changing the validated schema.
+
 ### Untested branch, addressed with a labeled synthetic check
 
 Both real document-derived dates are point-in-time, so neither exercises the third

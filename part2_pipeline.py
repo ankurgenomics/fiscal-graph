@@ -153,6 +153,15 @@ def run_pipeline_sync(model: str | None = None, max_tokens: int = 1024) -> Class
     return asyncio.run(run_pipeline(model=model, max_tokens=max_tokens))
 
 
+def to_sample_format(result: ClassifiedDates) -> list[dict]:
+    """ClassifiedDates wraps its list in a `dates` field because structured-output/
+    tool-calling APIs require an object root schema, not a bare array — but the
+    assignment's own sample output IS a bare array. This unwraps to match it exactly
+    for display, without changing the internal schema used for validation."""
+    return [d.model_dump() for d in result.dates]
+
+
 if __name__ == "__main__":
+    import json
     result = run_pipeline_sync()
-    print(result.model_dump_json(indent=2))
+    print(json.dumps(to_sample_format(result), indent=2))
