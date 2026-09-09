@@ -30,6 +30,47 @@ part. It supports two providers:
 Only one is strictly required depending on which models you run; both are supported so you
 can iterate for free and only spend real credit on confirmed final runs.
 
+### How to run each part
+
+All 3 notebooks already contain executed outputs (verified against ground truth, see each
+part's section below) — readable without running anything. To re-run:
+
+```bash
+jupyter nbconvert --to notebook --execute --inplace part1_extraction.ipynb
+jupyter nbconvert --to notebook --execute --inplace part2_tools_reasoning.ipynb
+jupyter nbconvert --to notebook --execute --inplace part3_multiagent.ipynb
+```
+
+Or run the underlying scripts directly:
+
+```bash
+python extract.py              # Part 1
+python part2_pipeline.py       # Part 2
+python part3_supervisor.py     # Part 3 -- runs all 4 demo queries, writes trace.json
+```
+
+### Repository structure
+
+| File | Purpose |
+|---|---|
+| `parser.py` | PDF parsing (PyMuPDF for prose, pdfplumber table-mode + artifact filter for tables) — shared by all 3 parts |
+| `schemas.py` | Pydantic models for every structured-output field across all 3 parts |
+| `llm_config.py` | Single LLM factory — routes to OpenRouter (free dev models) or direct Anthropic (Haiku/Sonnet) from one call site |
+| `extract.py` | Part 1: 5-field structured extraction |
+| `part1_extraction.ipynb` | Part 1 notebook, executed, with a verification table against ground truth |
+| `tools/datetime_core.py` | Part 2: shared deterministic date-normalization logic |
+| `tools/datetime_mcp.py` | Part 2: local MCP server exposing the datetime tool |
+| `tools/datetime_fallback.py` | Part 2: same tool as a plain LangChain `@tool` (fallback if MCP unavailable) |
+| `tools/mcp_client.py` | Part 2: connects to the MCP server as a real subprocess, exposes it as a LangChain-bindable tool |
+| `part2_pipeline.py` | Part 2: extraction → real LLM tool-calling normalization (MCP primary) → classification |
+| `part2_tools_reasoning.ipynb` | Part 2 notebook, executed, including a synthetic robustness check |
+| `agents.py` | Part 3: Revenue Agent and Expenditure Agent (`create_react_agent`) |
+| `part3_supervisor.py` | Part 3: supervisor (`create_supervisor`), trace capture, 4 demo queries |
+| `part3_multiagent.ipynb` | Part 3 notebook, executed, with an automated verification cell and routing-pattern summary |
+| `trace.json` | Part 3: full captured trace for all 4 demo queries |
+| `data/source_budget.pdf` | The source document, tracked for reproducibility |
+| `PLAN.md` *(not in this repo — see project's working notes)* | Full build history: every bug found, premortem, and postmortem across all 3 parts |
+
 ## Part 1 — Document Extraction & Prompt Engineering
 
 ### Parsing approach and justification
