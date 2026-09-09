@@ -252,7 +252,11 @@ trace of the supervisor's decision-making process." `create_supervisor()` return
 
 **Model tiering**: both sub-agents run on Haiku (well-scoped extraction/analysis, same tier as
 Parts 1-2); the supervisor's routing and final synthesis runs on Sonnet — the higher-value
-reasoning step, and the part actually graded on "decision-making."
+reasoning step, and the part actually graded on "decision-making." This refines an earlier,
+coarser plan (stated before Part 1 was built) of "Sonnet for all of Part 3" into a more
+cost-effective split once the actual sub-agent tasks turned out to be straightforward extraction
+work well within Haiku's capability, reserving the stronger model for where it's actually
+graded on.
 
 ### Assumptions
 
@@ -265,6 +269,19 @@ reasoning step, and the part actually graded on "decision-making."
 2. **Selective routing, not reflexive dual-agent calls**: the supervisor is explicitly prompted
    to delegate only to the agent(s) actually relevant to each query, not both by default. This
    is verified behaviorally, not just claimed — see Verified Results below.
+3. **Page-to-agent scoping is an interpretive judgment call**, not something the assignment
+   specifies: nothing in the task says exactly which pages of the 37-page source belong to
+   "revenue" vs. "expenditure." Assigned based on each page's dominant topic (Operating Revenue
+   narrative/tables → Revenue Agent; Total Expenditure, fund top-ups, Special Transfers →
+   Expenditure Agent) — see Architecture above for the exact page list per agent. Table 2.1
+   (page 16) and Table 2.4 (page 20) both contain the Future Energy Fund as a line item because
+   the source document itself nests expenditure figures inside a broader budget-summary table;
+   this created the accidental-overlap finding below.
+4. **"Key government revenue streams" (the query's own phrasing) is open-ended** — no fixed
+   count or threshold is specified for what counts as "key." Resolved by having Revenue Agent
+   report all revenue line items visible in its context (the full tax breakdown from Table 2.1),
+   rather than an arbitrarily truncated top-N list — the query's own answer (see Q1 below) lists
+   all ten-plus items rather than picking a subjective cutoff.
 
 ### Verified results — routing pattern across 4 demo queries
 
