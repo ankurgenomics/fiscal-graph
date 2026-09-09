@@ -1,39 +1,37 @@
 # HTX AI Engineering Take-Home
 
-AI-powered extraction, tool-calling/reasoning, and multi-agent analysis of Singapore's
-**FY2024 Analysis of Revenue and Expenditure** (Ministry of Finance).
+Extraction, tool-calling, and multi-agent analysis over Singapore's FY2024 Analysis of Revenue
+and Expenditure (Ministry of Finance).
 
 Source document: https://isomer-user-content.by.gov.sg/153/20f8e128-58fa-44ea-a109-f2dec3995271/fy2024_analysis_of_revenue_and_expenditure.pdf
-(fetched via a browser User-Agent header — a bare `curl`/`requests` GET is blocked with a
-403 by the CloudFront distribution serving this file).
+
+Note: a plain `curl` or `requests` GET against that URL returns a 403 from CloudFront. It needs
+a browser User-Agent header to fetch.
 
 ## Setup
 
 ```bash
 python -m venv .venv
-source .venv/Scripts/activate   # or .venv/bin/activate on macOS/Linux
+source .venv/Scripts/activate   # .venv/bin/activate on macOS/Linux
 pip install -r requirements.txt
-cp .env.example .env            # then fill in your key(s), see below
+cp .env.example .env
 ```
 
-### API keys
+Fill in `.env` with one or both of:
 
-This project is **model-agnostic**: `llm_config.py` is the single LLM factory used by every
-part. It supports two providers:
+- `OPENROUTER_API_KEY`: for any model on OpenRouter, including free-tier ones. Used here during
+  development to iterate without cost. Set the `DEV_MODEL` env var to change which model that is
+  (default: `google/gemma-4-31b-it:free`).
+- `ANTHROPIC_API_KEY`: used automatically for the Haiku and Sonnet runs that produced the
+  results documented below.
 
-- **OpenRouter** (`OPENROUTER_API_KEY`) — for any model on OpenRouter's catalog, including
-  free-tier models (used here for zero-cost development iteration). Set `DEV_MODEL` env var
-  to override the default (`google/gemma-4-31b-it:free`).
-- **Direct Anthropic** (`ANTHROPIC_API_KEY`) — used automatically whenever `HAIKU_MODEL` or
-  `SONNET_MODEL` (from `llm_config.py`) is requested, for the final verified runs.
+Only one is strictly required, depending on which model you run. `llm_config.py` is the single
+factory both paths go through.
 
-Only one is strictly required depending on which models you run; both are supported so you
-can iterate for free and only spend real credit on confirmed final runs.
+## How to run each part
 
-### How to run each part
-
-All 3 notebooks already contain executed outputs (verified against ground truth, see each
-part's section below) — readable without running anything. To re-run:
+Every notebook already contains executed output. You can read the results without running
+anything. To re-run:
 
 ```bash
 jupyter nbconvert --to notebook --execute --inplace part1_extraction.ipynb
@@ -41,395 +39,352 @@ jupyter nbconvert --to notebook --execute --inplace part2_tools_reasoning.ipynb
 jupyter nbconvert --to notebook --execute --inplace part3_multiagent.ipynb
 ```
 
-Or run the underlying scripts directly:
+Or the underlying scripts:
 
 ```bash
 python extract.py              # Part 1
 python part2_pipeline.py       # Part 2
-python part3_supervisor.py     # Part 3 -- runs all 4 demo queries, writes trace.json
+python part3_supervisor.py     # Part 3, runs all 4 demo queries, writes trace.json
 ```
 
-### Repository structure
+## Repository structure
 
 | File | Purpose |
 |---|---|
-| `parser.py` | PDF parsing (PyMuPDF for prose, pdfplumber table-mode + artifact filter for tables) — shared by all 3 parts |
-| `schemas.py` | Pydantic models for every structured-output field across all 3 parts |
-| `llm_config.py` | Single LLM factory — routes to OpenRouter (free dev models) or direct Anthropic (Haiku/Sonnet) from one call site |
-| `extract.py` | Part 1: 5-field structured extraction |
-| `part1_extraction.ipynb` | Part 1 notebook, executed, with a verification table against ground truth |
-| `tools/datetime_core.py` | Part 2: shared deterministic date-normalization logic |
-| `tools/datetime_mcp.py` | Part 2: local MCP server exposing the datetime tool |
-| `tools/datetime_fallback.py` | Part 2: same tool as a plain LangChain `@tool` (fallback if MCP unavailable) |
-| `tools/mcp_client.py` | Part 2: connects to the MCP server as a real subprocess, exposes it as a LangChain-bindable tool |
-| `part2_pipeline.py` | Part 2: extraction → real LLM tool-calling normalization (MCP primary) → classification |
-| `part2_tools_reasoning.ipynb` | Part 2 notebook, executed, including a synthetic robustness check |
-| `agents.py` | Part 3: Revenue Agent and Expenditure Agent (`create_react_agent`) |
-| `part3_supervisor.py` | Part 3: supervisor (`create_supervisor`), trace capture, 4 demo queries |
-| `part3_multiagent.ipynb` | Part 3 notebook, executed, with an automated verification cell and routing-pattern summary |
-| `trace.json` | Part 3: full captured trace for all 4 demo queries |
-| `data/source_budget.pdf` | The source document, tracked for reproducibility |
-| `PLAN.md` *(not in this repo — see project's working notes)* | Full build history: every bug found, premortem, and postmortem across all 3 parts |
+| `parser.py` | PDF parsing. PyMuPDF for prose pages, pdfplumber table mode plus an artifact filter for tables. Used by all three parts. |
+| `schemas.py` | Pydantic models for every structured output used across the three parts. |
+| `llm_config.py` | LLM factory. Routes to OpenRouter for free dev models or direct Anthropic for Haiku/Sonnet, from one call site. |
+| `extract.py` | Part 1 extraction. |
+| `part1_extraction.ipynb` | Part 1 notebook, executed, with a verification table against ground truth. |
+| `tools/datetime_core.py` | Part 2's date-normalization logic, deterministic. |
+| `tools/datetime_mcp.py` | Part 2's local MCP server exposing that logic as a tool. |
+| `tools/datetime_fallback.py` | Same tool as a plain LangChain `@tool`, used if MCP is unavailable. |
+| `tools/mcp_client.py` | Connects to the MCP server as a subprocess and exposes it as a LangChain-bindable tool. |
+| `part2_pipeline.py` | Part 2 pipeline: extraction, then tool-calling normalization (MCP primary), then classification. |
+| `part2_tools_reasoning.ipynb` | Part 2 notebook, executed, with a synthetic robustness check for one branch not covered by real data. |
+| `agents.py` | Part 3's Revenue Agent and Expenditure Agent. |
+| `part3_supervisor.py` | Part 3 supervisor, trace capture, four demo queries. |
+| `part3_multiagent.ipynb` | Part 3 notebook, executed, with an automated verification cell and a routing-pattern summary. |
+| `trace.json` | Full captured trace for all four Part 3 demo queries. |
+| `data/source_budget.pdf` | The source document, kept in the repo so the pipeline is reproducible without a fresh download. |
 
 ## System design
 
-One shared foundation, three progressively-built layers — matching the assignment's own framing
-that "each part builds upon the previous one":
+The three parts share one foundation:
 
 ```
 source_budget.pdf
       |
-      v
- parser.py  (PyMuPDF prose / pdfplumber table-mode, shared by all 3 parts)
+ parser.py  (shared PDF parsing)
       |
-      +---------------------------+---------------------------+
-      v                           v                           v
-  Part 1                      Part 2                      Part 3
-  extract.py                  part2_pipeline.py            agents.py + part3_supervisor.py
-  -> schemas.RevenueExtraction -> tools/datetime_*.py       -> create_react_agent x2
-     (5 structured fields)       (MCP-primary tool calling)    (revenue_context/expenditure_context
-                                 -> schemas.ClassifiedDates       tools, reusing parser.py)
-                                                              -> create_supervisor
-                                                                 (routes + synthesizes)
-      |                           |                              |
-      v                           v                              v
-  llm_config.py (single LLM factory: OpenRouter for free dev-iteration models, direct
-                 Anthropic for Haiku/Sonnet verified runs — same get_llm() call site
-                 used identically by all 3 parts)
+      +----------------+----------------+
+      |                |                |
+   Part 1           Part 2           Part 3
+extract.py     part2_pipeline.py   agents.py + part3_supervisor.py
+5 structured   date extraction,    two agents (create_react_agent)
+   fields      MCP tool calling,   over their own page scopes,
+               classification      routed and synthesized by a
+                                    supervisor (create_supervisor)
+      |                |                |
+      +----------------+----------------+
+                        |
+             llm_config.py (one LLM factory,
+             used the same way by all three parts)
 ```
 
-**Why this shape**: `parser.py`, `schemas.py`, and `llm_config.py` are the only pieces every
-part depends on — built once in Part 1, reused unchanged by Parts 2 and 3, rather than each
-part re-implementing PDF parsing or LLM plumbing independently. Part 2 builds directly on Part
-1's extraction pattern for its own date-extraction step. Part 3's agent tools call the exact
-same `parser.py` functions Part 1 uses, just with a different page scope per agent — the whole
-system is one PDF-to-structured-answers pipeline, not three unrelated scripts that happen to
-share a folder.
+`parser.py`, `schemas.py`, and `llm_config.py` are built once, in Part 1, and reused unchanged
+by Parts 2 and 3. Part 3's agent tools call the same `parser.py` functions Part 1 uses, just
+scoped to different pages per agent. It's one pipeline from PDF to structured answers, not
+three separate scripts.
 
-**API surface**: two external LLM APIs are used, both behind the single `llm_config.get_llm()`
-factory — OpenRouter's OpenAI-compatible endpoint (`https://openrouter.ai/api/v1`) for free-tier
-development models, and Anthropic's Messages API directly for the verified Haiku/Sonnet runs. No
-other external API is called at runtime (the source PDF is fetched once, manually, into
-`data/`, not re-fetched per run).
+Two external APIs are used, both behind `llm_config.get_llm()`: OpenRouter's OpenAI-compatible
+endpoint for free development models, and Anthropic's Messages API directly for the Haiku and
+Sonnet runs whose results are documented below. Nothing else is called at runtime. The source
+PDF is fetched once, manually, into `data/` rather than re-downloaded on every run.
 
 ## Dependencies
 
-| Library | Why |
+| Library | Why it's here |
 |---|---|
-| `pymupdf` | Fast, robust text-layer PDF extraction with correct reading order — used for narrative/prose pages (see Part 1). |
-| `pdfplumber` | Table-aware PDF extraction — used for tabular pages, chosen specifically because it can detect bordered tables cell-by-cell rather than reconstructing structure from a flat text stream (see Part 1's page-8 artifact finding). |
-| `langchain` / `langchain-openai` | Chat model abstraction + structured output (`.with_structured_output()`) and tool binding (`.bind_tools()`), used identically across all 3 parts; `langchain-openai`'s `ChatOpenAI` is what actually speaks to OpenRouter's OpenAI-compatible endpoint. |
-| `langchain-anthropic` | Direct Anthropic API access for the real Haiku/Sonnet verified runs (`llm_config.py`'s `ChatAnthropic` path). |
-| `pydantic` | Every structured-output schema across all 3 parts (`schemas.py`) is a Pydantic model — this is what makes `.with_structured_output()` type-safe rather than parsing raw JSON strings. |
-| `langgraph` / `langgraph-supervisor` | Part 3's multi-agent framework — `create_react_agent` for the two sub-agents, `create_supervisor` for the routing/synthesis layer, per the assignment's own suggested framework. |
-| `mcp` (pinned `<2.0.0,>=1.24.0`) | The local MCP server for Part 2's datetime tool, per the assignment's stated preference ("via local MCP"). Pinned below v2 because `langchain-mcp-adapters` hard-requires `mcp<2.0.0` — see Part 2's bug-fix writeup for how this was discovered. |
-| `langchain-mcp-adapters` | Bridges the MCP server into a LangChain-bindable tool object, so an LLM can genuinely call it via `.bind_tools()` rather than Python code invoking it directly (Part 2's core fix). |
-| `python-dateutil` | Deterministic date-string parsing for `tools/datetime_core.py` — deliberately not LLM-based, since normalizing an already-located date string is a parsing problem, not a reasoning problem. |
-| `python-dotenv` | Loads `.env` for API keys — keeps secrets out of source code and out of git (`.env` is gitignored). |
-| `jupyter` | Runs/executes the three `.ipynb` deliverable notebooks. |
+| `pymupdf` | Text-layer extraction for prose pages. Fast, correct reading order. |
+| `pdfplumber` | Table-aware extraction for tabular pages. Detects bordered tables cell by cell instead of reconstructing structure from a flat text dump (see the page 8 artifact finding under Part 1). |
+| `langchain`, `langchain-openai` | Structured output and tool binding, used the same way in all three parts. `langchain-openai`'s `ChatOpenAI` is what actually talks to OpenRouter. |
+| `langchain-anthropic` | Direct Anthropic access for the Haiku/Sonnet runs. |
+| `pydantic` | Every schema in `schemas.py` is a Pydantic model, which is what makes structured output type-checked instead of parsed from raw JSON strings. |
+| `langgraph`, `langgraph-supervisor` | Part 3's agent framework: `create_react_agent` for the two sub-agents, `create_supervisor` for routing and synthesis. |
+| `mcp` (pinned `<2.0.0,>=1.24.0`) | The local MCP server for Part 2's datetime tool. Pinned below v2 because `langchain-mcp-adapters` requires it (see Part 2's bug notes). |
+| `langchain-mcp-adapters` | Turns the MCP server into a tool an LLM can call through `.bind_tools()`, instead of Python code calling it directly. |
+| `python-dateutil` | Deterministic date parsing for `tools/datetime_core.py`. Not LLM-based, on purpose: once a date string is located, converting it to ISO format is parsing, not reasoning. |
+| `python-dotenv` | Loads `.env` so API keys stay out of source and out of git. |
+| `jupyter` | Runs the three notebook deliverables. |
 
 ## Part 1 — Document Extraction & Prompt Engineering
 
-### Parsing approach and justification
+### Parsing approach
 
-Two extraction modes are used deliberately, per page content type — not a single blanket
-approach:
+Two extraction modes, chosen by page content, not one blanket approach:
 
-- **`pymupdf` (`parser.get_prose_text`)** for narrative/prose pages. Fast, robust text-layer
-  extraction with correct reading order; the natural choice for pages that are paragraphs of
-  text (e.g. pages 5-6, 18).
-- **`pdfplumber` (`parser.get_table_text`)** for pages centered on tabular data (pages 8, 16,
-  20). `pdfplumber` was chosen over a raw text dump for tables because it can detect and
-  extract bordered tables cell-by-cell, which is more robust to column misalignment than
-  reconstructing table structure from a flat text stream.
+- `pymupdf` (`parser.get_prose_text`) for narrative pages, such as 5-6 and 18.
+- `pdfplumber` (`parser.get_table_text`) for pages centered on tables: 8, 16, 20.
 
-**A concrete finding drove a correction to this plan mid-build**: `pdfplumber.extract_tables()`
-returns *no* tables on pages 8 and 16 — this document's tables have no ruling/border lines,
-so pdfplumber can't detect them as bordered tables. It silently falls back to raw text on
-those two pages. This matters because **page 8's raw text layer contains a genuine rendering
-artifact**: a stray line of comma-thousands-formatted integers (`22,376,` / `23,480,570,` /
-`22,915, 0`) sitting between two real table rows, unrelated to any actual figure in the
-document (every real figure here is formatted `$X.XX billion`, never comma-thousands). A naive
-text-dump extractor would hand this garbage straight to the LLM. `get_table_text` handles this
-with a targeted, documented regex filter (`_strip_known_artifacts`) that strips lines matching
-this specific artifact pattern from the raw-text fallback path — verified to remove the
-artifact while leaving every real figure on the page untouched. Page 20 *does* have a real
-bordered table and is extracted via pdfplumber's native table mode, no fallback needed.
+pdfplumber was chosen for tables specifically because it can detect a bordered table and pull
+it out cell by cell, which holds up better than reconstructing a table's structure from a flat
+text stream. That distinction mattered in practice. Page 8's raw text layer contains a stray
+line, `22,376,` / `23,480,570,` / `22,915, 0`, sitting between two real rows of Table 1.1.
+It's a rendering artifact, not real data; every genuine figure in this document is formatted as
+`$X.XX billion`, never comma-thousands. A plain text dump hands this straight to the model.
+`get_table_text` filters it out with a regex scoped to that exact pattern, verified to remove
+the artifact while leaving every real number on the page untouched.
 
-### Extraction methodology
+pdfplumber's own table detector, as it turns out, finds no bordered table at all on pages 8 or
+16 (this document's tables have no ruling lines), so it silently falls back to raw text on
+both. That's where the artifact filter above actually does its work. Page 20 does have a
+detectable bordered table and goes through pdfplumber's native table extraction.
 
-`extract.py` builds one combined context (pages 5-6 prose + pages 8/16/20 table-mode) and
-extracts all 5 required fields in a single structured-output call via
-`schemas.RevenueExtraction` (a Pydantic model), using LangChain's `.with_structured_output()`.
-The system prompt explicitly warns the model that the source document contains both
-"Revised FY2023" and "Estimated FY2024" columns side by side in its tables, and that these are
-different numbers — this instruction was necessary, not decorative (see Known limitations).
+### Extraction
 
-### Verified results (against manually cross-checked source figures)
+`extract.py` builds one combined context from pages 5-6 (prose) and 8, 16, 20 (table mode),
+then extracts all five required fields in a single call using
+`.with_structured_output(RevenueExtraction)`. The system prompt warns explicitly that the
+source document has both a "Revised FY2023" and an "Estimated FY2024" column side by side in
+its tables, and that these are different numbers.
 
-| Field | Extracted value | Source |
+### Results
+
+| Field | Value | Source |
 |---|---|---|
 | Corporate Income Tax 2024 | $28.03 billion | Table 2.1, page 16 |
-| YoY % diff, CIT 2024 | -1.2% | Table 2.1, page 16 |
+| YoY % change, CIT 2024 | -1.2% | Table 2.1, page 16 |
 | Total top-ups 2024 | $20.352 billion | Table 2.4, page 20 |
-| Operating Revenue taxes | 12-item list (see below) | Pages 5-6 |
+| Operating Revenue taxes | 12-item list, matches source exactly | Pages 5-6 |
 | Latest Actual Fiscal Position | $1.72 billion | Table 1.1, page 8 |
 
-**Important finding, worth stating plainly**: the assignment brief cites **page 5** for the
-Corporate Income Tax 2024 and YoY fields. Page 5 is actually the "Update on Financial Year
-2023" section — the figures there ($28.38B, +17.0%) are **Revised FY2023** data, not FY2024.
-The correct FY2024 estimates ($28.03B, -1.2%) are on **page 16**, Table 2.1. This was confirmed
-by manually reading the source PDF, not assumed. The extraction pipeline is built to pull from
-the correct page regardless of the cited page number.
+Confirmed on `claude-haiku-4-5-20251001`.
+
+One finding is worth stating plainly: the task brief cites page 5 for the Corporate Income Tax
+2024 figure and its YoY change. Page 5 is the "Update on Financial Year 2023" section. Its
+figures ($28.38 billion, +17.0%) are Revised FY2023, not FY2024. The correct FY2024 estimates,
+$28.03 billion and -1.2%, are on page 16, Table 2.1. That was confirmed by reading the source
+PDF directly, not assumed. The pipeline pulls from the correct page regardless of which page
+the brief names.
 
 ### Assumptions
 
-1. **Units**: the assignment specifies `float` for the CIT and top-ups fields but not a unit.
-   Both are expressed in **$ billion**, matching the source document's own primary reporting
-   unit (its tables are titled "$billion"; the top-ups table is in $ million and was converted).
-2. **"Operating Revenue" tax list scope**: this field could reasonably mean either (a) the tax
-   names called out in the narrative prose under the "1.2 Operating Revenue" heading (pages
-   5-6) — 12 items — or (b) every line item under the "OPERATING REVENUE" header in Table 1.1
-   (page 8), which additionally includes "Fees and Charges" and "Others" (14 items, and not
-   all of those are strictly *taxes*). **We chose interpretation (a)**, the narrative's tax
-   list, since the field is literally named "list of taxes" and "Fees and Charges"/"Others"
-   are not taxes. This was empirically observed to be ambiguous during development — one dev
-   run returned the 14-item table version before this scope was pinned down explicitly.
-3. **Estate-duty-adjacent ambiguity does not apply to Part 1** (see Part 2 docs once written)
-   but is noted here for consistency of documentation practice going forward.
+1. **Units.** The task specifies `float` for the CIT and top-ups fields but no unit. Both are
+   reported in $ billion, matching the document's own primary unit (its tables are titled
+   "$billion"; the top-ups table itself is in $ million and was converted).
+2. **Scope of "taxes mentioned in the Operating Revenue section."** This could mean the tax
+   names called out in the narrative under "1.2 Operating Revenue" on pages 5-6 (12 items), or
+   every line under the "OPERATING REVENUE" header in Table 1.1 on page 8, which adds "Fees and
+   Charges" and "Others" (14 items, and neither of those two is actually a tax). The narrative
+   reading was used, since the field is named "list of taxes" and those two items aren't taxes.
+   This ambiguity showed up in practice: one early test run against a different page window
+   returned the 14-item version before the scope was pinned down.
 
 ### Known limitations
 
-- The fix that gets `latest_actual_fiscal_position_billion` correct has two parts: (1) a
-  **generalizable** rule in the schema description — "Actual" is a specific column label, not
-  "whichever year is most recent" — and (2) a **document-specific, hardcoded** instruction in
-  the system prompt pointing the model at page 8 specifically and telling it to ignore page 16.
-  Part (2) was necessary because both pages 8 and 16 contain a row literally named
-  `OVERALL FISCAL POSITION`, and part (1) alone was insufficient to resolve the collision on
-  the model tested. **This hardcoded page pointer is brittle**: it works for this specific
-  document but would need to be redesigned (e.g. via a retrieval step that identifies which
-  page a field's ground-truth table actually lives on, rather than assuming a fixed page
-  number) if applied to a different fiscal year's report with a different table layout.
-- Development iteration used a free OpenRouter model (`google/gemma-4-31b-it:free`) for
-  fast, zero-cost debugging; the final numbers above are from a real `claude-haiku-4-5-20251001`
-  run, not the free dev model, to avoid depending on flaky free-tier availability for the
-  numbers that actually matter.
+- Getting `latest_actual_fiscal_position_billion` right took two separate fixes: a general rule
+  in the schema description ("Actual" is a specific column label, not "whichever year is most
+  recent"), and a page-8-only instruction in the system prompt, because both pages 8 and 16
+  contain a row literally named `OVERALL FISCAL POSITION` and the general rule alone wasn't
+  enough to resolve the collision on the model tested. The page-8 pointer is specific to this
+  document. Point it at a different fiscal year's report with a different table layout and it
+  would need to be redesigned, probably with a retrieval step that finds which page a field's
+  answer actually lives on rather than assuming a fixed page number.
+- Development used a free OpenRouter model for fast iteration. The numbers above are from a
+  real Haiku run, not the free model, so the results that matter don't depend on a free tier
+  staying available.
 
 ## Part 2 — Tool Calling & Reasoning
 
 ### Approach
 
-Pipeline (`part2_pipeline.py`): extract raw date text from pages 1 and 36 (LLM, structured
-output via `schemas.DateExtraction`) → normalize to ISO 8601 using a **deterministic**
-datetime tool → classify each date relative to reference date `2024-01-01` (LLM, structured
-output via `schemas.ClassifiedDates`).
+`part2_pipeline.py`: extract the raw date text from pages 1 and 36, normalize it to ISO 8601
+through a real tool call, then classify each date against the reference date `2024-01-01`.
 
-The datetime tool is implemented **once** (`tools/datetime_core.py`, using `python-dateutil`,
-deliberately not LLM-based — once a raw date string is located, converting it to ISO is a
-parsing problem, not a reasoning problem) and wrapped two ways so both are guaranteed to
-never disagree:
-- **`tools/datetime_mcp.py`** — a real local MCP server (`mcp<2.0.0,>=1.24.0`, using the
-  `FastMCP` API — pinned below v2 because `langchain-mcp-adapters`, needed to bridge this
-  server into a LangChain-bindable tool, hard-requires `mcp<2.0.0`; installing it silently
-  downgrades an unpinned `mcp>=2` install and breaks the v2 `MCPServer` API this project
-  briefly used before that constraint was discovered).
-- **`tools/datetime_fallback.py`** — the same logic as a plain LangChain `@tool`, used
-  automatically only if the MCP connection itself fails.
+The normalization logic lives in one place, `tools/datetime_core.py`, using `python-dateutil`.
+This is not LLM-based on purpose. Once a date string is located, turning it into ISO format is
+parsing, not reasoning. Two wrappers sit on top of that one implementation, so they can't drift
+apart from each other:
 
-**The live pipeline routes through MCP as primary, not the fallback** — matching the
-assignment's literal preference order ("via local MCP... if you are not able to implement a
-local MCP, you may define as a function"). `part2_pipeline.py::_get_normalize_tool()` connects
-to the MCP server as a real subprocess (via `tools/mcp_client.py`, `langchain-mcp-adapters`),
-binds its tool to the LLM with `.bind_tools()`, and lets the model itself decide to call it
-with its own extracted arguments — this is genuine LLM-driven function calling, not Python
-code invoking the tool directly. The except clause around the MCP connection is scoped
-narrowly to just that call, so a downstream bug elsewhere can't be silently misattributed to
-"MCP unavailable." Every run prints which path (`mcp` or `fallback`) actually executed, so the
-mechanism is never asserted without evidence.
+- `tools/datetime_mcp.py`: a real local MCP server. `mcp` is pinned below v2 because
+  `langchain-mcp-adapters` requires it; installing that package silently downgraded an unpinned
+  `mcp>=2` install and broke the v2 API this file briefly used before the constraint was found.
+- `tools/datetime_fallback.py`: the same logic as a plain LangChain `@tool`, used only if the
+  MCP connection itself fails.
 
-**Environment-dependent behavior, disclosed rather than hidden**: from a plain Python process
-(script or `python -c`), the MCP path works and is confirmed (`tool source: mcp`). Inside the
-Jupyter kernel used for `part2_tools_reasoning.ipynb` specifically, the MCP subprocess
-connection fails with `UnsupportedOperation('fileno')` — Jupyter's kernel replaces stdin/stdout
-with custom stream objects lacking the raw file descriptors the stdio transport needs — and the
-fallback path is used automatically instead, producing identical correct results either way.
-This is the fallback design working as intended; both entry points are verified separately (see
-`part2_tools_reasoning.ipynb` for the notebook run, and this README's dev log for the standalone
-script run showing `tool source: mcp`).
+The running pipeline goes through MCP first, not the fallback, matching the task's own wording:
+"via local MCP... if you are not able to implement a local MCP, you may define as a function."
+`part2_pipeline.py`'s `_get_normalize_tool()` connects to the server as a real subprocess, binds
+its tool to the LLM with `.bind_tools()`, and lets the model decide to call it with arguments it
+extracted itself. That's the actual difference between this and Python code calling a function
+directly: the model is the one deciding to invoke the tool. Every run prints which path,
+`mcp` or `fallback`, actually executed.
 
-**Step 1's literal deliverable**: the assignment states "your final output for this step should
-be a list of these normalized dates" — `normalize_dates_via_tool_calling_async()` returns and
-prints exactly that (`['2024-02-16', '2008-02-15']`) before it's paired with original text and
-handed to classification.
+One environment detail to flag directly: from a plain Python process, the MCP path runs and is
+confirmed (`tool source: mcp`). Inside the Jupyter kernel used to execute
+`part2_tools_reasoning.ipynb`, the same connection fails with `UnsupportedOperation('fileno')`,
+because Jupyter replaces stdin/stdout with objects that don't expose the file descriptors the
+stdio transport needs. The fallback runs instead, automatically, with the same result. Both
+paths are exercised and verified separately. This is the fallback doing its job, not a failure
+being hidden.
 
-### Verified results
+### Results
 
-| Original text | Normalized date | Status |
+| Text | Normalized | Status |
 |---|---|---|
-| "Distributed on Budget Day: 16 February 2024" | 2024-02-16 | **Upcoming** |
-| "Estate Duty does not apply to a person who dies after 15 February 2008." | 2008-02-15 | **Expired** |
+| "Distributed on Budget Day: 16 February 2024" | 2024-02-16 | Upcoming |
+| "Estate Duty does not apply to a person who dies after 15 February 2008." | 2008-02-15 | Expired |
 
-The first row matches the assignment's own sample output exactly. Both were confirmed on real
-`claude-haiku-4-5-20251001`, run twice to confirm determinism (temperature=0).
+The first row matches the task's own sample output exactly. Both confirmed on real Haiku, run
+twice to check for determinism (temperature 0).
 
-### Assumption
+### Assumptions
 
-The assignment's Part 2 task description says "normalize submission dates extracted **in Part
-1**," but Part 1's task list has no date fields at all — the two dates to extract (page 1,
-page 36) are only named here in Part 2, as if for the first time. Treated as a continuation
-that extracts these two dates directly (using the same LLM-extraction pattern as Part 1),
-rather than assuming Part 1 already produced them.
+The task description says to normalize "submission dates extracted in Part 1," but Part 1 has
+no date fields at all. The two dates named here appear for the first time in Part 2, and are treated
+as a continuation that extracts these two dates directly, using the same pattern built for
+Part 1, rather than assuming Part 1 already produced them.
 
-The estate-duty date (`2008-02-15`) is a policy-abolition cutoff, not an event/submission
-date — genuinely ambiguous whether it should read as "Expired" (literal: the date has passed)
-or "Ongoing" (the policy state it describes is still in effect today). We chose **Expired**,
-the more literal reading of the field name.
+The estate duty date is a policy cutoff, not a submission date. Against the reference date, a
+literal reading says Expired (the date has passed); an alternative reading says Ongoing (the
+policy state it describes is still in effect). Expired was used, as the more literal reading of
+the field.
 
-### Bugs found and fixed during development
+### Bugs found along the way
 
-1. **Classification used the wrong "today"**: the classification step initially returned
-   `2024-02-16` as **Expired**, contradicting both simple date arithmetic (2024-02-16 is after
-   the reference date 2024-01-01) and the assignment's own sample output, which explicitly
-   labels this exact date "Upcoming." The model had substituted its own knowledge of the real
-   current date instead of strictly using the given reference date as "today" for the exercise.
-   Fixed by rewriting the classification system prompt to explicitly forbid using real-world
-   date knowledge, spell out the comparison rule against the reference date, and include a
-   worked example using this exact date — verified correct across two repeated runs afterward.
-2. **A stricter postmortem, re-reading the literal assignment text rather than just checking
-   output correctness, found the first working version of Part 2 was incomplete**: the
-   normalization step called the tool directly from Python glue code between two LLM calls
-   (no genuine function calling was demonstrated), and the assignment's literal Step-1
-   deliverable ("a list of these normalized dates") was never surfaced as its own output.
-   Both fixed as described above (real `.bind_tools()` tool calling routed through MCP as
-   primary, and an explicit printed list before classification runs).
-3. **The `mcp` package version pin**: installing `langchain-mcp-adapters` (needed to bridge
-   the MCP server into a bindable LangChain tool) silently downgraded `mcp` from an unpinned
-   `2.2.0` to `1.30.0`, breaking the v2 `MCPServer` API this project had briefly switched to.
-   Root-caused via `langchain-mcp-adapters`' own package metadata (`Requires-Dist:
-   mcp<2.0.0,>=1.24.0`) rather than guessed at; reverted `tools/datetime_mcp.py` to the v1
-   `FastMCP` API and pinned `mcp<2.0.0,>=1.24.0` explicitly in `requirements.txt`.
+1. The classification step first returned `2024-02-16` as Expired, which contradicts both plain
+   date arithmetic and the task's own sample output, which labels this exact date Upcoming. The
+   model had substituted its own sense of the current date instead of treating the reference
+   date as "today" for this exercise. Fixed by rewriting the system prompt to rule that out
+   explicitly, spell out the comparison, and include this date as a worked example.
+2. A closer read of the assignment text turned up two things the first working version had
+   missed: no genuine function calling (the tool was called from Python glue code between two
+   LLM calls, not by the model itself), and the literal Step 1 deliverable, "a list of these
+   normalized dates," was never printed as its own output. Both fixed as described above.
+3. Installing `langchain-mcp-adapters` silently downgraded `mcp` from an unpinned 2.2.0 to
+   1.30.0, breaking the v2 API `tools/datetime_mcp.py` had briefly switched to. Found by
+   comparing the installed version before and after, not guessed at. Reverted to the v1
+   `FastMCP` API and pinned the version constraint in `requirements.txt`.
+4. The printed final output was `{"dates": [...]}`, wrapped in an object because
+   structured-output APIs require an object root schema. The task's own sample output is a bare
+   array. `to_sample_format()` unwraps it for display only; the schema itself is unchanged.
 
-### Output format matched to the literal sample, not the internal schema
+### One branch tested synthetically
 
-A re-postmortem (re-reading the literal assignment text once more against the *current* code,
-per this project's working agreement) found the printed final output was `{"dates": [...]}`, an
-object wrapper — but the assignment's own sample output is a **bare array**. The wrapper exists
-for a real reason (structured-output/tool-calling APIs require an object root schema, `dates`
-wraps `list[ClassifiedDate]` to satisfy that), but the *presented* output shouldn't leak that
-internal detail. Added `to_sample_format()` to unwrap for display only — the printed/notebook
-output now matches the literal sample shape exactly, without changing the validated schema.
-
-### Untested branch, addressed with a labeled synthetic check
-
-Both real document-derived dates are point-in-time, so neither exercises the third
-classification state ("Ongoing" — a period spanning the reference date). Rather than leave this
-branch unverified, `part2_tools_reasoning.ipynb` includes one clearly-labeled **synthetic**
-test case (a constructed period explicitly marked `[SYNTHETIC, not document-derived]`) that
-does span the reference date — confirmed the model correctly classifies it "Ongoing." This is
-never conflated with the two graded document-derived answers above.
+Both real dates are single points in time, so neither exercises the third classification state,
+Ongoing, which describes a period spanning the reference date. `part2_tools_reasoning.ipynb`
+includes one clearly labeled synthetic case, a constructed period that does span the reference
+date, to confirm the branch works. It's marked `[SYNTHETIC, not document-derived]` and isn't
+part of the graded output above.
 
 ## Part 3 — Multi-Agent Supervisor
 
 ### Architecture
 
-`agents.py` defines two `create_react_agent` (LangGraph prebuilt) agents:
-- **Revenue Agent** (`name="revenue_agent"`): single no-argument tool `revenue_context()`
-  returning pages 5-6 (Operating Revenue narrative), 9 (Chart 1.1 breakdown), 16 (Table 2.1
-  FY2024 figures).
-- **Expenditure Agent** (`name="expenditure_agent"`): single no-argument tool
-  `expenditure_context()` returning pages 14 (Total Expenditure), 17 (Chart 2.1 by ministry),
-  **18** (Special Transfers / Fund top-up narrative — the Future Energy Fund's stated purpose),
-  20 (Table 2.4).
+Two agents, built with `create_react_agent`:
 
-`part3_supervisor.py` wires both under `langgraph_supervisor.create_supervisor(agents=[...],
-model=..., prompt=..., output_mode="full_history")`. **`output_mode="full_history"` is a
-deliberate, non-default choice** — the default `"last_message"` would only retain each
-sub-agent's final one-line answer, losing the tool-call detail needed for a genuinely "clear
-trace of the supervisor's decision-making process." `create_supervisor()` returns an uncompiled
-`StateGraph`; `.compile()` is called before use.
+- **Revenue Agent**: one tool, `revenue_context()`, returning pages 5-6, 9, and 16.
+- **Expenditure Agent**: one tool, `expenditure_context()`, returning pages 14, 17, 18, and 20.
+  Page 18 matters specifically: it's the narrative that explains why the Future Energy Fund
+  exists, not just the table row that gives its dollar amount.
 
-**Model tiering**: both sub-agents run on Haiku (well-scoped extraction/analysis, same tier as
-Parts 1-2); the supervisor's routing and final synthesis runs on Sonnet — the higher-value
-reasoning step, and the part actually graded on "decision-making." This refines an earlier,
-coarser plan (stated before Part 1 was built) of "Sonnet for all of Part 3" into a more
-cost-effective split once the actual sub-agent tasks turned out to be straightforward extraction
-work well within Haiku's capability, reserving the stronger model for where it's actually
-graded on.
+`part3_supervisor.py` wires both agents under `create_supervisor(agents=[...], model=...,
+prompt=..., output_mode="full_history")`. `output_mode="full_history"` is not the default; the
+default, `"last_message"`, would only keep each agent's final one-line answer and lose the tool
+calls that make the trace worth reading. `create_supervisor()` returns an uncompiled graph;
+`.compile()` is called before use.
+
+Both sub-agents run on Haiku. The supervisor's routing and final synthesis run on Sonnet, since
+that step is where the actual decision-making happens, and it's what this part is graded on.
 
 ### Assumptions
 
-1. **Tool design — proportionality, not under-engineering**: each agent's tool returns fixed,
-   pre-scoped page text rather than performing embedding-based retrieval over the full
-   37-page document. The source document has a known, fixed page-to-topic mapping (established
-   in Part 1), and this part is graded on the supervisor's *routing and synthesis* behavior, not
-   retrieval sophistication — building RAG infrastructure here would be disproportionate to what
-   the assignment is actually testing.
-2. **Selective routing, not reflexive dual-agent calls**: the supervisor is explicitly prompted
-   to delegate only to the agent(s) actually relevant to each query, not both by default. This
-   is verified behaviorally, not just claimed — see Verified Results below.
-3. **Page-to-agent scoping is an interpretive judgment call**, not something the assignment
-   specifies: nothing in the task says exactly which pages of the 37-page source belong to
-   "revenue" vs. "expenditure." Assigned based on each page's dominant topic (Operating Revenue
-   narrative/tables → Revenue Agent; Total Expenditure, fund top-ups, Special Transfers →
-   Expenditure Agent) — see Architecture above for the exact page list per agent. Table 2.1
-   (page 16) and Table 2.4 (page 20) both contain the Future Energy Fund as a line item because
-   the source document itself nests expenditure figures inside a broader budget-summary table;
-   this created the accidental-overlap finding below.
-4. **"Key government revenue streams" (the query's own phrasing) is open-ended** — no fixed
-   count or threshold is specified for what counts as "key." Resolved by having Revenue Agent
-   report all revenue line items visible in its context (the full tax breakdown from Table 2.1),
-   rather than an arbitrarily truncated top-N list — the query's own answer (see Q1 below) lists
-   all ten-plus items rather than picking a subjective cutoff.
+1. **Tool design.** Each agent's tool returns a fixed, pre-scoped block of page text rather than
+   searching the full document with an embedding index. The source is 37 pages with a page
+   mapping already established in Part 1, and this part is graded on how the supervisor routes
+   and synthesizes, not on retrieval sophistication. Building a retrieval layer here would be
+   solving a problem the task doesn't actually pose.
+2. **Selective routing.** The supervisor is prompted to delegate only to the agent or agents an
+   individual query actually needs, not both by default. That's a design choice, checked
+   behaviorally below rather than just asserted.
+3. **Which pages belong to which agent** is an interpretive call the task doesn't make for you.
+   Pages were assigned by their dominant topic: revenue narrative and tables to Revenue Agent,
+   expenditure and fund top-ups to Expenditure Agent. Table 2.1 (page 16) and Table 2.4 (page
+   20) both list the Future Energy Fund as a line item, since the source document nests
+   expenditure figures inside a broader budget summary table. That overlap produced the finding
+   below.
+4. **"Key government revenue streams"** has no fixed count or cutoff in the query itself.
+   Revenue Agent reports every line item visible in its context rather than picking an arbitrary
+   top-N.
 
-### Verified results — routing pattern across 4 demo queries
+### Results
 
-Trace-verified (from the actual message/actor structure, not inferred from answer plausibility):
+Trace-verified: read from the actual sequence of agents invoked, not inferred from whether the
+final answer sounded right.
 
-| Query | Agents invoked (from trace) |
+| Query | Agents invoked |
 |---|---|
-| Q1 — assignment's exact query (dual-agent) | `expenditure_agent`, `revenue_agent` |
-| Q2 — revenue-only ("largest source of revenue?") | `revenue_agent` only |
-| Q3 — expenditure-only ("GST Voucher Fund top-up?") | `expenditure_agent` only |
-| Q4 — second dual-agent query, different phrasing | `expenditure_agent`, `revenue_agent` |
+| The task's exact query (dual-agent) | Revenue Agent, Expenditure Agent |
+| Revenue-only ("largest single source of revenue?") | Revenue Agent only |
+| Expenditure-only ("GST Voucher Fund top-up?") | Expenditure Agent only |
+| A second dual-agent query, different phrasing | Revenue Agent, Expenditure Agent |
 
-Confirms the supervisor genuinely routes based on query content (Q2/Q3 prove it doesn't call
-both agents reflexively) and genuinely collaborates when needed (Q1/Q4 confirm dual-agent
-routing isn't a one-off fluke). Q1's final answer states the Future Energy Fund as **$5.0
-billion**, sourced to "invest in critical infrastructure for the energy transition" (verbatim
-from the source document), and names revenue streams that match Part 1's verified 12-item tax
-list exactly — see `part3_multiagent.ipynb`'s verification cell for the automated checks.
+The revenue-only and expenditure-only rows show the supervisor isn't reflexively calling both
+agents on every query. The two dual-agent rows show collaboration isn't a one-off. The task's
+exact query gets the Future Energy Fund figure right: $5.0 billion, sourced to "invest in
+critical infrastructure for the energy transition," the actual wording from page 18. It also
+names revenue streams that match Part 1's verified 12-item list, with nothing invented.
 
-### A real routing-quality finding from development (not glossed over)
+### A finding worth keeping in
 
-Q4 was originally phrased as "Compare total government revenue to the Future Energy Fund
-spending commitment." Run against that phrasing, the supervisor answered using **only**
-`revenue_agent` — not a bug, but a real, honest consequence of context design: Revenue Agent's
-page 16 (Table 2.1) happens to also list the Future Energy Fund as a line item (it's a top-up
-table nested within the FY2024 budget table), so the supervisor judged the second agent
-unnecessary for the number. The answer was still numerically correct, but it **hedged the fund's
-purpose** ("likely supporting energy transition... initiatives") instead of citing the actual
-verbatim reason — that qualitative fact lives only in Expenditure Agent's exclusive context
-(page 18), which never got invoked. Rewritten to explicitly ask for content only Expenditure
-Agent has ("what specific purpose... according to the budget document") — confirmed both agents
-now invoked, and the answer quotes the source verbatim rather than hedging. Kept in this README
-because it's a genuine, instructive finding about agent context design (accidental page overlap
-between agents can mask under-collaboration behind a still-plausible answer), not something to
-hide because the first version "mostly worked."
+The second dual-agent query was originally phrased as a comparison between total revenue and
+the Future Energy Fund's spending commitment. Run that way, the supervisor answered using only
+Revenue Agent. This wasn't a routing bug. Revenue Agent's page 16 happens to list the fund's dollar
+figure too, so the supervisor judged the second agent unnecessary. The answer was numerically
+correct but hedged the fund's purpose ("likely supporting energy transition... initiatives")
+instead of citing the actual reason, which lives only in Expenditure Agent's page-18 context
+and was never reached. The query was rewritten to ask for something only Expenditure Agent has,
+which brought both agents back into play and replaced the hedge with the verbatim source quote.
+Left in here because it says something real about agent design: overlapping context between
+agents can produce an answer that still looks fine while quietly skipping collaboration.
 
-### Bugs found and fixed during development
+### Bugs found along the way
 
-1. **`temperature` deprecated for `claude-sonnet-5`**: `llm_config.get_llm()` always passed
-   `temperature=0` by default; Haiku 4.5 accepts this fine, but Sonnet 5 rejects it entirely
-   with a 400 error ("`temperature` is deprecated for this model"). Fixed by making
-   `temperature` an optional parameter (`None` omits it from the API call) and passing
-   `temperature=None` explicitly for the supervisor's Sonnet call.
-2. **Trace duplication from `output_mode="full_history"`**: each streamed step re-emits the
-   *entire* accumulated message history so far, not just new deltas — naively appending every
-   step's messages produced a 50+ entry trace full of duplicates. Fixed by only reading the
-   **last** stream step's message list (already contains the complete, ordered history) rather
-   than accumulating across steps.
-3. **Final answer content sometimes a list, not a string**: when the model's final response
-   includes an extended-thinking block alongside its text, `message.content` comes back as a
-   list of content blocks instead of a plain string — nondeterministic (depends on whether
-   thinking was triggered for that particular run), so earlier test runs "got lucky" with plain
-   strings before this surfaced. Fixed with `_extract_text()`, which handles both shapes.
+1. The Sonnet model rejects the `temperature` parameter outright. Haiku accepts it, Sonnet
+   returns a 400 with "temperature is deprecated for this model." `llm_config.get_llm()` made
+   `temperature` optional; passing `None` now omits it from the request entirely.
+2. `output_mode="full_history"` re-sends the entire accumulated message history on every
+   streamed step, not just the new part. Appending each step's messages produced a trace with
+   over fifty entries, most of them duplicates. Technically complete, not remotely clear. Fixed
+   by reading only the final stream step, which already holds the full ordered history.
+3. The final answer's content is sometimes a list of content blocks instead of a plain string,
+   when the model's response includes an extended-thinking block. This is not consistent run to
+   run. Earlier tests happened to get plain strings before a later run exposed it with an
+   `AttributeError`. `_extract_text()` now handles both shapes.
+
+## Known limitations and open items
+
+A consolidated list, pulled together from the sections above and from decisions made along the
+way that a reader shouldn't have to hunt for:
+
+- No embedding-based retrieval anywhere in the pipeline. Every part uses fixed, pre-scoped page
+  text. Given a 37-page document with a known page-to-topic mapping that was a reasonable scope
+  decision, but it means none of this would scale to a much longer or less-structured source
+  without redesign.
+- The Part 1 fix for `latest_actual_fiscal_position_billion` includes a hardcoded pointer to
+  page 8. It works for this document and would need to be redesigned for a different one.
+- The Part 2 "Ongoing" classification branch is verified with a synthetic example, not real
+  document data. There's no naturally occurring date range in the source that spans the
+  reference date.
+- The MCP tool-calling path in Part 2 doesn't run inside a Jupyter kernel specifically, due to a
+  `fileno()` limitation in how Jupyter replaces stdio streams. It falls back automatically and
+  correctly, and both paths are verified separately, but the notebook run and the plain-script
+  run don't take the identical code path.
+- Two judgment calls in Part 1 and Part 2, the Operating Revenue tax list scope and the estate
+  duty date's Expired/Ongoing classification, don't have a single correct answer. Both are
+  documented above with the reasoning behind the choice made.
+- Page-to-agent scoping in Part 3 is an interpretive choice, not something the task specifies.
+- This README and the three notebooks are the record of what was built and verified. The task's
+  own step of emailing the repository link to the review contacts is not part of this repository
+  and was not done as part of building it.
