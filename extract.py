@@ -2,7 +2,8 @@
 
 Deliberately feeds page 16 (not the literally-cited page 5) for the CIT/YoY
 fields — page 5 is FY2023 narrative; page 16's Table 2.1 is the actual
-Estimated FY2024 vs Revised FY2023 comparison. See PLAN.md section 0.
+Estimated FY2024 vs Revised FY2023 comparison. See README.md's
+"Interpretation calls" table, row 2.
 """
 from langchain_core.prompts import ChatPromptTemplate
 from parser import get_prose_text, get_table_text
@@ -22,8 +23,12 @@ asking about 2024. Figures in parentheses, e.g. (1.2), are negative: -1.2.
 Note: both page 8 and page 16 contain a row named 'OVERALL FISCAL POSITION' \
 with different values in each — these are two different tables comparing \
 different fiscal year pairs. For the 'latest_actual_fiscal_position_billion' \
-field specifically, use PAGE 8's table only, and within page 8, the 'Actual' \
-column (which corresponds to FY2022). Ignore page 16 entirely for this field."""
+field specifically, use PAGE 8's table only, and within page 8, the 'Revised \
+FY2023' column — the most recent fiscal year backed by real collected data, \
+not a forecast. This is NOT the 'Actual' column (that is FY2022, a year \
+older) and NOT 'Estimated FY2023' (the original forecast, superseded by the \
+revision). Ignore page 16 entirely for this field, since its only FY2024 \
+figure is still an estimate."""
 
 
 def build_context() -> str:
@@ -36,8 +41,10 @@ def build_context() -> str:
     return "\n\n".join(parts)
 
 
-def run_extraction(model: str | None = None, max_tokens: int = 3000) -> RevenueExtraction:
-    llm = get_llm(model=model, max_tokens=max_tokens)
+def run_extraction(
+    model: str | None = None, max_tokens: int = 3000, temperature: float | None = 0
+) -> RevenueExtraction:
+    llm = get_llm(model=model, max_tokens=max_tokens, temperature=temperature)
     structured_llm = llm.with_structured_output(RevenueExtraction)
     prompt = ChatPromptTemplate.from_messages([
         ("system", SYSTEM_PROMPT),

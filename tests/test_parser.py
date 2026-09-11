@@ -40,7 +40,10 @@ def test_page_8_artifact_is_stripped():
 
 def test_page_8_fiscal_position_present():
     text = get_table_text(PDF, 8)
+    # both candidate readings of "latest actual fiscal position" must be present:
+    # Actual FY2022 (1.72) and Revised FY2023 (3.57), see README's interpretation table
     assert "1.72" in text
+    assert "3.57" in text
 
 
 def test_page_16_fy2024_cit_present():

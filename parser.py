@@ -1,6 +1,7 @@
 """PDF parsing utilities.
 
-Two extraction modes, chosen deliberately per page type (see PLAN.md section 0):
+Two extraction modes, chosen deliberately per page type (see README.md, Part 1
+"Parsing approach"):
 - get_prose_text: PyMuPDF, for narrative pages.
 - get_table_text: pdfplumber table-extraction, for pages 8/16/20 — avoids the
   text-layer rendering artifact confirmed on page 8 (a stray garbage line

@@ -20,7 +20,7 @@ def test_revenue_extraction_valid():
         corp_income_tax_yoy_pct=-1.2,
         total_topups_2024_billion=20.352,
         operating_revenue_taxes=["Corporate Income Tax", "Personal Income Tax"],
-        latest_actual_fiscal_position_billion=1.72,
+        latest_actual_fiscal_position_billion=-3.57,
     )
     assert r.corp_income_tax_2024_billion == 28.03
     assert len(r.operating_revenue_taxes) == 2

@@ -17,18 +17,20 @@ class RevenueExtraction(BaseModel):
         "Estimated FY2024, in $ billion (source table is in $ million — convert)."
     )
     operating_revenue_taxes: list[str] = Field(
-        description="List of all tax/revenue line-item names mentioned in the "
-        "'Operating Revenue' section (narrative and/or table), e.g. 'Corporate "
-        "Income Tax', 'Personal Income Tax', etc. Names only, no figures."
+        description="List of TAX names only, mentioned in the 'Operating Revenue' "
+        "section (narrative and/or table), e.g. 'Corporate Income Tax', 'Personal "
+        "Income Tax', etc. The table version of this section also includes 'Fees "
+        "and Charges' and 'Others' under the same header — EXCLUDE both, neither "
+        "is a tax. Names only, no figures."
     )
     latest_actual_fiscal_position_billion: float = Field(
-        description="The 'OVERALL FISCAL POSITION' row's value in the column "
-        "literally labeled 'Actual'. IMPORTANT: 'Actual' is a specific column "
-        "header, distinct from 'Estimated' and 'Revised' columns. Do NOT pick "
-        "an Estimated or Revised figure just because it belongs to a more "
-        "recent fiscal year — a newer year's Estimated/Revised figure is NOT "
-        "'Actual' data. Find the column header spelled 'Actual' specifically, "
-        "even if it corresponds to an older fiscal year than other columns shown."
+        description="The 'OVERALL FISCAL POSITION' row's value in page 8's "
+        "'Revised FY2023' column — the most recent fiscal year with real, "
+        "collected data behind it rather than a forward projection. Use "
+        "'Revised FY2023' specifically, NOT 'Actual FY2022' (a year older) "
+        "and NOT 'Estimated FY2023' (the original forecast, since revised). "
+        "Page 16's 'Estimated FY2024' does not qualify either, since it is "
+        "still a forecast, not realized data."
     )
 
 
