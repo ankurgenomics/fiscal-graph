@@ -12,12 +12,12 @@
         "actor": "supervisor",
         "content": [
           {
-            "signature": "EsUCCpABCBEYAipAvHeC62NG/hVCq6VPJ8kyamwZUiKKtVg4AsMl+9B0WhF3z9ByI9ZsUjcUnyYYJrfexQY0qG842FD51+iFORHz8DIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRhZTkxZjkwYS0zOGFmLTQ2YTktOTdkNy0wNjg1YThlMDllZTKoAf+OhtUGEgytofaAdDM/l4+Xy7UaDN1fueAaWoafqJhOViIw9oQN7OA1KvXlcQcuT/JSMLQsf7+XW/bJTvnU87FdY8sQMaAaq01waZf+3tr6PBqmKmLPWUbuEhK7lleENuxDWejmJnMOlGqPseQqsI3JZQlAQNhWF9bpUy1Xaa22jTnTCDY39Px0suW1YXKaFy7ZT/eLmlTAnBLXYJgfzBO4/GHmfwIOmnD3R7PTcp/sUmPcyNMgNRgB",
+            "signature": "Et0CCpABCBEYAipA4XpmensSSHZGs4VLWAx4oq7gOynBSMXncSp6IGSpZ7LxX6nuBH5zUOvF9BqQ/FN/2isR1g8NYfPPtDiEZeHNUzIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRhZTkxZjkwYS0zOGFmLTQ2YTktOTdkNy0wNjg1YThlMDllZTKoAYO5kNUGEgwjC+pN1VnF+k83gYEaDL8US56ZgiAzQfdi7CIw0NDMSm9/e3fC254BRy5huNygYUDysmCbgngfX0+wyioPbWjTrH90hljjLVCQYZGsKnq6tK2ucBJZI+3S0ZiL1trBcUAt9eafpRmRMEz0eSbnLnhOOOtbz2kF4q8C3Ar4FSfdp04qec+AXM0GFj1/LdfyKeWhPSx35dCA/jckdsJVDB8aDVIaau3iCe+jEBPfhx2qHPGX5z+8U62xfOAX0i/YgROTlTZ6rN7cEBgB",
             "thinking": "",
             "type": "thinking"
           },
           {
-            "id": "toolu_01F6foxmSz1D7AMqh2gbNwAk",
+            "id": "toolu_01Q6THX17467HrZZTQf8SsaS",
             "caller": {
               "type": "direct"
             },
@@ -38,11 +38,12 @@
         "actor": "revenue_agent",
         "content": [
           {
-            "text": "I'll help you with information about government revenue streams. Let me retrieve the relevant context.",
-            "type": "text"
+            "signature": "EqMCCpABCBEYAipAqUraHBda6qDtYL6d5nIHVyshm1ya9Rz0JSIEgrtIq+Y+FU+13UZ9aUG8zrmZHQX1N7W8uL8Xay2WS6hs91rShzIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRhZTkxZjkwYS0zOGFmLTQ2YTktOTdkNy0wNjg1YThlMDllZTKoAYS5kNUGEgxqytYlqaS0GwPfe9caDGNoT6O0dgbIHcylpSIwGxbMyyZsi0bRnAX8lsiWok3mfECm6ng65kAdVcUdtvLWcyZ3a92+qACt1Y8k8alXKkByLm8Fpqz8ZFfhFgSv6UFxZOpRXT3iSiklHmF30HUjtEGEBF/xZdg/q/tzdtipG83UrWBu1kOyFh8PBtkCHmAnGAE=",
+            "thinking": "",
+            "type": "thinking"
           },
           {
-            "id": "toolu_01E6VkdR8w7KVCgMqRynMYhn",
+            "id": "toolu_01SJf9C9goupNZAM4bKg1pE6",
             "caller": {
               "type": "direct"
             },
@@ -61,7 +62,7 @@
       {
         "type": "AIMessage",
         "actor": "revenue_agent",
-        "content": "Based on the government revenue context, here are the key findings:\n\n## Key Government Revenue Streams (FY2024)\n\nThe government's **Operating Revenue is estimated at $108.64 billion** for FY2024, with the following major components:\n\n1. **Corporate Income Tax** - $28.03 billion (25.8% of operating revenue)\n2. **Personal Income Tax** - $18.07 billion (16.6%)\n3. **Goods and Services Tax** - $19.39 billion (17.8%)\n4. **Assets Taxes** - $6.67 billion (6.1%)\n5. **Stamp Duty** - $5.73 billion (5.3%)\n6. **Other Taxes** - $8.86 billion (8.2%) - includes Foreign Worker Levy, Water Conservation Tax, Land Betterment Charge, and Annual Tonnage Tax\n7. **Vehicle Quota Premiums** - $4.72 billion (4.3%)\n8. **Betting Taxes** - $3.26 billion (3.0%)\n9. **Motor Vehicle Taxes** - $2.84 billion (2.6%)\n10. **Customs, Excise and Carbon Taxes** - $3.56 billion (3.3%)\n\n## Future Energy Fund Support\n\nAccording to Table 2.1, the **Future Energy Fund will receive a $5.00 billion top-up in FY2024**. This funding comes from the government's overall budget allocation for endowment and trust funds, which is supported by:\n\n- **Operating Revenue**: $108.64 billion\n- **Net Investment Returns Contribution (NIRC)**: $23.50 billion\n\nThe Future Energy Fund is one of several strategic funds receiving top-ups, alongside the GST Voucher Fund ($6.00 billion) and Financial Sector Development Fund ($2.00 billion)."
+        "content": "## Key Government Revenue Streams\n\nBased on the FY2024 Budget (Table 2.1), total **Operating Revenue** is estimated at **$108.64 billion**, a 4.2% increase ($4.34 billion) over Revised FY2023 ($104.30 billion). The major revenue streams, by size, are:\n\n| Revenue Stream | FY2024 Estimate ($B) | Share/Notes |\n|---|---|---|\n| **Corporate Income Tax** | 28.03 | Largest single source (27.2% of FY2023 revenue); slight dip of 1.2% vs FY2023 |\n| **Goods and Services Tax (GST)** | 19.39 | Up 18.5% ($3.03B) \u2014 largest % growth driver |\n| **Personal Income Tax** | 18.07 | Up 3.1% |\n| **Other Taxes** (Foreign Worker Levy, Water Conservation Tax, Land Betterment Charge, Annual Tonnage Tax) | 8.86 | Up 0.9% |\n| **Assets Taxes** | 6.67 | Up 12.8% due to higher Annual Value adjustments |\n| **Stamp Duty** | 5.73 | Down 3.2% |\n| **Vehicle Quota Premiums** | 4.72 | Up 1.3% |\n| **Fees and Charges** (excl. Vehicle Quota Premiums) | 4.25 | Up 4.4% |\n| **Customs, Excise and Carbon Taxes** | 3.56 | Up 4.9% |\n| **Betting Taxes** | 3.26 | Up 3.4% |\n| **Motor Vehicle Taxes** | 2.84 | Up 9.3% |\n| **Withholding Tax** | 2.31 | Up 5.5% |\n| **Statutory Boards' Contributions** | 0.31 | Down 58.8% |\n| **Others** | 0.64 | Up 4.3% |\n\nIn addition to Operating Revenue, the government's **Total Revenue** also includes **Net Investment Returns Contribution (NIRC)**, estimated at **$23.50 billion** for FY2024 (up 2.6% from $22.92B), which typically makes up around 18% of Total Revenue (based on the FY2023 breakdown).\n\n## Future Energy Fund Support\n\nThe **Future Energy Fund** is supported through a **Top-up of $5.00 billion** in FY2024 (categorized under \"Top-ups to Endowment and Trust Funds,\" which falls under Special Transfers in the fiscal framework). Notably, there was **no allocation to this fund in Revised FY2023** \u2014 it is a new top-up introduced in the FY2024 Budget.\n\nThis fund sits alongside other major FY2024 endowment/trust fund top-ups, including:\n- **GST Voucher Fund**: $6.00 billion\n- **National Productivity Fund**: $2.00 billion\n- **Financial Sector Development Fund**: $2.00 billion\n- **Top-up to Endowment Funds** (Edusave, Medical Endowment, ElderCare, Community Care Endowment): $2.00 billion\n\nOverall, **Top-ups to Endowment and Trust Funds** for FY2024 total **$20.35 billion**, funded as part of the government's broader **Special Transfers** ($23.30 billion), which are drawn from the fiscal surplus/revenue position rather than being tied to a specific new tax. The Future Energy Fund top-up is thus financed out of the government's overall Basic Surplus/Deficit position, which for FY2024 stands at a **Basic Deficit of $6.06 billion** before this and other top-ups are accounted for."
       },
       {
         "type": "AIMessage",
@@ -78,7 +79,7 @@
         "actor": "supervisor",
         "content": [
           {
-            "id": "toolu_01U4q2icdgZNMMbiUdVp7Lfo",
+            "id": "toolu_016BrzQwTAJLPmiKcx6Sqo2m",
             "caller": {
               "type": "direct"
             },
@@ -99,11 +100,7 @@
         "actor": "expenditure_agent",
         "content": [
           {
-            "text": "Now let me get the expenditure context to provide more details on the Future Energy Fund:",
-            "type": "text"
-          },
-          {
-            "id": "toolu_0117HpczgWdT2JFoKYXLYhzi",
+            "id": "toolu_01XnVzE4hkTkc18rXfxuU8cz",
             "caller": {
               "type": "direct"
             },
@@ -122,7 +119,17 @@
       {
         "type": "AIMessage",
         "actor": "expenditure_agent",
-        "content": "Perfect! Now I have complete information. Here's the comprehensive answer:\n\n## Summary: Government Revenue Streams and Future Energy Fund Support\n\n### Key Government Revenue Streams (FY2024: $108.64 billion)\n\nThe government's operating revenue is diversified across multiple sources:\n\n**Major Tax Revenue Sources:**\n- **Corporate Income Tax**: $28.03 billion (25.8%)\n- **Goods and Services Tax**: $19.39 billion (17.8%)\n- **Personal Income Tax**: $18.07 billion (16.6%)\n- **Other Taxes**: $8.86 billion (8.2%)\n- **Assets Taxes**: $6.67 billion (6.1%)\n- **Stamp Duty**: $5.73 billion (5.3%)\n- **Vehicle Quota Premiums**: $4.72 billion (4.3%)\n- **Betting Taxes**: $3.26 billion (3.0%)\n- **Customs, Excise and Carbon Taxes**: $3.56 billion (3.3%)\n- **Motor Vehicle Taxes**: $2.84 billion (2.6%)\n\n**Additional Revenue:**\n- **Net Investment Returns Contribution (NIRC)**: $23.50 billion (supplementing operating revenue)\n\n---\n\n### Future Energy Fund Support\n\n**Budget Allocation:** The government will establish the **Future Energy Fund with an initial injection of $5.0 billion** in FY2024.\n\n**Purpose:** According to the expenditure context, the Future Energy Fund is established \"to invest in critical infrastructure for the energy transition.\"\n\n**Funding Source:** This $5.0 billion top-up comes from the government's overall budget allocation for endowment and trust funds, which is supported by the combined operating revenue ($108.64 billion) and net investment returns contribution ($23.50 billion).\n\nThe Future Energy Fund is one of 10 strategic funds receiving top-ups in FY2024, with total fund top-ups amounting to **$20.352 billion** (as shown in Table 2.4)."
+        "content": [
+          {
+            "signature": "EpADCpABCBEYAipAjC6L6tfyJitUTgYHYw8mkfx2AQqgWit/aF0kZPpT7knRCtK3WpKP3xkPTU7gslqyZyJwfdvl2r9mvOPbEaZsujIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRhZTkxZjkwYS0zOGFmLTQ2YTktOTdkNy0wNjg1YThlMDllZTKoAZe5kNUGEgys8ZGF5Xc0cklk+KwaDDN/aEL3OJSQYtDWGyIwYGyE5wAlYNvGSbNFLhH3vCQN8/JpgdN3UvsaaJvGW+G0HqqLlTtKAnaOg8JiPe6nKqwBC1dbNCW/mLiwBke0v4QBXnLGOrFJkt8QJanWjH61PbTZl0qO3TvpFkH/j/EBPzaiLnBAsr3xb7CuXEiHvl3QEsvraqg27hM2tHsFxUfZbbjaT/GpXQ4vBNyQjFOIrZ7Od5x9J7rbII1hongkXhOWu4mfBN2ydhXRg1wxAEtRAppt0A6B7CQv5jWBUAUX9r4rGKqC0CeZ6K0w5NXeeKFNEYjXU9l0uK78VP6pFBgB",
+            "thinking": "",
+            "type": "thinking"
+          },
+          {
+            "text": "## Key Government Revenue Streams\n\nThe government's total **Operating Revenue** for FY2024 is estimated at **$108.64 billion**, up 4.2% ($4.34 billion) from Revised FY2023. The major contributors are:\n\n- **Corporate Income Tax**: $28.03 billion (largest single source, ~27% of revenue)\n- **Goods and Services Tax (GST)**: $19.39 billion (up 18.5%, largest driver of revenue growth)\n- **Personal Income Tax**: $18.07 billion\n- **Other Taxes** (Foreign Worker Levy, Water Conservation Tax, Land Betterment Charge, Annual Tonnage Tax): $8.86 billion\n- **Assets Taxes**: $6.67 billion\n- **Stamp Duty**: $5.73 billion\n- **Vehicle Quota Premiums**: $4.72 billion\n- **Fees and Charges**: $4.25 billion\n- **Customs, Excise and Carbon Taxes**: $3.56 billion\n- **Betting Taxes**: $3.26 billion\n- **Motor Vehicle Taxes**: $2.84 billion\n- **Withholding Tax**: $2.31 billion\n\nIn addition, **Net Investment Returns Contribution (NIRC)** \u2014 investment income from reserves \u2014 contributes a further **$23.50 billion**, forming part of Total Revenue alongside Operating Revenue.\n\n## Future Energy Fund Support\n\nThe **Future Energy Fund** is a **newly established fund in Budget 2024**, supported by an **initial injection of $5.0 billion** (part of the $20.4 billion in total Endowment and Trust Fund top-ups for FY2024, detailed in Table 2.4).\n\n**Purpose:** The fund is designed to **invest in critical infrastructure for Singapore's energy transition** \u2014 supporting the shift toward cleaner energy sources and related long-term infrastructure needs.\n\n**How it fits into the broader funding picture:**\n- It is one of several major fund top-ups in Budget 2024, alongside the GST Voucher Fund ($6.0B), Edusave Endowment Fund ($2.0B), Financial Sector Development Fund ($2.0B), National Productivity Fund ($2.0B), National Research Fund ($1.8B), Progressive Wage Credit Scheme Fund ($1.0B), Skills Development Fund ($500M), Public Transport Fund ($50M), and Legal Aid Fund ($2M).\n- These top-ups are financed as **Special Transfers** drawn from the government's overall fiscal resources (Operating Revenue and other income), rather than being tied to any single dedicated tax or levy.\n- This reflects the government's practice of using fund top-ups \u2014 backed by strong revenue collection (e.g., higher-than-expected Corporate Income Tax and GST in recent years) \u2014 to pre-fund long-term strategic priorities like the energy transition.",
+            "type": "text"
+          }
+        ]
       },
       {
         "type": "AIMessage",
@@ -137,10 +144,10 @@
       {
         "type": "AIMessage",
         "actor": "supervisor",
-        "content": "## Comprehensive Answer\n\n### Key Government Revenue Streams (FY2024)\n\nSingapore's Estimated FY2024 Operating Revenue totals **$108.64 billion**, drawn from a diversified mix of tax and non-tax sources:\n\n| Revenue Source | Amount ($B) | % of Total |\n|---|---|---|\n| Corporate Income Tax | 28.03 | 25.8% |\n| Goods and Services Tax | 19.39 | 17.8% |\n| Personal Income Tax | 18.07 | 16.6% |\n| Other Taxes (Foreign Worker Levy, Water Conservation Tax, Land Betterment Charge, Annual Tonnage Tax) | 8.86 | 8.2% |\n| Assets Taxes | 6.67 | 6.1% |\n| Stamp Duty | 5.73 | 5.3% |\n| Vehicle Quota Premiums | 4.72 | 4.3% |\n| Customs, Excise and Carbon Taxes | 3.56 | 3.3% |\n| Betting Taxes | 3.26 | 3.0% |\n| Motor Vehicle Taxes | 2.84 | 2.6% |\n\nAdditionally, the **Net Investment Returns Contribution (NIRC)** of $23.50 billion supplements Operating Revenue to fund total government spending, including special transfers.\n\n---\n\n### Future Energy Fund Support\n\nThe Government will **establish the Future Energy Fund with an initial injection of $5.0 billion** in Budget FY2024. Its stated purpose is **to invest in critical infrastructure for the energy transition**.\n\nThis allocation is part of a broader package of **$20.4 billion in Top-ups to Endowment and Trust Funds** for FY2024, which is financed by the government's overall fiscal resources \u2014 namely Operating Revenue and NIRC described above. Among the fund top-ups, the Future Energy Fund receives the **second-largest allocation**, just behind the GST Voucher Fund ($6.0 billion), and ahead of other funds like the Edusave Endowment Fund and Financial Sector Development Fund (each $2.0 billion).\n\n**In short:** The diversified tax revenue base (led by Corporate Income Tax, GST, and Personal Income Tax) combined with NIRC generates the fiscal capacity that allows the Government to commit $5.0 billion toward launching the Future Energy Fund, supporting Singapore's energy transition infrastructure needs."
+        "content": "## Summary\n\n**Key Government Revenue Streams (FY2024 Estimated Operating Revenue: $108.64 billion, +4.2% over Revised FY2023):**\n\n| Revenue Stream | FY2024 ($B) | Notes |\n|---|---|---|\n| Corporate Income Tax | 28.03 | Largest source (~27% of revenue) |\n| Goods and Services Tax | 19.39 | +18.5%, largest growth driver |\n| Personal Income Tax | 18.07 | +3.1% |\n| Other Taxes (Foreign Worker Levy, Water Conservation Tax, Land Betterment Charge, Annual Tonnage Tax) | 8.86 | +0.9% |\n| Assets Taxes | 6.67 | +12.8% |\n| Stamp Duty | 5.73 | -3.2% |\n| Vehicle Quota Premiums | 4.72 | +1.3% |\n| Fees and Charges | 4.25 | +4.4% |\n| Customs, Excise & Carbon Taxes | 3.56 | +4.9% |\n| Betting Taxes | 3.26 | +3.4% |\n| Motor Vehicle Taxes | 2.84 | +9.3% |\n| Withholding Tax | 2.31 | +5.5% |\n\nOn top of this, **Net Investment Returns Contribution (NIRC)** adds **$23.50 billion**, forming part of Total Revenue alongside Operating Revenue and Special Transfers considerations.\n\n**How the Future Energy Fund Will Be Supported:**\n\nThe **Future Energy Fund** is a **newly established fund in Budget 2024**, supported by an **initial injection of $5.0 billion**. This is part of the government's broader **$20.4 billion in Top-ups to Endowment and Trust Funds** for FY2024 (a category of Special Transfers).\n\n- **Purpose**: To invest in **critical infrastructure for Singapore's energy transition** \u2014 supporting the country's shift to cleaner energy sources.\n- **Funding mechanism**: Like other fund top-ups (GST Voucher Fund $6.0B, Edusave Endowment Fund $2.0B, Financial Sector Development Fund $2.0B, National Productivity Fund $2.0B, National Research Fund $1.8B, Progressive Wage Credit Scheme Fund $1.0B, Skills Development Fund $500M, Public Transport Fund $50M, and Legal Aid Fund $2M), it is **not tied to a specific dedicated tax**. Instead, it draws on the government's overall fiscal resources \u2014 funded by strong Operating Revenue collections (notably Corporate Income Tax and GST) and other income \u2014 as a lump-sum top-up to pre-fund this long-term strategic priority, rather than being financed through recurring annual budget allocations."
       }
     ],
-    "final_answer": "## Comprehensive Answer\n\n### Key Government Revenue Streams (FY2024)\n\nSingapore's Estimated FY2024 Operating Revenue totals **$108.64 billion**, drawn from a diversified mix of tax and non-tax sources:\n\n| Revenue Source | Amount ($B) | % of Total |\n|---|---|---|\n| Corporate Income Tax | 28.03 | 25.8% |\n| Goods and Services Tax | 19.39 | 17.8% |\n| Personal Income Tax | 18.07 | 16.6% |\n| Other Taxes (Foreign Worker Levy, Water Conservation Tax, Land Betterment Charge, Annual Tonnage Tax) | 8.86 | 8.2% |\n| Assets Taxes | 6.67 | 6.1% |\n| Stamp Duty | 5.73 | 5.3% |\n| Vehicle Quota Premiums | 4.72 | 4.3% |\n| Customs, Excise and Carbon Taxes | 3.56 | 3.3% |\n| Betting Taxes | 3.26 | 3.0% |\n| Motor Vehicle Taxes | 2.84 | 2.6% |\n\nAdditionally, the **Net Investment Returns Contribution (NIRC)** of $23.50 billion supplements Operating Revenue to fund total government spending, including special transfers.\n\n---\n\n### Future Energy Fund Support\n\nThe Government will **establish the Future Energy Fund with an initial injection of $5.0 billion** in Budget FY2024. Its stated purpose is **to invest in critical infrastructure for the energy transition**.\n\nThis allocation is part of a broader package of **$20.4 billion in Top-ups to Endowment and Trust Funds** for FY2024, which is financed by the government's overall fiscal resources \u2014 namely Operating Revenue and NIRC described above. Among the fund top-ups, the Future Energy Fund receives the **second-largest allocation**, just behind the GST Voucher Fund ($6.0 billion), and ahead of other funds like the Edusave Endowment Fund and Financial Sector Development Fund (each $2.0 billion).\n\n**In short:** The diversified tax revenue base (led by Corporate Income Tax, GST, and Personal Income Tax) combined with NIRC generates the fiscal capacity that allows the Government to commit $5.0 billion toward launching the Future Energy Fund, supporting Singapore's energy transition infrastructure needs."
+    "final_answer": "## Summary\n\n**Key Government Revenue Streams (FY2024 Estimated Operating Revenue: $108.64 billion, +4.2% over Revised FY2023):**\n\n| Revenue Stream | FY2024 ($B) | Notes |\n|---|---|---|\n| Corporate Income Tax | 28.03 | Largest source (~27% of revenue) |\n| Goods and Services Tax | 19.39 | +18.5%, largest growth driver |\n| Personal Income Tax | 18.07 | +3.1% |\n| Other Taxes (Foreign Worker Levy, Water Conservation Tax, Land Betterment Charge, Annual Tonnage Tax) | 8.86 | +0.9% |\n| Assets Taxes | 6.67 | +12.8% |\n| Stamp Duty | 5.73 | -3.2% |\n| Vehicle Quota Premiums | 4.72 | +1.3% |\n| Fees and Charges | 4.25 | +4.4% |\n| Customs, Excise & Carbon Taxes | 3.56 | +4.9% |\n| Betting Taxes | 3.26 | +3.4% |\n| Motor Vehicle Taxes | 2.84 | +9.3% |\n| Withholding Tax | 2.31 | +5.5% |\n\nOn top of this, **Net Investment Returns Contribution (NIRC)** adds **$23.50 billion**, forming part of Total Revenue alongside Operating Revenue and Special Transfers considerations.\n\n**How the Future Energy Fund Will Be Supported:**\n\nThe **Future Energy Fund** is a **newly established fund in Budget 2024**, supported by an **initial injection of $5.0 billion**. This is part of the government's broader **$20.4 billion in Top-ups to Endowment and Trust Funds** for FY2024 (a category of Special Transfers).\n\n- **Purpose**: To invest in **critical infrastructure for Singapore's energy transition** \u2014 supporting the country's shift to cleaner energy sources.\n- **Funding mechanism**: Like other fund top-ups (GST Voucher Fund $6.0B, Edusave Endowment Fund $2.0B, Financial Sector Development Fund $2.0B, National Productivity Fund $2.0B, National Research Fund $1.8B, Progressive Wage Credit Scheme Fund $1.0B, Skills Development Fund $500M, Public Transport Fund $50M, and Legal Aid Fund $2M), it is **not tied to a specific dedicated tax**. Instead, it draws on the government's overall fiscal resources \u2014 funded by strong Operating Revenue collections (notably Corporate Income Tax and GST) and other income \u2014 as a lump-sum top-up to pre-fund this long-term strategic priority, rather than being financed through recurring annual budget allocations."
   },
   "Q2 (revenue-only, tests selective routing)": {
     "query": "What is the largest single source of government revenue?",
@@ -155,7 +162,7 @@
         "actor": "supervisor",
         "content": [
           {
-            "id": "toolu_01FN6zNVhQEdr8xjHr5JijGa",
+            "id": "toolu_01SjHv3ofm4tC8Q2mnm49fXR",
             "caller": {
               "type": "direct"
             },
@@ -176,11 +183,12 @@
         "actor": "revenue_agent",
         "content": [
           {
-            "text": "Let me get the revenue context to identify the largest single source of government revenue.",
-            "type": "text"
+            "signature": "EswDCpABCBEYAipA3SsmOjIw1nZB4rVukPQbKIALHRsNQ8YmvwVCWvuHuOJwx90jlP8qyg5YYlyYe8gMsum92U3DvGYauyAO+iMQqjIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRhZTkxZjkwYS0zOGFmLTQ2YTktOTdkNy0wNjg1YThlMDllZTKoAa25kNUGEgwDVn+P6Ar0QDMNQJYaDNeiGeFE1EspboT64SIw+e3N6wdGKtV4iInc1HU2NA7WU5uSsfvwcMTr4btKE/ttBSybUwEK7wyqD7pUcph7KugBDR+28XJEaQT0s1ccz5teHfP1GgUjiEDMlVC1ayY30fzsAQPDlwrGIbtxCRs3KS4vQnl+H8S5JG4mQES2wU4tRz9ExBtdw9rLVME3dKbuWTkyyxu1GZMHGDck3uygTBGh2EFfIjGI4UzzKpXLdWViADeJl7Xit8AdpT+r9rCOYatdPnDDvijHH6Cu92Kcc1MFNSvKix5RUGr9oYHdWvimT40LRbqwdbVLFsfcT0cYPgSHmTDWypKM9us3iVklWmWD256+zxrb9IVXCoU3Rw8wHxhDEgs5UDhQTBeA2AOgn3DA6UD2vBCtUhgB",
+            "thinking": "",
+            "type": "thinking"
           },
           {
-            "id": "toolu_01786tmniTXNDPqYidVg5yH4",
+            "id": "toolu_01TB9AseNgfFfbHNetniMzUv",
             "caller": {
               "type": "direct"
             },
@@ -199,7 +207,7 @@
       {
         "type": "AIMessage",
         "actor": "revenue_agent",
-        "content": "Based on the revenue context, **Corporate Income Tax is the largest single source of government revenue**.\n\nAccording to the FY2023 data:\n- **Corporate Income Tax: $28.38 billion** (27.2% of Operating Revenue)\n\nThis is followed by:\n- Personal Income Tax: $17.53 billion (16.8%)\n- Goods and Services Tax: $16.36 billion (15.7%)\n\nFor FY2024, Corporate Income Tax is estimated at $28.03 billion, maintaining its position as the largest revenue source, though with a slight decrease of $0.35 billion compared to FY2023."
+        "content": "The largest single source of government revenue is **Corporate Income Tax**.\n\n- In **Revised FY2023**, Corporate Income Tax collections came to **$28.4 billion**, accounting for **27.2%** of Operating Revenue \u2014 the biggest share among all revenue components shown in Chart 1.1. This was $4.1 billion (17.0%) higher than the original FY2023 estimate, driven by stronger-than-expected economic growth in 2022.\n- For **Estimated FY2024** (Table 2.1), Corporate Income Tax is projected at **$28.03 billion**, a slight decrease of $0.35 billion (-1.2%) from Revised FY2023, but it still remains the top revenue source.\n\nFor comparison, the next largest sources are:\n- **Personal Income Tax**: $17.53 billion (FY2023) \u2192 $18.07 billion (FY2024 estimate), 16.8% share in FY2023\n- **Goods and Services Tax**: $16.36 billion (FY2023) \u2192 $19.39 billion (FY2024 estimate), 15.7% share in FY2023 \u2014 notably GST is projected to grow strongly (+18.5%) in FY2024, though it still trails Corporate Income Tax as the largest source."
       },
       {
         "type": "AIMessage",
@@ -214,10 +222,10 @@
       {
         "type": "AIMessage",
         "actor": "supervisor",
-        "content": "## Summary\n\n**The largest single source of government revenue is Corporate Income Tax.**\n\nKey figures from the Ministry of Finance data:\n\n- **FY2023 (Revised):** Corporate Income Tax collections were **$28.4 billion**, representing **27.2%** of Operating Revenue \u2014 by far the largest component.\n- **FY2024 (Estimated):** Corporate Income Tax is projected at **$28.03 billion**, still the top revenue source, though slightly lower than FY2023 (a decrease of $0.35 billion, or -1.2%).\n\nFor context, the next largest sources of revenue are:\n1. **Personal Income Tax** \u2013 $17.53 billion (16.8% of revenue) in FY2023\n2. **Goods and Services Tax** \u2013 $16.36 billion (15.7% of revenue) in FY2023\n\nCorporate Income Tax revenue rose sharply in FY2023 due to stronger-than-expected economic growth in 2022, which continues to make it the dominant contributor to total government operating revenue."
+        "content": "The largest single source of government revenue is **Corporate Income Tax**.\n\n- In **Revised FY2023**, Corporate Income Tax collections totaled **$28.4 billion**, representing **27.2%** of Operating Revenue \u2014 the single largest component of government revenue, ahead of all other tax and non-tax sources. This figure was $4.1 billion (17.0%) higher than originally estimated, driven by stronger-than-expected economic growth in 2022.\n- For **Estimated FY2024**, Corporate Income Tax is projected at **$28.03 billion**, a slight decline of $0.35 billion (-1.2%) from the revised FY2023 figure, but it is still expected to remain the top revenue source.\n\nFor context, the next largest revenue sources in FY2023 were:\n- **Personal Income Tax**: $17.5 billion (16.8% of revenue)\n- **Goods and Services Tax (GST)**: $16.4 billion (15.7% of revenue)\n- **Other Taxes** (Foreign Worker Levy, Water Conservation Tax, Land Betterment Charge, Annual Tonnage Tax): $8.8 billion (8.4%)\n\nSo while GST is projected to grow strongly in FY2024 (+18.5% to $19.39 billion) and Personal Income Tax will also rise modestly, Corporate Income Tax remains the largest single revenue source for the government in both the revised FY2023 figures and the FY2024 budget estimates."
       }
     ],
-    "final_answer": "## Summary\n\n**The largest single source of government revenue is Corporate Income Tax.**\n\nKey figures from the Ministry of Finance data:\n\n- **FY2023 (Revised):** Corporate Income Tax collections were **$28.4 billion**, representing **27.2%** of Operating Revenue \u2014 by far the largest component.\n- **FY2024 (Estimated):** Corporate Income Tax is projected at **$28.03 billion**, still the top revenue source, though slightly lower than FY2023 (a decrease of $0.35 billion, or -1.2%).\n\nFor context, the next largest sources of revenue are:\n1. **Personal Income Tax** \u2013 $17.53 billion (16.8% of revenue) in FY2023\n2. **Goods and Services Tax** \u2013 $16.36 billion (15.7% of revenue) in FY2023\n\nCorporate Income Tax revenue rose sharply in FY2023 due to stronger-than-expected economic growth in 2022, which continues to make it the dominant contributor to total government operating revenue."
+    "final_answer": "The largest single source of government revenue is **Corporate Income Tax**.\n\n- In **Revised FY2023**, Corporate Income Tax collections totaled **$28.4 billion**, representing **27.2%** of Operating Revenue \u2014 the single largest component of government revenue, ahead of all other tax and non-tax sources. This figure was $4.1 billion (17.0%) higher than originally estimated, driven by stronger-than-expected economic growth in 2022.\n- For **Estimated FY2024**, Corporate Income Tax is projected at **$28.03 billion**, a slight decline of $0.35 billion (-1.2%) from the revised FY2023 figure, but it is still expected to remain the top revenue source.\n\nFor context, the next largest revenue sources in FY2023 were:\n- **Personal Income Tax**: $17.5 billion (16.8% of revenue)\n- **Goods and Services Tax (GST)**: $16.4 billion (15.7% of revenue)\n- **Other Taxes** (Foreign Worker Levy, Water Conservation Tax, Land Betterment Charge, Annual Tonnage Tax): $8.8 billion (8.4%)\n\nSo while GST is projected to grow strongly in FY2024 (+18.5% to $19.39 billion) and Personal Income Tax will also rise modestly, Corporate Income Tax remains the largest single revenue source for the government in both the revised FY2023 figures and the FY2024 budget estimates."
   },
   "Q3 (expenditure-only, tests selective routing)": {
     "query": "How much is being spent on the GST Voucher Fund top-up, and why?",
@@ -232,12 +240,12 @@
         "actor": "supervisor",
         "content": [
           {
-            "signature": "EtsCCpABCBEYAipAbi3tU19RtBy/TZ0l2Jsdyc+E+f/f2vpXrhfc5rBlMVJnU8+c5gFFLSKZZ9pjKniitbirPbJJo13aQxp3f89sgTIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRhZTkxZjkwYS0zOGFmLTQ2YTktOTdkNy0wNjg1YThlMDllZTKoAaePhtUGEgzNGTQ8OUfgqVT3eCIaDNSyxCZOWUXCQu/gYSIwcbIr+jixS5SwnJw+BzvsQWPYGPglHTQu5ZhhaMcwdZALRf147V6b+w/vJUMugYO0KnjJZoUcRmlwt3bWusuuNSAViiiLrOQlJxmduL4rQF5057/Tlg+ggzhq2mxV4cbm/DgvEHXKX5iS29ZOeJsrmZYwtFg3wN3F1FXDhiysOet8oauNo8KymVLAWLkT/kK8weeJn0mxiSG2Q1BFTx1AGj4WGpLZdC6IroIYAQ==",
+            "signature": "ErAECpABCBEYAipA06KL3Lr8MHkryZZpO0nweBubv5HL2GBPPKZU0mZCeU/94ho/IR+LaQrQ0S3YS7FrRx734XcVNrcVzlXDC7GWXDIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRhZTkxZjkwYS0zOGFmLTQ2YTktOTdkNy0wNjg1YThlMDllZTKoAbq5kNUGEgxqkVZx6qpO6hPP8tkaDHcITwGb7kNHyKESkyIwMVDxzkoP7cNBuqqPgJYlHnP0AnLBBfHLvBpPzjNhvzbwpz+L6bVYGj3d6n4r6IBaKswCJJtEMv3ruWkKA40K1gUNraYadljRTezHP+t36KiRaai+1ox7gXizX9bfsJXBl+KhyEhsPXnh7CR0H0YAPIeKhNQRJLc/p4FGUnqhh87EXE9ODzo6t7+A+6LhFwApCbpH4tc3YGUpcuO+GnA2UtZ/thLVJNVZ/WvodCOPa59ZFwmH1BBVHV3ABR2za5k6PsqwN5iKvGQn+q3gKPzIiKHR0517pzdepENbkJ7VuX9CF6IZbWNr1vUGAZzHZ7+7gviFlVzWdxQRKebJYJV+oKkJD2QvDPCIeVSnA2a/s4ThiXv6laFkgBjP0nsaEynWYflxWHwB2bPJMvZSfIigmNzKn+/QU14z2D54K0T0qSYjQmDbW+hUgzbu5FsvZYKil8N+D2X5iT4hmItXbPmMxuyedd1Tm8EEKBt44ZOZmDm+0kq8Y7gpMcLPOHJJ/VMYAQ==",
             "thinking": "",
             "type": "thinking"
           },
           {
-            "id": "toolu_01NUPKUWZXGeuhNjJs9FwbWp",
+            "id": "toolu_0127QUyYNs6e62gwgRq1f2FJ",
             "caller": {
               "type": "direct"
             },
@@ -258,11 +266,12 @@
         "actor": "expenditure_agent",
         "content": [
           {
-            "text": "Let me get the expenditure context for you.",
-            "type": "text"
+            "signature": "Es8CCpABCBEYAipAvBiUWJEWmttKL4hMaD6WsGtYjmqYoly0hJEH7Y4lFMV+8V0q2oBBwwOjI0nhmxlQryEWf+zeM6MfP7d+ElFpojIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRhZTkxZjkwYS0zOGFmLTQ2YTktOTdkNy0wNjg1YThlMDllZTKoAbu5kNUGEgww0GsT90JcQHMIt38aDEfSUPcgCO8uz3phTCIwpFkw3D2Xs7tJvWDvbSVEuW814c3NOgtot2qtuBpNxi37pNsMAKt6wUXvz79qX7CkKmyZHOhqxGr/fyFeHbl612zngu9M3vMj7/R/J3rZznHg1O7+Fi7KamGEjkbDpkOGXLeHVu1miJDvDVZyko33MK3iOKwwqg8xUpMDPN74XogEHm3umDfASTv9kKHBaGhJVCc6yqE39ldYRlSJ3VIYAQ==",
+            "thinking": "",
+            "type": "thinking"
           },
           {
-            "id": "toolu_01GTb3H6LcZYfhP1MBpk9LB2",
+            "id": "toolu_01T5YDS1J1gJ7QnHDCxLZxzf",
             "caller": {
               "type": "direct"
             },
@@ -281,7 +290,7 @@
       {
         "type": "AIMessage",
         "actor": "expenditure_agent",
-        "content": "Based on the expenditure context, **$6.0 billion** is being spent on the GST Voucher Fund top-up in FY2024.\n\n**Why:** The Government is topping up the GST Voucher Fund by $6.0 billion **to meet the steady state cashflow needs for the enhanced permanent GST Voucher scheme**. This represents the largest single fund top-up in Budget 2024 and reflects the Government's commitment to providing ongoing support through the GST Voucher scheme."
+        "content": "In Budget 2024, the Government will top up the **GST Voucher Fund by $6.0 billion** (specifically $6,000 million per Table 2.4), making it the largest single fund top-up in this year's Budget.\n\n**Reason:** This top-up is intended to **meet the steady-state cashflow needs of the enhanced permanent GST Voucher scheme**, ensuring the fund has sufficient resources to sustain payouts under the scheme going forward.\n\nFor context, this $6.0 billion is part of a broader $20.4 billion (specifically $20,352 million) committed to Top-ups to Endowment and Trust Funds in Budget 2024, which also includes top-ups such as the Future Energy Fund ($5.0 billion), Edusave Endowment Fund ($2.0 billion), and others."
       },
       {
         "type": "AIMessage",
@@ -296,10 +305,10 @@
       {
         "type": "AIMessage",
         "actor": "supervisor",
-        "content": "## Summary: GST Voucher Fund Top-up\n\n**Amount:** $6.0 billion (this is the largest single fund top-up among all the Endowment and Trust Fund top-ups in Budget 2024, which total $20.4 billion overall)\n\n**Reason:** The top-up is meant **to meet the steady state cashflow needs for the enhanced permanent GST Voucher scheme**. In other words, the Government is injecting this sum into the fund to ensure it can sustainably finance the GST Voucher payouts to Singaporeans on an ongoing basis, now that the scheme has been made permanent and enhanced.\n\nFor context, this $6.0 billion top-up is part of a broader set of Endowment and Trust Fund injections in Budget 2024, which also include top-ups to the Future Energy Fund ($5.0 billion), Edusave Endowment Fund ($2.0 billion), Financial Sector Development Fund ($2.0 billion), National Productivity Fund ($2.0 billion), National Research Fund ($1.8 billion), Progressive Wage Credit Scheme Fund ($1.0 billion), and smaller amounts for the Skills Development Fund, Public Transport Fund, and Legal Aid Fund."
+        "content": "**Answer: GST Voucher Fund Top-up**\n\n**Amount:** $6.0 billion (S$6,000 million) \u2014 the largest single fund top-up announced in Budget 2024.\n\n**Reason/Purpose:** The top-up is intended to **meet the steady-state cashflow needs of the enhanced, now-permanent GST Voucher scheme**. In other words, since the GST Voucher scheme has been made a permanent feature (rather than a one-off/temporary support measure) and has been enhanced, the government is injecting funds now to ensure the Fund has enough resources to sustain payouts to eligible households on an ongoing basis into the future.\n\nThis $6.0 billion top-up is part of a larger $20.4 billion (S$20,352 million) total committed to Top-ups to Endowment and Trust Funds in Budget 2024, which also includes top-ups to funds such as the Future Energy Fund ($5.0 billion), Edusave Endowment Fund ($2.0 billion), Financial Sector Development Fund ($2.0 billion), National Productivity Fund ($2.0 billion), National Research Fund ($1.8 billion), Progressive Wage Credit Scheme Fund ($1.0 billion), and smaller amounts for the Skills Development Fund, Public Transport Fund, and Legal Aid Fund."
       }
     ],
-    "final_answer": "## Summary: GST Voucher Fund Top-up\n\n**Amount:** $6.0 billion (this is the largest single fund top-up among all the Endowment and Trust Fund top-ups in Budget 2024, which total $20.4 billion overall)\n\n**Reason:** The top-up is meant **to meet the steady state cashflow needs for the enhanced permanent GST Voucher scheme**. In other words, the Government is injecting this sum into the fund to ensure it can sustainably finance the GST Voucher payouts to Singaporeans on an ongoing basis, now that the scheme has been made permanent and enhanced.\n\nFor context, this $6.0 billion top-up is part of a broader set of Endowment and Trust Fund injections in Budget 2024, which also include top-ups to the Future Energy Fund ($5.0 billion), Edusave Endowment Fund ($2.0 billion), Financial Sector Development Fund ($2.0 billion), National Productivity Fund ($2.0 billion), National Research Fund ($1.8 billion), Progressive Wage Credit Scheme Fund ($1.0 billion), and smaller amounts for the Skills Development Fund, Public Transport Fund, and Legal Aid Fund."
+    "final_answer": "**Answer: GST Voucher Fund Top-up**\n\n**Amount:** $6.0 billion (S$6,000 million) \u2014 the largest single fund top-up announced in Budget 2024.\n\n**Reason/Purpose:** The top-up is intended to **meet the steady-state cashflow needs of the enhanced, now-permanent GST Voucher scheme**. In other words, since the GST Voucher scheme has been made a permanent feature (rather than a one-off/temporary support measure) and has been enhanced, the government is injecting funds now to ensure the Fund has enough resources to sustain payouts to eligible households on an ongoing basis into the future.\n\nThis $6.0 billion top-up is part of a larger $20.4 billion (S$20,352 million) total committed to Top-ups to Endowment and Trust Funds in Budget 2024, which also includes top-ups to funds such as the Future Energy Fund ($5.0 billion), Edusave Endowment Fund ($2.0 billion), Financial Sector Development Fund ($2.0 billion), National Productivity Fund ($2.0 billion), National Research Fund ($1.8 billion), Progressive Wage Credit Scheme Fund ($1.0 billion), and smaller amounts for the Skills Development Fund, Public Transport Fund, and Legal Aid Fund."
   },
   "Q4 (second dual-agent query, different phrasing)": {
     "query": "What is the largest source of tax revenue, and separately, what specific purpose will the Future Energy Fund infrastructure spending serve according to the budget document?",
@@ -314,12 +323,12 @@
         "actor": "supervisor",
         "content": [
           {
-            "signature": "EssCCpABCBEYAipAKlfeVQCxV2ifX9a969mIpk1//7eWVSNKTDWH8MLhHxQB72TOvTTpNcC1LdN+CNx5IW2MJpqfoRX1JgCBNXIHxzIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRhZTkxZjkwYS0zOGFmLTQ2YTktOTdkNy0wNjg1YThlMDllZTKoAbKPhtUGEgyVe+2jkRW8sEsg6Q8aDPiOtpS/TS0X0QNWFCIw3ztnDw9m9KbvgPD+eO6Bx+sQzcykh+0KzuJklhvjaM7WgGPlq3Z8in1xYAJmSgZnKmjXZxZRHGypZ2oTxiKvK86XyEmOJft5J1RJH3wntnvMbnobvy/6atOuJJshRiGmVOMh1SukEesBXTIWLejRGz4TCndxdzfsjb62WL7rJgMon6zB8qZmMYuokM4CVQhYPOFl/UpCfv0nNhgB",
+            "signature": "EusCCpABCBEYAipAQ2A01OZMZe8d2WRBcNaw4ciyYgRLydRnQrKFA3TtcIpEdQwK2n+OGk1r9zEJZuxgLBjIHI30q1gFeVVXxvp5MzIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRhZTkxZjkwYS0zOGFmLTQ2YTktOTdkNy0wNjg1YThlMDllZTKoAce5kNUGEgx35WvJpocxW83KkzkaDFAai7QLJv3tJLNKkiIwqeQ1rVmK/Nfu5+PjWvIpxDRvIgbT1ectIDPjYjhaI1q8KeSk+dM/mr6B8Gm3Mix1KocBPet2hkxxUakhSTT6cImW5iSwS1HHpv8JKW3+sE4em/GA3+eaxPCefQWngHDlzbuxenGi3x8wRiXK9jx7UIaRxSMQ1YrRDz8XVfnBg2uZ2W+9iPvAY3VSyWsCFD3bZn19pFScevg0yROou+xJXcAvoWbO4uGWGVH7rW0+KhxSk14W5ii5vNEHGAE=",
             "thinking": "",
             "type": "thinking"
           },
           {
-            "id": "toolu_0134b3kHFRgBPmLA1ez7mHiG",
+            "id": "toolu_01XMmeSYDjH9btYhPaHbMPNF",
             "caller": {
               "type": "direct"
             },
@@ -340,11 +349,7 @@
         "actor": "revenue_agent",
         "content": [
           {
-            "text": "I need to clarify that I'm the Revenue Agent, and I can help you with the first part of your question about the largest source of tax revenue. However, your second question about the Future Energy Fund infrastructure spending is an expenditure/budget allocation question, which falls outside my revenue specialization.\n\nLet me get the revenue information for you:",
-            "type": "text"
-          },
-          {
-            "id": "toolu_01A3iPwTVFaWMs18Z9nUxQfz",
+            "id": "toolu_01FT3KcGsj4RTA7TZBV5Xq6J",
             "caller": {
               "type": "direct"
             },
@@ -363,7 +368,17 @@
       {
         "type": "AIMessage",
         "actor": "revenue_agent",
-        "content": "Based on the revenue context provided, I can answer your first question:\n\n## Largest Source of Tax Revenue\n\n**Corporate Income Tax** is the largest source of tax revenue. According to the FY2024 budget figures in Table 2.1, Corporate Income Tax is estimated at **$28.03 billion** for FY2024. This is also confirmed in Chart 1.1 showing the FY2023 breakdown, where Corporate Income Tax represents **27.2%** of Operating Revenue.\n\n---\n\n## Regarding the Future Energy Fund\n\nRegarding your second question about the Future Energy Fund infrastructure spending, I can see from Table 2.1 that **$5.00 billion** is allocated as a top-up to the Future Energy Fund in FY2024. However, the specific purpose this infrastructure spending will serve is not detailed in the revenue context document I have access to. \n\nTo answer that part of your question, you would need to consult the expenditure or policy sections of the budget document, which fall outside my revenue specialization. I recommend checking the budget narrative or expenditure estimates for details on the Future Energy Fund's specific infrastructure objectives."
+        "content": [
+          {
+            "signature": "EtAFCpABCBEYAipAs6+VC7+Y+E7YUW59rhje66EQd7qrV/k80pg5wykJ7Kygzrk0jUIbAKXqgfXDGlkslFBtPLCwz4/sTpw/3vvQpDIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiRhZTkxZjkwYS0zOGFmLTQ2YTktOTdkNy0wNjg1YThlMDllZTKoAcy5kNUGEgzXoi5Nj3KjxVyfg3AaDDmFxgHo+cT5amHYviIwHobsaGM5EHoJUbS7V5Z9epptBMnqd1g5YF7aU9fWloocz/IahDvrbLQ4EaGM7P7OKuwDb5bpX1dLSw3xJiA8ajuNZOUUG6/eeOTdjSDLJqs+Fm3TKqo78sfmvJzlB/U+/hP85DtB8iQ0FjfSQFL+E6mpm9ImgKRjGvXo28JXIp/8Y25gQU7q2F7CC5FccDHmD8pu+biMFImOEpcF0XY1pcfQ3WwKVi1N93WSBgFXK8DVlhldp6lv83kzgJRwOMiVOQtD8YyA1nfLQK2jKkFQ/vBi00E9wosjD7xqbllbJ2Z2Uaf9D7nUAeFV39k69s1qYzjK9rtWE/+ISzpiSiQVl73/+8hZS02k702xiPGflGlzfkGGgVPpC8npGKKrzVTDb990tAlBdzhSRzw89N88R7v/CdT1op8UwCLzA496YpBQVpeKMDAxJJESp3UnHfrH5oBslVVoAKV3rJptdu7vt0w5EEWZWeK3wmY/m55KYLwteoTP6k7yxpa8ClAd2VNt5XA1HRHQRRloRAIH8DxKN2uSvISo3EIOz3/kOKxJUQFHffW9VpEChV/l+8eD4kFlY3f97QE0XHx4hgXgPN/vBvPHxG7JyUCw4OWM8/Od7+JEfpFtjKm/Q7GHVZjCyc4YsX//kFVqdu8MGRAtympynADiiXKftOETs5CCFndd1X4EoSpznySNnGuInVfZhJ4I8iy42Oh+XBAJQQ74nN81GAE=",
+            "thinking": "",
+            "type": "thinking"
+          },
+          {
+            "text": "Based on the budget document context available to me:\n\n**Largest source of tax revenue: Corporate Income Tax**\n- In FY2023, Corporate Income Tax was the single largest component of Operating Revenue, making up **27.2%** of the total (per Chart 1.1 breakdown), well ahead of Personal Income Tax (16.8%) and Goods and Services Tax (15.7%).\n- In dollar terms, Corporate Income Tax collections were revised to **$28.38 billion** for FY2023 (up $4.1 billion/17.0% from the original estimate, due to stronger-than-expected 2022 economic growth), and are estimated at **$28.03 billion** for FY2024 (a slight decline of $0.35 billion, or -1.2%, from Revised FY2023) \u2014 still the largest single tax line in Table 2.1.\n\n**Future Energy Fund \u2014 stated purpose:**\nThe revenue/budget context I have access to only shows the **financial allocation** for the Future Energy Fund, not a narrative description of its intended use. Specifically, Table 2.1 shows:\n- Revised FY2023: **$0** (no allocation)\n- Estimated FY2024: **$5.00 billion** top-up, classified under \"Top-ups to Endowment and Trust Funds\"\n\nThe document does not provide further descriptive text in this section explaining the specific infrastructure purpose of the Future Energy Fund. For details on what infrastructure spending it is meant to support (e.g., energy transition, grid infrastructure, etc.), you would need to consult the Expenditure/Development Expenditure sections of the budget document, which fall outside the revenue-focused context I have available. I'd recommend checking with an agent covering expenditure or fund-specific initiatives for that detail.",
+            "type": "text"
+          }
+        ]
       },
       {
         "type": "AIMessage",
@@ -380,7 +395,7 @@
         "actor": "supervisor",
         "content": [
           {
-            "id": "toolu_01A1H1ehfritbeJLCZzFr8fr",
+            "id": "toolu_018wZa2KXJYsAJvzvNema3RC",
             "caller": {
               "type": "direct"
             },
@@ -401,11 +416,7 @@
         "actor": "expenditure_agent",
         "content": [
           {
-            "text": "Now let me get the expenditure information about the Future Energy Fund:",
-            "type": "text"
-          },
-          {
-            "id": "toolu_019WZbJjLHrcV2WbBLEF8K4T",
+            "id": "toolu_01L5LcGCTWvnsZg5UAhvo8ih",
             "caller": {
               "type": "direct"
             },
@@ -424,7 +435,7 @@
       {
         "type": "AIMessage",
         "actor": "expenditure_agent",
-        "content": "Perfect! Now I have the complete answer to your second question.\n\n## Future Energy Fund Purpose\n\nAccording to the budget document, **the Government will establish the Future Energy Fund with an initial injection of $5.0 billion to invest in critical infrastructure for the energy transition.**\n\nThis is stated explicitly in the Special Transfers section (page 18) of the budget document, which notes that the Future Energy Fund will be used to \"invest in critical infrastructure for the energy transition.\"\n\n---\n\n## Summary\n\nTo answer both parts of your question:\n\n1. **Largest source of tax revenue:** Corporate Income Tax at **$28.03 billion** (estimated FY2024)\n\n2. **Future Energy Fund purpose:** To **invest in critical infrastructure for the energy transition**, with an initial allocation of **$5.0 billion**"
+        "content": "I now have the complete answer for both parts of your question.\n\n## 1. Largest Source of Tax Revenue\n\n**Corporate Income Tax** is the largest source of tax revenue:\n- It made up **27.2%** of Operating Revenue in FY2023 (Chart 1.1) \u2014 the single largest component, ahead of Personal Income Tax (16.8%) and GST (15.7%).\n- In dollar terms: **$28.38 billion** (Revised FY2023) and **$28.03 billion** (Estimated FY2024), per Table 2.1.\n\n## 2. Future Energy Fund Purpose\n\nAccording to the budget document (Section 2.6, Special Transfers):\n\n> \"The Government will establish the Future Energy Fund with an initial injection of **$5.0 billion** to **invest in critical infrastructure for the energy transition**.\"\n\nThis $5.0 billion injection is confirmed in Table 2.4 (Fund Top-ups for Estimated FY2024), where the Future Energy Fund is listed at **$5,000 million**, out of a total $20,352 million ($20.4 billion) committed to Fund top-ups that year. It has no prior allocation in Revised FY2023 \u2014 this is a newly established fund in Budget 2024, specifically earmarked to support Singapore's transition to future energy sources through critical infrastructure investment."
       },
       {
         "type": "AIMessage",
@@ -439,9 +450,9 @@
       {
         "type": "AIMessage",
         "actor": "supervisor",
-        "content": "## Comprehensive Answer\n\n**1. Largest Source of Tax Revenue:**\n**Corporate Income Tax** is the largest source of tax revenue for the Singapore government. According to the budget document:\n- Estimated FY2024: **$28.03 billion**\n- It represented **27.2%** of total Operating Revenue in FY2023 \u2014 the single largest component, ahead of Personal Income Tax (16.8%) and Goods and Services Tax (15.7%).\n\n**2. Future Energy Fund Infrastructure Spending Purpose:**\nAccording to the budget document, the Government will establish the **Future Energy Fund with an initial injection of $5.0 billion** specifically **to invest in critical infrastructure for the energy transition**. This fund represents one of the largest new Top-ups to Endowment and Trust Funds in Budget 2024, reflecting the government's commitment to supporting Singapore's shift toward more sustainable and future-ready energy infrastructure."
+        "content": "## Summary\n\n**1. Largest source of tax revenue: Corporate Income Tax**\n- Corporate Income Tax is the single largest tax revenue source, comprising **27.2%** of Operating Revenue in FY2023 \u2014 ahead of Personal Income Tax (16.8%) and Goods and Services Tax (15.7%).\n- In dollar terms, collections were **$28.38 billion** (Revised FY2023) and are estimated at **$28.03 billion** (Estimated FY2024).\n\n**2. Future Energy Fund infrastructure spending purpose**\nAccording to the budget document, the Government is establishing the Future Energy Fund with an initial injection of **$5.0 billion** in FY2024 specifically to **\"invest in critical infrastructure for the energy transition.\"** This is a newly created fund (no allocation existed in FY2023), and it represents one component of the $20.4 billion in total Top-ups to Endowment and Trust Funds planned for FY2024."
       }
     ],
-    "final_answer": "## Comprehensive Answer\n\n**1. Largest Source of Tax Revenue:**\n**Corporate Income Tax** is the largest source of tax revenue for the Singapore government. According to the budget document:\n- Estimated FY2024: **$28.03 billion**\n- It represented **27.2%** of total Operating Revenue in FY2023 \u2014 the single largest component, ahead of Personal Income Tax (16.8%) and Goods and Services Tax (15.7%).\n\n**2. Future Energy Fund Infrastructure Spending Purpose:**\nAccording to the budget document, the Government will establish the **Future Energy Fund with an initial injection of $5.0 billion** specifically **to invest in critical infrastructure for the energy transition**. This fund represents one of the largest new Top-ups to Endowment and Trust Funds in Budget 2024, reflecting the government's commitment to supporting Singapore's shift toward more sustainable and future-ready energy infrastructure."
+    "final_answer": "## Summary\n\n**1. Largest source of tax revenue: Corporate Income Tax**\n- Corporate Income Tax is the single largest tax revenue source, comprising **27.2%** of Operating Revenue in FY2023 \u2014 ahead of Personal Income Tax (16.8%) and Goods and Services Tax (15.7%).\n- In dollar terms, collections were **$28.38 billion** (Revised FY2023) and are estimated at **$28.03 billion** (Estimated FY2024).\n\n**2. Future Energy Fund infrastructure spending purpose**\nAccording to the budget document, the Government is establishing the Future Energy Fund with an initial injection of **$5.0 billion** in FY2024 specifically to **\"invest in critical infrastructure for the energy transition.\"** This is a newly created fund (no allocation existed in FY2023), and it represents one component of the $20.4 billion in total Top-ups to Endowment and Trust Funds planned for FY2024."
   }
 }

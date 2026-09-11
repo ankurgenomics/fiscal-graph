@@ -3,9 +3,10 @@
 Each agent gets a single no-argument tool returning its pre-scoped page context
 (reusing parser.py, same pattern as Parts 1-2), not a generic full-document search
 tool — deliberate proportionality: this is a 37-page document with a known, fixed
-page-to-topic mapping (established in PLAN.md section 0), so embedding-based RAG
-would be over-engineering relative to what this part is actually graded on: the
-supervisor's routing and synthesis behavior, not retrieval sophistication.
+page-to-topic mapping (the same pages verified in Part 1, see README.md), so
+embedding-based RAG would be over-engineering relative to what this part is
+actually graded on: the supervisor's routing and synthesis behavior, not
+retrieval sophistication.
 """
 from langchain_core.tools import tool
 from langgraph.prebuilt import create_react_agent
@@ -52,8 +53,8 @@ questions about government expenditure and fund allocations. Cite specific figur
 from the context, do not estimate or invent numbers."""
 
 
-def build_revenue_agent(model: str | None = None):
-    llm = get_llm(model=model or HAIKU_MODEL, max_tokens=2048)
+def build_revenue_agent(model: str | None = None, temperature: float | None = 0):
+    llm = get_llm(model=model or HAIKU_MODEL, max_tokens=2048, temperature=temperature)
     return create_react_agent(
         model=llm,
         tools=[revenue_context],
@@ -62,8 +63,8 @@ def build_revenue_agent(model: str | None = None):
     )
 
 
-def build_expenditure_agent(model: str | None = None):
-    llm = get_llm(model=model or HAIKU_MODEL, max_tokens=2048)
+def build_expenditure_agent(model: str | None = None, temperature: float | None = 0):
+    llm = get_llm(model=model or HAIKU_MODEL, max_tokens=2048, temperature=temperature)
     return create_react_agent(
         model=llm,
         tools=[expenditure_context],

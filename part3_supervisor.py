@@ -6,26 +6,57 @@ supervisor. output_mode='full_history' is used deliberately (not the default
 their one-line final answers -- needed for the assignment's "clear trace of the
 supervisor's decision-making process" requirement.
 """
+import sys
 from langgraph_supervisor import create_supervisor
 from agents import build_revenue_agent, build_expenditure_agent
 from llm_config import get_llm, SONNET_MODEL
 
+# Windows' default console codepage (cp1252) can't print characters models
+# commonly generate (arrows, smart quotes, em dashes). Reconfigure stdout to
+# UTF-8 so printing a trace never crashes on the model's own output.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
 SUPERVISOR_PROMPT = """You are a supervisor managing two specialized agents:
 - revenue_agent: specializes in government revenue (taxes, collections).
-- expenditure_agent: specializes in government spending (funds, expenditure figures).
+- expenditure_agent: specializes in government spending, including WHY specific
+  funds exist, their purpose, and how their budgets are supported.
 
-For each user query, delegate to whichever agent(s) are relevant -- only the
-agents actually needed to answer the question, not both by default. If the
-query has both a revenue component and an expenditure component, delegate to
-both and synthesize their responses into one comprehensive final answer that
-directly addresses every part of the original question. Do not answer from
-your own knowledge -- always delegate to the agents, who have access to the
-source document."""
+For each user query, delegate to whichever agent(s) are relevant. A query with
+only a revenue component needs only revenue_agent; a query with only a
+spending component needs only expenditure_agent.
+
+If a query has BOTH a revenue component AND a question about a specific fund's
+purpose or how it will be supported, you MUST delegate to both agents, even if
+revenue_agent's own context happens to also mention that fund's dollar figure.
+A fund's purpose, rationale, and "how will it be supported" belong to
+expenditure_agent specifically -- revenue_agent incidentally showing the same
+number is not a reason to skip expenditure_agent when the query asks about
+that fund's support or purpose, not just its size.
+
+Synthesize both responses into one comprehensive final answer that directly
+addresses every part of the original question. Do not answer from your own
+knowledge -- always delegate to the agents, who have access to the source
+document.
+
+Your own tools are ONLY transfer_to_revenue_agent and transfer_to_expenditure_agent.
+You will see other tool names, such as revenue_context or expenditure_context, appear
+in the conversation history -- those belong to the sub-agents, not to you. Never call
+them yourself; delegate with a transfer_to_* tool instead."""
 
 
-def build_supervisor(agent_model: str | None = None, supervisor_model: str | None = None):
-    revenue_agent = build_revenue_agent(model=agent_model)
-    expenditure_agent = build_expenditure_agent(model=agent_model)
+def build_supervisor(
+    agent_model: str | None = None,
+    supervisor_model: str | None = None,
+    agent_temperature: float | None = None,
+):
+    # Sonnet by default for sub-agents too, not just the supervisor -- see
+    # README's Part 3 "A finding worth keeping in" for why Haiku sub-agents
+    # were dropped as the default. agent_temperature defaults to None to match
+    # (Sonnet rejects the parameter entirely, even 0); pass 0 explicitly if
+    # overriding agent_model back to Haiku for a cheaper run.
+    revenue_agent = build_revenue_agent(model=agent_model or SONNET_MODEL, temperature=agent_temperature)
+    expenditure_agent = build_expenditure_agent(model=agent_model or SONNET_MODEL, temperature=agent_temperature)
     # temperature omitted (None): claude-sonnet-5 rejects the parameter entirely, even 0
     supervisor_llm = get_llm(model=supervisor_model or SONNET_MODEL, max_tokens=4096, temperature=None)
 
@@ -111,7 +142,7 @@ DEMO_QUERIES = {
 
 if __name__ == "__main__":
     import json
-    app = build_supervisor()
+    app = build_supervisor()  # Sonnet everywhere by default -- see build_supervisor()
     all_results = {}
     for label, query in DEMO_QUERIES.items():
         print(f"\n{'=' * 80}\n{label}\nQuery: {query}\n{'=' * 80}")
