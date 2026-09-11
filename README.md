@@ -67,29 +67,22 @@ python part3_supervisor.py     # Part 3, runs all 4 demo queries, writes trace.j
 | `part3_multiagent.ipynb` | Part 3 notebook, executed, with an automated verification cell and a routing-pattern summary. |
 | `trace.json` | Full captured trace for all four Part 3 demo queries. |
 | `data/source_budget.pdf` | The source document, kept in the repo so the pipeline is reproducible without a fresh download. |
+| `tests/` | Unit tests for the parts of the pipeline that don't need an LLM call to verify: PDF parsing, date normalization, schema validation. |
+| `.github/workflows/test.yml` | Runs `tests/` on every push. No API keys involved. |
 
 ## System design
 
 The three parts share one foundation:
 
-```
-source_budget.pdf
-      |
- parser.py  (shared PDF parsing)
-      |
-      +----------------+----------------+
-      |                |                |
-   Part 1           Part 2           Part 3
-extract.py     part2_pipeline.py   agents.py + part3_supervisor.py
-5 structured   date extraction,    two agents (create_react_agent)
-   fields      MCP tool calling,   over their own page scopes,
-               classification      routed and synthesized by a
-                                    supervisor (create_supervisor)
-      |                |                |
-      +----------------+----------------+
-                        |
-             llm_config.py (one LLM factory,
-             used the same way by all three parts)
+```mermaid
+flowchart TD
+    PDF[source_budget.pdf] --> Parser[parser.py<br/>shared PDF parsing]
+    Parser --> P1["Part 1: extract.py<br/>5 structured fields"]
+    Parser --> P2["Part 2: part2_pipeline.py<br/>date extraction, MCP tool calling, classification"]
+    Parser --> P3["Part 3: agents.py + part3_supervisor.py<br/>two agents routed and synthesized by a supervisor"]
+    P1 --> LLM[llm_config.py<br/>one LLM factory, same call site for all three parts]
+    P2 --> LLM
+    P3 --> LLM
 ```
 
 `parser.py`, `schemas.py`, and `llm_config.py` are built once, in Part 1, and reused unchanged
@@ -102,6 +95,12 @@ endpoint for free development models, and Anthropic's Messages API directly for 
 Sonnet runs whose results are documented below. Nothing else is called at runtime. The source
 PDF is fetched once, manually, into `data/` rather than re-downloaded on every run.
 
+Cost: development iteration ran on a free OpenRouter model at no cost. The verified runs used
+Haiku ($1/$5 per million input/output tokens) for Parts 1-2 and both Part 3 sub-agents, and
+Sonnet ($2/$10 per million tokens) for Part 3's supervisor. Prompt sizes here are small, a few
+thousand tokens at most per call, so every individual run costs a fraction of a cent. Total
+spend across all verified runs and re-runs during development stayed well under $1.
+
 ## Dependencies
 
 | Library | Why it's here |
@@ -112,11 +111,30 @@ PDF is fetched once, manually, into `data/` rather than re-downloaded on every r
 | `langchain-anthropic` | Direct Anthropic access for the Haiku/Sonnet runs. |
 | `pydantic` | Every schema in `schemas.py` is a Pydantic model, which is what makes structured output type-checked instead of parsed from raw JSON strings. |
 | `langgraph`, `langgraph-supervisor` | Part 3's agent framework: `create_react_agent` for the two sub-agents, `create_supervisor` for routing and synthesis. |
-| `mcp` (pinned `<2.0.0,>=1.24.0`) | The local MCP server for Part 2's datetime tool. Pinned below v2 because `langchain-mcp-adapters` requires it (see Part 2's bug notes). |
+| `mcp` | The local MCP server for Part 2's datetime tool. Pinned to `1.30.0` specifically because `langchain-mcp-adapters` requires `mcp<2.0.0` (see Part 2's bug notes) and v2's `FastMCP` rename would otherwise break on a later minor bump. |
 | `langchain-mcp-adapters` | Turns the MCP server into a tool an LLM can call through `.bind_tools()`, instead of Python code calling it directly. |
 | `python-dateutil` | Deterministic date parsing for `tools/datetime_core.py`. Not LLM-based, on purpose: once a date string is located, converting it to ISO format is parsing, not reasoning. |
 | `python-dotenv` | Loads `.env` so API keys stay out of source and out of git. |
 | `jupyter` | Runs the three notebook deliverables. |
+| `pytest` | Runs `tests/`, the unit tests for the deterministic parts of the pipeline (see below). |
+
+All versions above are pinned exactly (not just constrained), captured from a known-working
+install, so a clone six months from now installs the same thing rather than whatever the latest
+compatible resolver picks.
+
+## Tests
+
+`tests/` covers the parts of the pipeline that don't need a live LLM call to verify: PDF parsing
+(`test_parser.py`, checking known text lands on the pages it's supposed to, including the page 8
+artifact staying stripped), date normalization (`test_datetime_core.py`), and schema validation
+(`test_schemas.py`, checking bad input is rejected, not just that good input is accepted). 18
+tests, no API key required, runs in a few seconds:
+
+```bash
+pytest tests/ -v
+```
+
+`.github/workflows/test.yml` runs the same command on every push.
 
 ## Part 1 — Document Extraction & Prompt Engineering
 
