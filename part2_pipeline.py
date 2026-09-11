@@ -22,8 +22,10 @@ EXTRACTION_SYSTEM_PROMPT = """Extract the exact raw text stating each requested 
 from the given page excerpts. Copy the sentence/phrase verbatim, do not paraphrase."""
 
 TOOL_CALLING_SYSTEM_PROMPT = """You have access to a normalize_date tool that converts \
-a date mentioned in raw text into ISO 8601 (YYYY-MM-DD) format. Call the tool with the \
-exact raw text given to you, so it can locate and normalize the date within it."""
+a date mentioned in raw text into ISO 8601 (YYYY-MM-DD) format. You will be given one or \
+more dates, each labeled "Date N: <text>". Call the tool once per date, passing that \
+date's exact labeled text as the raw_text argument, so it can locate and normalize the \
+date within it."""
 
 CLASSIFICATION_SYSTEM_PROMPT = f"""You are given a list of dates, each with its \
 original source text and its normalized ISO date. Classify each one relative to \
@@ -91,30 +93,45 @@ async def normalize_dates_via_tool_calling_async(
 ) -> list[str]:
     """Real function/tool calling: the LLM decides to call normalize_date with its own
     extracted arguments (via .bind_tools()), rather than Python invoking the tool
-    directly. Single-turn per date — the tool's ISO output is the final answer needed
-    at this step, no further model reasoning required on the result.
+    directly. All dates are sent in a single message so the model can emit one
+    tool_use block per date in parallel, in one turn, instead of one LLM round-trip
+    per date — Claude supports parallel tool calls by default.
 
-    Returns the plain list of normalized ISO dates — this is the assignment's literal
-    Step 1 deliverable ("your final output for this step should be a list of these
-    normalized dates"), returned/printed on its own before classification consumes it.
+    Returns the plain list of normalized ISO dates, in the same order as raw_texts —
+    this is the assignment's literal Step 1 deliverable ("your final output for this
+    step should be a list of these normalized dates"), returned/printed on its own
+    before classification consumes it.
     """
     llm = get_llm(model=model, max_tokens=max_tokens)
     tool, source = await _get_normalize_tool()
     llm_with_tools = llm.bind_tools([tool])
     print(f"[normalize_dates_via_tool_calling] tool source: {source}")
 
+    labeled = "\n".join(f"Date {i + 1}: {t}" for i, t in enumerate(raw_texts))
+    messages = [
+        SystemMessage(content=TOOL_CALLING_SYSTEM_PROMPT),
+        HumanMessage(content=labeled),
+    ]
+    ai_msg = llm_with_tools.invoke(messages)
+    if len(ai_msg.tool_calls) != len(raw_texts):
+        raise RuntimeError(
+            f"Expected {len(raw_texts)} tool calls (one per date), got "
+            f"{len(ai_msg.tool_calls)}: {ai_msg.tool_calls!r}"
+        )
+
+    # Match each tool call back to its source date by the exact text the model was
+    # given, so output order matches raw_texts regardless of the order the model
+    # emitted the parallel calls in.
+    results_by_text = {}
+    for tool_call in ai_msg.tool_calls:
+        raw_result = await tool.ainvoke(tool_call["args"]) if source == "mcp" else tool.invoke(tool_call["args"])
+        results_by_text[tool_call["args"].get("raw_text")] = _unwrap_tool_result(raw_result)
+
     normalized_dates = []
     for raw_text in raw_texts:
-        messages = [
-            SystemMessage(content=TOOL_CALLING_SYSTEM_PROMPT),
-            HumanMessage(content=raw_text),
-        ]
-        ai_msg = llm_with_tools.invoke(messages)
-        if not ai_msg.tool_calls:
-            raise RuntimeError(f"Model did not call normalize_date for: {raw_text!r}")
-        tool_call = ai_msg.tool_calls[0]
-        raw_result = await tool.ainvoke(tool_call["args"]) if source == "mcp" else tool.invoke(tool_call["args"])
-        normalized_dates.append(_unwrap_tool_result(raw_result))
+        if raw_text not in results_by_text:
+            raise RuntimeError(f"No tool call matched raw text: {raw_text!r}")
+        normalized_dates.append(results_by_text[raw_text])
     return normalized_dates
 
 
