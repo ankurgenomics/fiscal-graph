@@ -35,11 +35,14 @@ expenditure_agent specifically -- revenue_agent incidentally showing the same
 number is not a reason to skip expenditure_agent when the query asks about
 that fund's support or purpose, not just its size.
 
-Two worked examples showing the selectivity boundary:
-- "How much is being spent on the GST Voucher Fund top-up, and why?" has no
+Two worked examples showing the selectivity boundary. These are illustrations of the
+RULE above, not queries this system is graded on -- do not treat any query matching
+these topics as a special case; apply the same rule to every query, including ones
+that resemble these:
+- "How much is being spent on the Skills Development Fund top-up, and why?" has no
   revenue component at all -- delegate to expenditure_agent ONLY.
-- "What are the key government revenue streams, and how will the Future Energy
-  Fund be supported?" asks about both -- delegate to BOTH agents.
+- "What are the largest sources of government revenue, and how is the National
+  Productivity Fund being supported?" asks about both -- delegate to BOTH agents.
 
 Synthesize both responses into one comprehensive final answer that directly
 addresses every part of the original question. Do not answer from your own

@@ -53,8 +53,9 @@ Fill in `.env` with one or both keys:
 
 | Key | Used for |
 |---|---|
-| `OPENROUTER_API_KEY` | Any OpenRouter model, including free-tier ones. Used during development to iterate at no cost. Change the model with `DEV_MODEL` (default: `google/gemma-4-31b-it:free`). |
+| `OPENROUTER_API_KEY` | Any OpenRouter model, including free-tier ones. Used during development to iterate at no cost. Change the model with `DEV_MODEL` (default: `liquid/lfm-2.5-2.6b:free`). |
 | `ANTHROPIC_API_KEY` | The Haiku and Sonnet runs that produced the results documented below. |
+| `GEMINI_API_KEY` | Optional. Only needed to run against Google's Gemini directly (see Cross-model behavior and `MODEL_EVALUATION.md`); not required for the primary Haiku/Sonnet results. |
 
 Only one is strictly required, depending on which model you run. `llm_config.py` is the single
 factory both paths go through.
@@ -127,10 +128,11 @@ Parts 2 and 3. Part 3's agent tools call the same `parser.py` functions Part 1 u
 different pages per agent. It is one pipeline from PDF to structured answers, not three separate
 scripts.
 
-Two external APIs are used, both behind `llm_config.get_llm()`: OpenRouter's OpenAI-compatible
-endpoint for free development models, and Anthropic's Messages API directly for the Haiku and
-Sonnet runs whose results are documented below. Nothing else is called at runtime. The source PDF
-is fetched once, manually, into `data/` rather than re-downloaded on every run.
+Three external APIs are used, all behind `llm_config.get_llm()`: OpenRouter's OpenAI-compatible
+endpoint for free development models, Anthropic's Messages API directly for the Haiku and Sonnet
+runs whose results are documented below, and Google's Gemini API directly for the model comparison
+in `MODEL_EVALUATION.md`. Nothing else is called at runtime. The source PDF is fetched once,
+manually, into `data/` rather than re-downloaded on every run.
 
 **Cost.** Development iteration ran on a free OpenRouter model at no cost. The verified runs used
 Haiku ($1 / $5 per million input/output tokens) for Parts 1 and 2, and Sonnet ($2 / $10 per
@@ -150,6 +152,7 @@ this cost total.
 | `pdfplumber` | Table-aware extraction for tabular pages. Detects bordered tables cell by cell instead of reconstructing structure from a flat text dump (see the page 8 artifact finding in Part 1). |
 | `langchain`, `langchain-openai` | Structured output and tool binding, used the same way in all three parts. `langchain-openai`'s `ChatOpenAI` talks to OpenRouter. |
 | `langchain-anthropic` | Direct Anthropic access for the Haiku/Sonnet runs. |
+| `langchain-google-genai` | Direct Google access for the Gemini runs in `MODEL_EVALUATION.md`. |
 | `pydantic` | Every schema in `schemas.py` is a Pydantic model, so structured output is type-checked rather than parsed from raw JSON strings. |
 | `langgraph`, `langgraph-supervisor` | Part 3's agent framework: `create_react_agent` for the two sub-agents, `create_supervisor` for routing and synthesis. |
 | `mcp` | The local MCP server for Part 2's datetime tool. Pinned to `1.30.0` because `langchain-mcp-adapters` requires `mcp<2.0.0`; v2's `FastMCP` rename would otherwise break on a later minor bump. |
@@ -421,7 +424,7 @@ one failed, is in [MODEL_EVALUATION.md](MODEL_EVALUATION.md).
 |---|---|---|---|---|
 | `temperature` parameter | Rejects it outright: a 400 error if passed at all, even `0`. `llm_config.py` omits the kwarg entirely when `temperature=None`. | Accepts `temperature=0` fine. | Accepts the kwarg without erroring, but silently ignores it; the API warns that this model "uses fixed sampling defaults." | Three different behaviors (reject / honor / silently ignore) for the identical parameter. A single call site can't assume any of the three without checking the model first. |
 | Structured-output token budget | Reliably populates every required schema field at `max_tokens=3000`. | Same as Sonnet. | Silently dropped one required field out of five at `max_tokens=3000`; needed `6000` to populate all fields reliably. No error, no truncation warning: the response simply validated as incomplete. | A fixed `max_tokens` tuned against one provider is not a safe default for another. This is a real, reproduced failure, not a one-off. |
-| Operating Revenue tax list (Part 1) | Excludes "Statutory Boards' Contributions": 11 items. | Includes it: 12 items. See [Interpretation calls](#interpretation-calls), row 6. | Included it, 12 items, matching Haiku. | Genuine disagreement about what counts as a "tax" under an ambiguous field name, not something a schema description alone resolved. |
+| Operating Revenue tax list (Part 1) | Excludes "Statutory Boards' Contributions": always 11 items, consistent across repeated runs. | Includes it: always 12 items, consistent across repeated runs. See [Interpretation calls](#interpretation-calls), row 6. | Inconsistent: 10 items in one run, 12 in another, across identical repeated calls. Not settled on either reading. | Genuine disagreement about what counts as a "tax" under an ambiguous field name. Sonnet and Haiku each pick a side and hold it; Gemini's own output varies run to run, a different and arguably worse property than picking the "wrong" side consistently. |
 | Supervisor routing selectivity (Part 3) | Correctly delegates to exactly the agent(s) a query needs, after the routing-prompt fix described in Part 3's Architecture section. | Not run as supervisor/agent model in the verified trace (Part 3 defaults to Sonnet for both roles; see Part 3 Assumptions). | Over-routed on the expenditure-only demo query (GST Voucher Fund top-up): called both `revenue_agent` and `expenditure_agent` when only the latter was relevant. The answer content was still correct; the inefficiency is in which agents got called, not what they said. | Routing precision is itself model-dependent, not just a property of the prompt. The same `SUPERVISOR_PROMPT` produces tighter routing on Sonnet than on Gemini. |
 
 ### Mitigations
@@ -440,9 +443,11 @@ run) never triggers any of them and pays no extra cost:
   OpenRouter free model, `liquid/lfm-2.5-2.6b:free`, non-deterministically spending its whole token
   budget on hidden reasoning tokens before emitting any JSON; the same call succeeded cleanly
   moments earlier and failed this way the next time). It never inspects which model or which field
-  failed, so it's schema-agnostic and model-agnostic by construction. Wired into every
-  structured-output call site in Parts 1 and 2, plus the tool-call-count check in Part 2's date
-  normalization.
+  failed, so it's schema-agnostic and model-agnostic by construction. Called directly at every
+  structured-output call site in Parts 1 and 2. Part 2's tool-call-count check (a different failure
+  shape: not a validation error, a wrong number of tool calls) uses a separate, hand-written
+  one-retry check rather than this same function, since its input isn't a `chain.invoke(dict)` call
+  this helper's signature expects.
 - **A worked example in the Part 1 extraction prompt** showing which items belong in
   `operating_revenue_taxes` and which don't, plus an explicit "every field is required" line.
   Targets both the Gemini omission and the Haiku/Sonnet tax-count disagreement at once, since both

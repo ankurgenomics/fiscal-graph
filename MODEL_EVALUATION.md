@@ -1,5 +1,3 @@
-<!-- DRAFT: not linked from README, not committed. For review before deciding placement. -->
-
 # Model Selection: Why Claude Sonnet/Haiku, Not Free Open-Weight Models
 
 ## Method
@@ -27,9 +25,9 @@ to test at zero cost, not excluded by choice.
 | `nex-agi/nex-n2.5-pro:free` | Open-weight, free (reasoning) | Failed: same mode | 7,703 of 8,000 tokens spent on reasoning tokens before truncation. Same root cause as above. |
 | `inclusionai/ling-3.0-flash-fin:free` | Open-weight, free (finance-domain-tuned) | Failed: request rejected, zero attempts possible | Backing provider (Novita) returns HTTP 400: "model features structured outputs not support." This model cannot serve this pipeline's contract under any prompt or token budget. |
 | `liquid/lfm-2.5-2.6b:free` | Open-weight, free (2.6B params) | Ran, but unreliable on both axes tested | Non-deterministic: an identical call succeeded once, then failed with the same `LengthFinishReasonError` as the two reasoning models above on a later attempt, with no prompt or input changed. When it did return valid JSON, the answers were wrong and inconsistent across identical repeated calls: fiscal position returned as 1.72, 1.72, then -0.35 across three runs (correct answer: -3.57); the Corporate Income Tax figure and its year-over-year change were pulled from the wrong fiscal-year column (Revised FY2023 instead of the requested Estimated FY2024) in all three runs; the required tax list ranged from 7 to 10 items per run (correct: 10-12, depending on one documented interpretation call). |
-| `gemini-3.6-flash` (Google) | Closed, paid-tier API, direct | Passed on content, three quantified operational gaps | See "Gemini vs. Claude" below. |
-| `claude-haiku-4-5` (Anthropic) | Closed, paid-tier API, direct | Passed | Correct on every field in every run. One interpretation disagreement against Sonnet on an inherently ambiguous field (see Interpretation calls, row 6), a documented reading difference, not an error. |
-| `claude-sonnet-5` (Anthropic) | Closed, paid-tier API, direct | Passed | Correct on every field in every run. Correct multi-agent routing after one prompt refinement. Rejects the `temperature` parameter outright at the API level, a protocol quirk, handled in `llm_config.py`, not a capability issue. |
+| `gemini-3.6-flash` (Google) | Closed API, direct (tested on free quota, $0 spent) | Passed on content, three quantified operational gaps | See "Gemini vs. Claude" below. |
+| `claude-haiku-4-5` (Anthropic) | Closed API, direct, metered/paid | Passed | Correct on every field in every run. One interpretation disagreement against Sonnet on an inherently ambiguous field (see Interpretation calls, row 6), a documented reading difference, not an error. |
+| `claude-sonnet-5` (Anthropic) | Closed API, direct, metered/paid | Passed | Correct on every field in every run. Correct multi-agent routing after one prompt refinement. Rejects the `temperature` parameter outright at the API level, a protocol quirk, handled in `llm_config.py`, not a capability issue. |
 
 ## Gemini vs. Claude
 
