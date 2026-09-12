@@ -1,0 +1,37 @@
+name: golden-set eval
+
+# Manual trigger only, not on push or pull_request. This calls a real LLM and
+# costs API spend, so it never runs automatically; it runs only when someone
+# clicks "Run workflow" in the Actions tab. Requires ANTHROPIC_API_KEY set as
+# a repository secret.
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "Model id (blank uses evaluate.py's default, Haiku)"
+        required: false
+        default: ""
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run golden-set eval
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -n "${{ github.event.inputs.model }}" ]; then
+            python evaluate.py --model "${{ github.event.inputs.model }}"
+          else
+            python evaluate.py
+          fi

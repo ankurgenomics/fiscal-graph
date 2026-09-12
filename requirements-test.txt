@@ -1,16 +1,23 @@
-# Minimal install for `pytest tests/`: parser, schema, and retry-logic tests only.
-# No LLM calls happen in tests/, but retry_utils.py and llm_config.py are imported
-# by test_citations.py and test_retry_utils.py, so their provider SDKs are needed
-# to import those modules even though no network call is made. Excludes jupyter,
-# langgraph, langgraph-supervisor, mcp, and langchain-mcp-adapters -- none of the
-# test files import agents.py, part2_pipeline.py, or part3_supervisor.py, so none
-# of those are needed to run the suite. See requirements.txt for the full pipeline.
+# Minimal install for `pytest tests/`. No LLM calls happen in tests/, but several
+# provider SDKs and frameworks are still needed just to import the modules under
+# test, even though no network call is made:
+# - retry_utils.py / llm_config.py (test_retry_utils.py, test_citations.py) need
+#   the three provider SDKs.
+# - api.py (test_api.py) imports part3_supervisor.py, which imports agents.py and
+#   langgraph_supervisor, so those are needed too.
+# Excludes jupyter and the MCP packages (mcp, langchain-mcp-adapters) -- no test
+# file imports part2_pipeline.py or tools/mcp_client.py. See requirements.txt for
+# the full pipeline.
 langchain-openai==1.6.1
 langchain-anthropic==1.7.1
 langchain-google-genai==4.4.0
+langgraph==1.2.11
+langgraph-supervisor==0.0.31
 pdfplumber==0.11.10
 pymupdf==1.28.2
 pydantic==2.13.5
 python-dateutil==2.9.0.post0
 python-dotenv==1.2.3
 pytest==9.1.1
+fastapi==0.141.1
+httpx==0.28.1

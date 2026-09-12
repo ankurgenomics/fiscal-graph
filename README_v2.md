@@ -9,7 +9,7 @@
   &nbsp;
   <img src="https://img.shields.io/badge/python-3.11-3776AB?logo=python&logoColor=white&style=flat-square" alt="Python 3.11" />
   &nbsp;
-  <img src="https://img.shields.io/badge/tests-28%20passing-22C55E?style=flat-square" alt="28 tests passing" />
+  <img src="https://img.shields.io/badge/tests-31%20passing-22C55E?style=flat-square" alt="31 tests passing" />
   &nbsp;
   <img src="https://img.shields.io/badge/LangGraph-multi--agent%20supervisor-FF6B35?style=flat-square" alt="LangGraph" />
   &nbsp;
@@ -60,6 +60,12 @@ factory every part goes through.
 ## How to run
 
 ```bash
+python run_all.py              # all three parts in sequence
+```
+
+Or run each part on its own:
+
+```bash
 python extract.py              # Part 1
 python part2_pipeline.py       # Part 2
 python part3_supervisor.py     # Part 3: runs four queries, writes trace.json
@@ -67,6 +73,14 @@ python part3_supervisor.py     # Part 3: runs four queries, writes trace.json
 
 Or open the equivalent notebook for each part: `part1_extraction.ipynb`,
 `part2_tools_reasoning.ipynb`, `part3_multiagent.ipynb`.
+
+Part 3 is also reachable as a service:
+
+```bash
+uvicorn api:app --reload
+curl -X POST localhost:8000/query -H "Content-Type: application/json" \
+  -d '{"query": "What is the largest single source of government revenue?"}'
+```
 
 ## Repository structure
 
@@ -77,6 +91,8 @@ Or open the equivalent notebook for each part: `part1_extraction.ipynb`,
 | `llm_config.py` | LLM factory. One call site, routed by model id, to OpenRouter, Anthropic, or Google. |
 | `retry_utils.py` | Retries a structured-output call once if the model's response doesn't validate. |
 | `observability.py` | Logs one line per top-level call with elapsed time and outcome. |
+| `run_all.py` | Runs all three parts in sequence: `python run_all.py`. |
+| `api.py` | A single `POST /query` endpoint over Part 3's supervisor: `uvicorn api:app`. |
 | `extract.py` | Part 1: extraction, plus the fixed page citation for each field. |
 | `part1_extraction.ipynb` | Part 1 notebook, executed, with a verification table. |
 | `evaluate.py` | Runs Part 1 against a fixed set of known-correct values: `python evaluate.py`. |
@@ -93,6 +109,7 @@ Or open the equivalent notebook for each part: `part1_extraction.ipynb`,
 | `data/source_budget.pdf` | The source document. |
 | `tests/` | Unit tests for the parts of the pipeline that don't need a live LLM call. |
 | `.github/workflows/test.yml` | Runs `tests/` on every push. |
+| `.github/workflows/eval.yml` | Runs `evaluate.py` against a live model. Manual trigger only, never on push, since it costs API spend. |
 
 ## System design
 
@@ -147,14 +164,15 @@ well under $1.
 | `python-dateutil` | Deterministic date parsing for `tools/datetime_core.py`. Not LLM-based: converting a located date string to ISO format is parsing, not reasoning. |
 | `python-dotenv` | Loads `.env` so API keys stay out of source and out of git. |
 | `pytest` | Runs `tests/`. |
+| `fastapi`, `uvicorn` | The `api.py` service surface over Part 3's supervisor. |
 
 Every version is pinned exactly, not just constrained.
 
 ## Tests
 
 `tests/` covers the parts of the pipeline that don't need a live LLM call to verify: PDF parsing,
-date normalization, schema validation, the retry helper, the citation mapping, and structured
-logging. 28 tests, no API key required:
+date normalization, schema validation, the retry helper, the citation mapping, structured
+logging, and the API's route structure. 31 tests, no API key required:
 
 ```bash
 pytest tests/ -v
@@ -337,6 +355,24 @@ recorded sequence for the required query above:
 
 This is the actual message sequence from `trace.json`, condensed for readability; tool-call IDs
 and raw page text are omitted here but present in the file.
+
+## Design decisions
+
+Each agent's tool returns a fixed, pre-scoped page range rather than searching the document with
+an embedding index, because the page-to-topic mapping for this specific 37-page document is
+already known from Part 1, and the graded skill in Part 3 is routing and synthesis, not
+retrieval. This is a boundary drawn for a known, fixed document, not a general design. Extending
+this pipeline to a different or future budget document would move that mapping from a fixed
+dictionary to a classification step: a first pass that identifies which pages are relevant to a
+query before an agent reads them, so the page numbers themselves stop being hardcoded knowledge.
+
+The same applies to tool calling in Part 2: the model chooses to call `normalize_date` with
+arguments it extracted itself, which is genuinely different from Python calling that function
+directly, but the model never sees the tool's result to reason over again. That is enough for
+this task, normalizing two known dates, and is the right amount of machinery for it. A pipeline
+that needed the model to react to a tool result, for example deciding which of several dates to
+normalize next based on what the first one returned, would need a full agent loop instead of a
+single bound tool call.
 
 ## Assumptions
 
