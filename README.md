@@ -57,6 +57,16 @@ Fill in `.env`:
 Only one is strictly required, depending on which model you run. `llm_config.py` is the single
 factory every part goes through.
 
+To run the whole pipeline against a different model, set `MODEL_OVERRIDE` instead of editing any
+code:
+
+```bash
+MODEL_OVERRIDE=gemini-3.6-flash python run_all.py
+```
+
+`MODEL_EVALUATION.md` documents exactly what this produces on Gemini, run live, alongside where it
+differs from the Haiku/Sonnet results documented below.
+
 ## How to run
 
 ```bash

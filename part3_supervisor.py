@@ -9,7 +9,7 @@ supervisor's decision-making process" requirement.
 import sys
 from langgraph_supervisor import create_supervisor
 from agents import build_revenue_agent, build_expenditure_agent
-from llm_config import get_llm, SONNET_MODEL
+from llm_config import get_llm, SONNET_MODEL, primary_model
 from observability import timed_call
 
 # Windows' default console codepage (cp1252) can't print characters models
@@ -64,11 +64,15 @@ def build_supervisor(
     # made the supervisor's routing brittle (see README's Part 3 Architecture section).
     # agent_temperature defaults to None to match (Sonnet rejects the parameter
     # entirely, even 0); pass 0 explicitly if overriding agent_model back to Haiku
-    # for a cheaper run.
-    revenue_agent = build_revenue_agent(model=agent_model or SONNET_MODEL, temperature=agent_temperature)
-    expenditure_agent = build_expenditure_agent(model=agent_model or SONNET_MODEL, temperature=agent_temperature)
+    # for a cheaper run. Both defaults route through primary_model(), so setting
+    # MODEL_OVERRIDE swaps the whole supervisor onto a different model with no
+    # code change -- see llm_config.py.
+    agent_model = agent_model or primary_model(SONNET_MODEL)
+    supervisor_model = supervisor_model or primary_model(SONNET_MODEL)
+    revenue_agent = build_revenue_agent(model=agent_model, temperature=agent_temperature)
+    expenditure_agent = build_expenditure_agent(model=agent_model, temperature=agent_temperature)
     # temperature omitted (None): claude-sonnet-5 rejects the parameter entirely, even 0
-    supervisor_llm = get_llm(model=supervisor_model or SONNET_MODEL, max_tokens=6144, temperature=None)
+    supervisor_llm = get_llm(model=supervisor_model, max_tokens=6144, temperature=None)
 
     graph = create_supervisor(
         agents=[revenue_agent, expenditure_agent],

@@ -5,19 +5,20 @@ python run_all.py
 import json
 
 from extract import run_extraction, field_sources
-from llm_config import HAIKU_MODEL
+from llm_config import HAIKU_MODEL, primary_model
 from part2_pipeline import run_pipeline_sync, to_sample_format
 from part3_supervisor import build_supervisor, run_query, DEMO_QUERIES
 
 
 def main():
-    # Haiku explicitly: leaving model unset would fall through to DEV_MODEL,
-    # the free OpenRouter model used only for zero-cost iteration, not the
-    # model these parts' documented results are verified against.
+    # Haiku by default; set MODEL_OVERRIDE to run the whole pipeline against a
+    # different model instead (see llm_config.py's primary_model() and
+    # MODEL_EVALUATION.md for what that actually produces on Gemini).
+    model = primary_model(HAIKU_MODEL)
     print("=" * 80)
     print("PART 1: Document Extraction")
     print("=" * 80)
-    result1 = run_extraction(model=HAIKU_MODEL)
+    result1 = run_extraction(model=model)
     print(result1.model_dump_json(indent=2))
     print("\nSource pages (fixed at code time, not model-reported):")
     print(json.dumps(field_sources(), indent=2))
@@ -25,7 +26,7 @@ def main():
     print("\n" + "=" * 80)
     print("PART 2: Tool Calling and Reasoning")
     print("=" * 80)
-    result2 = run_pipeline_sync(model=HAIKU_MODEL)
+    result2 = run_pipeline_sync(model=model)
     print(json.dumps(to_sample_format(result2), indent=2))
 
     print("\n" + "=" * 80)

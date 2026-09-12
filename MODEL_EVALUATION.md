@@ -31,16 +31,42 @@ testing; DeepSeek, Llama, Qwen, and Mistral were not among them.
 
 ## Gemini
 
-Gemini matched Sonnet and Haiku on content: every fact it returned across all three parts, once
-given enough token budget, was correct. It differed on three measured, specific points:
+Every documented entry point (`run_all.py`, `part3_supervisor.py`, `api.py`) resolves its model
+through `llm_config.primary_model()`, which reads the `MODEL_OVERRIDE` environment variable before
+falling back to the Haiku/Sonnet default. Setting it runs the entire pipeline on a different model
+with no code change:
 
-1. **Token budget.** Needed 6,000-8,000 tokens to reliably complete the schema, versus 3,000 for
+```bash
+MODEL_OVERRIDE=gemini-3.6-flash python run_all.py
+```
+
+Run this way, live, end to end:
+
+| Part | Result | vs. the documented Haiku/Sonnet result |
+|---|---|---|
+| Part 1 | 4 of 5 fields exact. Fiscal position (the field with three candidate columns) correct. | Tax list count varied across separate runs (10, 11, and 12 items observed across different sessions); Sonnet and Haiku each hold one count consistently across repeats. |
+| Part 2 | Exact match, character for character | No difference observed |
+| Part 3, the 4 demo queries | 4 of 4 routed correctly | Matches Sonnet exactly; an over-routing case documented in an earlier version of this evaluation did not reproduce against the current `SUPERVISOR_PROMPT` |
+| Part 3, held-out eval (8 queries never seen in the prompt) | 4 of 8 confirmed correct, zero failures observed; the remaining 4 were never reached | Cut short by the quota limitation below, not by any wrong answer |
+
+Three measured differences from Sonnet/Haiku, unchanged from prior testing:
+
+1. **Token budget.** Needs 6,000-8,000 tokens to reliably complete the schema, versus 3,000 for
    Sonnet and Haiku on the identical task.
-2. **Run-to-run consistency.** Its operating-revenue tax list varied between a 12-item and a
-   10-item answer across repeated identical calls. Sonnet and Haiku each held one reading
-   consistently across repeats.
-3. **Routing precision.** Over-routed once across four Part 3 demo queries, calling both agents
-   where one was relevant. The final answer was still correct.
+2. **Run-to-run consistency.** The one field already documented as genuinely ambiguous
+   (`operating_revenue_taxes`) is the only field where Gemini's answer changes between runs.
+   Every other field, every run observed, has been correct.
+3. **`temperature` handling.** Accepted without erroring, then silently ignored; the API reports
+   this model "uses fixed sampling defaults."
+
+**A fourth, operational limitation, confirmed directly**: Google's free-tier quota
+(`generativelanguage.googleapis.com/generate_content_free_tier_requests`, 20 requests/day for this
+model) is scoped **per Google Cloud project, not per API key**. Seven separate API keys were
+created across testing; all seven drew from the same daily pool. A fresh key does not grant fresh
+quota if it belongs to the same project as a key already in use that day. This is not a code
+limitation, and does not apply to Anthropic's keys (Parts 1-3's default), but it is the practical
+reason a full run against Gemini, including the held-out eval, could not be completed inside a
+single day on the free tier.
 
 ## Failure categories
 

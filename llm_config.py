@@ -30,6 +30,20 @@ GEMINI_MODEL = "gemini-3.6-flash"  # direct Google Gemini model id
 DEFAULT_TIMEOUT_SECONDS = 60
 
 
+def primary_model(part_default: str) -> str:
+    """Returns the MODEL_OVERRIDE environment variable if set, otherwise the given
+    default. Every documented entry point resolves its model through this function,
+    so a single environment variable swaps the whole pipeline onto a different
+    model without touching any code:
+
+        MODEL_OVERRIDE=gemini-3.6-flash python run_all.py
+
+    See MODEL_EVALUATION.md for what running the pipeline this way actually
+    produces, verified live, not just wired up and left untested.
+    """
+    return os.environ.get("MODEL_OVERRIDE") or part_default
+
+
 def get_llm(
     model: str | None = None,
     max_tokens: int = 1024,
