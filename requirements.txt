@@ -8,6 +8,7 @@ langgraph-supervisor==0.0.31
 mcp==1.30.0
 langchain-mcp-adapters==0.3.2
 langchain-anthropic==1.7.1
+langchain-google-genai==4.4.0
 python-dateutil==2.9.0.post0
 python-dotenv==1.2.3
 jupyter==1.1.1
