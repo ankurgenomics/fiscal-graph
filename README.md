@@ -9,7 +9,7 @@
   &nbsp;
   <img src="https://img.shields.io/badge/python-3.11-3776AB?logo=python&logoColor=white&style=flat-square" alt="Python 3.11" />
   &nbsp;
-  <img src="https://img.shields.io/badge/tests-23%20passing-22C55E?style=flat-square" alt="23 tests passing" />
+  <img src="https://img.shields.io/badge/tests-28%20passing-22C55E?style=flat-square" alt="28 tests passing" />
   &nbsp;
   <img src="https://img.shields.io/badge/LangGraph-multi--agent%20supervisor-FF6B35?style=flat-square" alt="LangGraph" />
   &nbsp;
@@ -24,7 +24,8 @@
   <a href="#part-2-tool-calling-and-reasoning">Part 2</a> &nbsp;•&nbsp;
   <a href="#part-3-multi-agent-supervisor">Part 3</a> &nbsp;•&nbsp;
   <a href="#interpretation-calls">Interpretation calls</a> &nbsp;•&nbsp;
-  <a href="#cross-model-behavior">Model evaluation</a>
+  <a href="#cross-model-behavior">Model evaluation</a> &nbsp;•&nbsp;
+  <a href="#reliability-and-operations">Reliability</a>
 
 </div>
 
@@ -83,8 +84,11 @@ python part3_supervisor.py     # Part 3: runs all 4 demo queries, writes trace.j
 |---|---|
 | `parser.py` | PDF parsing. PyMuPDF for prose pages, pdfplumber table mode plus an artifact filter for tables. Used by all three parts. |
 | `schemas.py` | Pydantic models for every structured output used across the three parts. |
-| `llm_config.py` | LLM factory. Routes to OpenRouter for free dev models or direct Anthropic for Haiku/Sonnet, from one call site. |
-| `extract.py` | Part 1 extraction. |
+| `llm_config.py` | LLM factory. Routes to OpenRouter for free dev models, direct Anthropic for Haiku/Sonnet, or direct Google for Gemini, from one call site. Also owns the per-provider timeout mapping. |
+| `retry_utils.py` | Generic retry on structured-output failure, used by Parts 1 and 2. See Cross-model behavior, Mitigations. |
+| `observability.py` | Structured local logging (`timed_call()`) around each part's top-level entry point. See Reliability and operations. |
+| `extract.py` | Part 1 extraction, plus `field_sources()` (fixed source-page citations) and the opt-in `run_extraction_consistent()` / `run_extraction_verified()` robustness wrappers. |
+| `evaluate.py` | Golden-set regression check for Part 1, run by hand: `python evaluate.py`. See Reliability and operations. |
 | `part1_extraction.ipynb` | Part 1 notebook, executed, with a verification table against ground truth. |
 | `tools/datetime_core.py` | Part 2's date-normalization logic, deterministic. |
 | `tools/datetime_mcp.py` | Part 2's local MCP server exposing that logic as a tool. |
@@ -97,8 +101,9 @@ python part3_supervisor.py     # Part 3: runs all 4 demo queries, writes trace.j
 | `part3_multiagent.ipynb` | Part 3 notebook, executed, with an automated verification cell and a routing-pattern summary. |
 | `trace.json` | Full captured trace for all four Part 3 demo queries. |
 | `data/source_budget.pdf` | The source document, kept in the repo so the pipeline is reproducible without a fresh download. |
-| `tests/` | Unit tests for the parts of the pipeline that don't need an LLM call to verify: PDF parsing, date normalization, schema validation. |
+| `tests/` | Unit tests for the parts of the pipeline that don't need an LLM call to verify: PDF parsing, date normalization, schema validation, retry logic, citation mapping, structured logging. |
 | `.github/workflows/test.yml` | Runs `tests/` on every push. No API keys involved. |
+| `requirements-test.txt` | Minimal install for `tests/` alone; excludes `jupyter`, `langgraph`, and MCP packages that no test file imports. Used by CI. |
 
 ## System design
 
@@ -162,9 +167,10 @@ compatible resolver picks.
 
 `tests/` covers the parts of the pipeline that don't need a live LLM call to verify: PDF parsing
 (`test_parser.py`: known text lands on the pages it's supposed to, and the page 8 artifact stays
-stripped), date normalization (`test_datetime_core.py`), and schema validation
-(`test_schemas.py`: bad input is rejected, not just that good input is accepted). 18 tests, no
-API key required, runs in a few seconds:
+stripped), date normalization (`test_datetime_core.py`), schema validation (`test_schemas.py`: bad
+input is rejected, not just that good input is accepted), the generic retry helper
+(`test_retry_utils.py`), the source-page citation mapping (`test_citations.py`), and structured
+logging (`test_observability.py`). 28 tests, no API key required, runs in a few seconds:
 
 ```bash
 pytest tests/ -v
@@ -450,4 +456,35 @@ surfacing any per-field disagreement instead of silently picking one; `run_extra
 adds a second self-check pass where the model reviews its own draft against the source context.
 Neither changes any currently-documented result; they're available for a run where the extra cost
 is worth the added robustness.
+
+## Reliability and operations
+
+Four things a production version of this pipeline would need, built here in a scope matched to a
+take-home rather than a full platform:
+
+- **Timeouts.** `llm_config.get_llm()` bounds every network call at 60 seconds by default (pass
+  `timeout=None` to disable). Each provider names this field differently: `ChatAnthropic` wants
+  `default_request_timeout`, `ChatOpenAI` wants `request_timeout`, `ChatGoogleGenerativeAI` wants
+  `timeout`, confirmed by inspecting each class's own fields rather than guessing. Without this, a
+  hung provider call hangs the pipeline indefinitely.
+- **Source citations, fixed at code time.** `extract.py`'s `field_sources()` returns which PDF
+  page(s) back each extracted field, e.g. `{"latest_actual_fiscal_position_billion": [8]}`. This
+  mapping is not model-generated: it mirrors the page actually fed to the model for that field in
+  `build_context()`, so it carries no hallucination risk and cannot drift from what the model was
+  actually shown. `tests/test_citations.py` asserts every schema field has exactly one entry here,
+  so adding a field without a citation fails the test suite rather than shipping silently.
+- **Structured logging.** `observability.py`'s `timed_call()` is a context manager wrapped around
+  each part's top-level entry point (`run_extraction`, `part2_pipeline.run_pipeline`,
+  `part3_supervisor.run_query`), logging one line per call with elapsed time and outcome. This is
+  local, dependency-free logging, not a tracing platform: no LangSmith or Phoenix integration,
+  which would need its own account and API key. It is the minimum real visibility into latency and
+  failure rate without one.
+- **Golden-set regression check.** `evaluate.py` runs the Part 1 extraction against a fixed set of
+  known-correct values (the same ones `part1_extraction.ipynb` checks against) and exits non-zero
+  on any mismatch, formalizing that notebook check into a reusable, scriptable entry point:
+  `python evaluate.py [--model MODEL_ID]`. Not wired into CI, since it calls a real LLM and needs
+  an API key; run it by hand after a prompt or schema change. The one field with a documented
+  interpretation split (`operating_revenue_taxes`, see Interpretation calls row 6) is reported
+  separately from the other four fields' pass/fail count, since a mismatch there may reflect the
+  known model-dependent ambiguity rather than a regression.
 
