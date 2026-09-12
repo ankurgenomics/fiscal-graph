@@ -14,6 +14,7 @@ from schemas import DateExtraction, ClassifiedDates
 from llm_config import get_llm
 from tools.datetime_fallback import normalize_date as _fallback_normalize_date
 from tools.mcp_client import get_mcp_normalize_tool
+from retry_utils import invoke_with_retry
 
 PDF = "data/source_budget.pdf"
 REFERENCE_DATE = "2024-01-01"
@@ -48,7 +49,7 @@ Return one classified entry per input date, preserving the original_text and \
 normalized_date exactly as given."""
 
 
-def extract_raw_dates(model: str | None = None, max_tokens: int = 1024) -> DateExtraction:
+def extract_raw_dates(model: str | None = None, max_tokens: int = 2048) -> DateExtraction:
     llm = get_llm(model=model, max_tokens=max_tokens)
     structured_llm = llm.with_structured_output(DateExtraction)
     prompt = ChatPromptTemplate.from_messages([
@@ -57,7 +58,7 @@ def extract_raw_dates(model: str | None = None, max_tokens: int = 1024) -> DateE
     ])
     chain = prompt | structured_llm
     context = get_prose_text(PDF, [1, 36])
-    return chain.invoke({"context": context})
+    return invoke_with_retry(chain, {"context": context})
 
 
 def _unwrap_tool_result(result) -> str:
@@ -89,7 +90,7 @@ async def _get_normalize_tool():
 
 
 async def normalize_dates_via_tool_calling_async(
-    raw_texts: list[str], model: str | None = None, max_tokens: int = 512
+    raw_texts: list[str], model: str | None = None, max_tokens: int = 1024
 ) -> list[str]:
     """Real function/tool calling: the LLM decides to call normalize_date with its own
     extracted arguments (via .bind_tools()), rather than Python invoking the tool
@@ -114,6 +115,11 @@ async def normalize_dates_via_tool_calling_async(
     ]
     ai_msg = llm_with_tools.invoke(messages)
     if len(ai_msg.tool_calls) != len(raw_texts):
+        # One retry, same failure category as the structured-output retries in
+        # retry_utils.py: a weaker model occasionally under-delivers on a strict
+        # contract (here, one tool call per date) without erroring.
+        ai_msg = llm_with_tools.invoke(messages)
+    if len(ai_msg.tool_calls) != len(raw_texts):
         raise RuntimeError(
             f"Expected {len(raw_texts)} tool calls (one per date), got "
             f"{len(ai_msg.tool_calls)}: {ai_msg.tool_calls!r}"
@@ -136,7 +142,7 @@ async def normalize_dates_via_tool_calling_async(
 
 
 
-def classify_dates(normalized: list[dict], model: str | None = None, max_tokens: int = 1024) -> ClassifiedDates:
+def classify_dates(normalized: list[dict], model: str | None = None, max_tokens: int = 2048) -> ClassifiedDates:
     llm = get_llm(model=model, max_tokens=max_tokens)
     structured_llm = llm.with_structured_output(ClassifiedDates)
     prompt = ChatPromptTemplate.from_messages([
@@ -144,10 +150,10 @@ def classify_dates(normalized: list[dict], model: str | None = None, max_tokens:
         ("human", "{dates}"),
     ])
     chain = prompt | structured_llm
-    return chain.invoke({"dates": normalized})
+    return invoke_with_retry(chain, {"dates": normalized})
 
 
-async def run_pipeline(model: str | None = None, max_tokens: int = 1024) -> ClassifiedDates:
+async def run_pipeline(model: str | None = None, max_tokens: int = 2048) -> ClassifiedDates:
     """Async — call with `await run_pipeline(...)` in a notebook (Jupyter already
     runs an event loop; asyncio.run() would fail there). For scripts/CLI use, call
     run_pipeline_sync(...) instead."""
@@ -165,7 +171,7 @@ async def run_pipeline(model: str | None = None, max_tokens: int = 1024) -> Clas
     return classify_dates(paired, model=model, max_tokens=max_tokens)
 
 
-def run_pipeline_sync(model: str | None = None, max_tokens: int = 1024) -> ClassifiedDates:
+def run_pipeline_sync(model: str | None = None, max_tokens: int = 2048) -> ClassifiedDates:
     """Sync entry point for scripts/CLI use — do not call this from a notebook cell."""
     return asyncio.run(run_pipeline(model=model, max_tokens=max_tokens))
 

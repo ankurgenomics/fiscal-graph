@@ -34,6 +34,12 @@ expenditure_agent specifically -- revenue_agent incidentally showing the same
 number is not a reason to skip expenditure_agent when the query asks about
 that fund's support or purpose, not just its size.
 
+Two worked examples showing the selectivity boundary:
+- "How much is being spent on the GST Voucher Fund top-up, and why?" has no
+  revenue component at all -- delegate to expenditure_agent ONLY.
+- "What are the key government revenue streams, and how will the Future Energy
+  Fund be supported?" asks about both -- delegate to BOTH agents.
+
 Synthesize both responses into one comprehensive final answer that directly
 addresses every part of the original question. Do not answer from your own
 knowledge -- always delegate to the agents, who have access to the source
@@ -50,15 +56,15 @@ def build_supervisor(
     supervisor_model: str | None = None,
     agent_temperature: float | None = None,
 ):
-    # Sonnet by default for sub-agents too, not just the supervisor -- see
-    # README's Part 3 "A finding worth keeping in" for why Haiku sub-agents
-    # were dropped as the default. agent_temperature defaults to None to match
-    # (Sonnet rejects the parameter entirely, even 0); pass 0 explicitly if
-    # overriding agent_model back to Haiku for a cheaper run.
+    # Sonnet by default for sub-agents too, not just the supervisor: Haiku sub-agents
+    # made the supervisor's routing brittle (see README's Part 3 Architecture section).
+    # agent_temperature defaults to None to match (Sonnet rejects the parameter
+    # entirely, even 0); pass 0 explicitly if overriding agent_model back to Haiku
+    # for a cheaper run.
     revenue_agent = build_revenue_agent(model=agent_model or SONNET_MODEL, temperature=agent_temperature)
     expenditure_agent = build_expenditure_agent(model=agent_model or SONNET_MODEL, temperature=agent_temperature)
     # temperature omitted (None): claude-sonnet-5 rejects the parameter entirely, even 0
-    supervisor_llm = get_llm(model=supervisor_model or SONNET_MODEL, max_tokens=4096, temperature=None)
+    supervisor_llm = get_llm(model=supervisor_model or SONNET_MODEL, max_tokens=6144, temperature=None)
 
     graph = create_supervisor(
         agents=[revenue_agent, expenditure_agent],

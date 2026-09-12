@@ -54,7 +54,7 @@ from the context, do not estimate or invent numbers."""
 
 
 def build_revenue_agent(model: str | None = None, temperature: float | None = 0):
-    llm = get_llm(model=model or HAIKU_MODEL, max_tokens=2048, temperature=temperature)
+    llm = get_llm(model=model or HAIKU_MODEL, max_tokens=4096, temperature=temperature)
     return create_react_agent(
         model=llm,
         tools=[revenue_context],
@@ -64,7 +64,7 @@ def build_revenue_agent(model: str | None = None, temperature: float | None = 0)
 
 
 def build_expenditure_agent(model: str | None = None, temperature: float | None = 0):
-    llm = get_llm(model=model or HAIKU_MODEL, max_tokens=2048, temperature=temperature)
+    llm = get_llm(model=model or HAIKU_MODEL, max_tokens=4096, temperature=temperature)
     return create_react_agent(
         model=llm,
         tools=[expenditure_context],

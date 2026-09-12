@@ -6,6 +6,7 @@ HAIKU_MODEL / SONNET_MODEL: real Claude, used for final verified runs (costs a f
 import os
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
+from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,16 +14,23 @@ load_dotenv()
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 _OPENROUTER_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 _ANTHROPIC_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+_GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "")
 
-DEV_MODEL = os.environ.get("DEV_MODEL", "google/gemma-4-31b-it:free")  # via OpenRouter, free
+DEV_MODEL = os.environ.get("DEV_MODEL", "liquid/lfm-2.5-2.6b:free")  # via OpenRouter, free
+# Gemma was the original default; swapped after its shared free-tier pool started
+# returning 429s. Reasoning-style free models (nvidia/nemotron-3-super-120b-a12b:free,
+# nex-agi/nex-n2.5-pro:free) were tried and rejected: both spend their entire token
+# budget on a hidden "thinking" phase before ever emitting the structured JSON answer,
+# which is a bad fit for a fast dev-iteration loop regardless of eventual accuracy.
 HAIKU_MODEL = "claude-haiku-4-5-20251001"  # direct Anthropic model id
 SONNET_MODEL = "claude-sonnet-5"  # direct Anthropic model id
+GEMINI_MODEL = "gemini-3.6-flash"  # direct Google Gemini model id
 
 
 def get_llm(model: str | None = None, max_tokens: int = 1024, temperature: float | None = 0):
     """Routes to direct Anthropic for real Claude models (HAIKU_MODEL/SONNET_MODEL),
-    OpenRouter for everything else (free/dev models). Model-agnostic: any OpenRouter
-    model id works for the dev path with zero code changes.
+    direct Google for GEMINI_MODEL, OpenRouter for everything else (free/dev models).
+    Model-agnostic: any OpenRouter model id works for the dev path with zero code changes.
 
     temperature=None omits the parameter entirely -- some newer Anthropic models
     (confirmed: claude-sonnet-5) reject `temperature` as deprecated/unsupported and
@@ -36,6 +44,13 @@ def get_llm(model: str | None = None, max_tokens: int = 1024, temperature: float
         if temperature is not None:
             kwargs["temperature"] = temperature
         return ChatAnthropic(**kwargs)
+    if model == GEMINI_MODEL:
+        if not _GEMINI_KEY:
+            raise RuntimeError("GEMINI_API_KEY not set in .env")
+        kwargs = {"google_api_key": _GEMINI_KEY, "model": model, "max_tokens": max_tokens}
+        if temperature is not None:
+            kwargs["temperature"] = temperature
+        return ChatGoogleGenerativeAI(**kwargs)
     if not _OPENROUTER_KEY:
         raise RuntimeError("OPENROUTER_API_KEY not set in .env")
     kwargs = {
