@@ -122,9 +122,8 @@ be checked against the PDF directly. Each call is also logged with elapsed time 
 through `observability.py`.
 
 **Model choice.** The results in this document use Haiku for Parts 1 and 2 and Sonnet for Part 3,
-both direct through Anthropic. A separate, wider comparison across 8 models, including Gemini and
-5 free open-weight models through OpenRouter, is documented in
-[MODEL_EVALUATION.md](MODEL_EVALUATION.md).
+both direct through Anthropic, chosen for consistent, correct structured output across every
+field and every run.
 
 **Cost.** Development iteration ran on a free OpenRouter model at no cost. The results above used
 Haiku ($1 / $5 per million input/output tokens) for Parts 1 and 2, and Sonnet ($2 / $10 per
@@ -208,7 +207,7 @@ Verified against the source PDF, using `claude-sonnet-5`:
   collected from taxpayers. It is included here. This is not a hypothetical split: run repeatedly
   on the same prompt and schema, Sonnet excludes it every time and Haiku includes it every time,
   each holding its own reading consistently. Gemini, run the same way, was inconsistent between
-  the two readings across separate runs. See `MODEL_EVALUATION.md` for the full comparison.
+  the two readings across separate runs.
 
 ## Part 2: Tool Calling and Reasoning
 
