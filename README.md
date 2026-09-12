@@ -41,7 +41,7 @@ the pipeline runs without a fresh download.
 
 ```bash
 python -m venv .venv
-source .venv/Scripts/activate   # .venv/bin/activate on macOS/Linux
+source .venv/bin/activate       # .venv/Scripts/activate on Windows
 pip install -r requirements.txt
 cp .env.example .env
 ```
