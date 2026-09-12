@@ -133,7 +133,7 @@ million tokens) for all of Part 3 and a set of Part 1 comparison runs (see row 6
 [Interpretation calls](#interpretation-calls)). Prompt sizes are small, a few thousand tokens at
 most per call, so any individual run costs a fraction of a cent. Total spend across every
 verified run and re-run during development stayed well under $1. A separate, wider model
-comparison (8 models, including Gemini and 5 free OpenRouter models — see
+comparison (8 models, including Gemini and 5 free OpenRouter models, documented in
 [MODEL_EVALUATION.md](MODEL_EVALUATION.md)) ran entirely on free tiers, at $0, and is not part of
 this cost total.
 
@@ -258,7 +258,7 @@ drift apart from each other:
   connection itself fails.
 
 **Built real, then proven real.** The first working version of this pipeline had Python calling
-`normalize_date` directly — MCP was wired up but sat unused, a prop rather than the actual path.
+`normalize_date` directly. MCP was wired up but sat unused, a prop rather than the actual path.
 That was caught and rewired so the LLM calls the tool itself through MCP as primary. The rewire
 immediately surfaced two real environment issues rather than zero: the `mcp` version pin above,
 and the Jupyter `fileno` issue below. Both were diagnosed and fixed rather than papered over, and
@@ -337,7 +337,7 @@ Both sub-agents and the supervisor run on Sonnet, chosen after comparing routing
 against Haiku sub-agents on the graded query.
 
 **A routing bug, found and fixed.** The first version of `SUPERVISOR_PROMPT` missed
-`expenditure_agent` on the task's exact graded query — reproducibly, 3/3 runs — because Revenue
+`expenditure_agent` on the task's exact graded query (reproducibly, 3/3 runs) because Revenue
 Agent's own context happens to also mention the Future Energy Fund's dollar figure, and the
 supervisor treated that as sufficient. The fix was an explicit rule in the prompt: a fund's
 purpose or how it will be supported belongs to Expenditure Agent regardless of Revenue Agent's
@@ -396,50 +396,50 @@ comparison, and is documented here for the first time.
 | 3 | Operating Revenue tax list scope (Part 1) | Narrative-only: 7 taxes named in running prose, pages 5-6 (only the ones whose collections moved enough to get a sentence) | Table row labels: 12 tax items, pages 8/16 (14 if "Fees and Charges" and "Others" are included) | **12-item table list** | The field is titled "list of taxes." Fees and Charges and Others aren't taxes. The narrative names an arbitrary subset, whatever moved that year, not the section's full scope. |
 | 4 | Estate duty date classification (Part 2) | Expired: the literal date, 15 Feb 2008, has passed | Ongoing: the policy state it describes ("does not apply to a person who dies after...") is still in effect today | **Expired** | The more literal reading of the date field itself, not the policy it describes. |
 | 5 | "Dates extracted in Part 1" (Part 2) | Reuse Part 1's literal output; none exists, Part 1 has no date fields | Extract both named dates directly in Part 2, using the same extraction pattern Part 1 established | **Extract directly in Part 2** | Part 1's 5 fields are all financial figures, never dates. A literal reuse is impossible, so this is read as a continuation that performs its own extraction rather than a broken dependency. |
-| 6 | Is "Statutory Boards' Contributions" a tax? (Part 1) | Exclude it: it's money a statutory board pays *to* government, not money government collects *from* taxpayers, the same category as the already-excluded "Fees and Charges" | Include it: it's listed under the same "OPERATING REVENUE" table header as every other tax row, and the field asks for what's "mentioned in" that section | **Include (12-item list, Haiku)** | Not a hypothetical: run twice on `claude-sonnet-5` with the same prompt and schema, both times excluding it (11 items) on the reasoning in Candidate A. `claude-haiku-4-5-20251001` includes it (12 items) both times. Gemini (`gemini-3.6-flash`), run against the same prompt and schema, was inconsistent between the two readings across repeated calls (10 and 12-item lists) rather than settling on either — see [MODEL_EVALUATION.md](MODEL_EVALUATION.md) — which is itself evidence this is a genuine ambiguity, not an error in any one model. The 12-item Haiku answer is kept as primary because all existing ground truth and tests were built around it, not because the Sonnet reading is wrong. |
+| 6 | Is "Statutory Boards' Contributions" a tax? (Part 1) | Exclude it: it's money a statutory board pays *to* government, not money government collects *from* taxpayers, the same category as the already-excluded "Fees and Charges" | Include it: it's listed under the same "OPERATING REVENUE" table header as every other tax row, and the field asks for what's "mentioned in" that section | **Include (12-item list, Haiku)** | Not a hypothetical: run twice on `claude-sonnet-5` with the same prompt and schema, both times excluding it (11 items) on the reasoning in Candidate A. `claude-haiku-4-5-20251001` includes it (12 items) both times. Gemini (`gemini-3.6-flash`), run against the same prompt and schema, was inconsistent between the two readings across repeated calls (10 and 12-item lists) rather than settling on either (see [MODEL_EVALUATION.md](MODEL_EVALUATION.md)), which is itself evidence this is a genuine ambiguity, not an error in any one model. The 12-item Haiku answer is kept as primary because all existing ground truth and tests were built around it, not because the Sonnet reading is wrong. |
 
 ## Cross-model behavior
 
 The pipeline runs unchanged against four model backends behind `llm_config.get_llm()`: Sonnet
 and Haiku direct via Anthropic, Gemini direct via Google, and any OpenRouter model (used as a
-free dev-tier stand-in during iteration). Same prompts, same schemas, same code path — model
+free dev-tier stand-in during iteration). Same prompts, same schemas, same code path: model
 choice is a parameter, not a fork. Running the same pipeline across all four surfaced real,
 reproducible differences in how each provider's API and model behave, independent of prompt
 wording. Documented here rather than papered over with per-model branches in the pipeline code.
 
-The table below covers Sonnet, Haiku, and Gemini. A wider comparison across 8 models total —
+The table below covers Sonnet, Haiku, and Gemini. A wider comparison across 8 models total,
 including 5 free open-weight models tried and rejected, with the specific, verifiable reason each
-one failed — is in [MODEL_EVALUATION.md](MODEL_EVALUATION.md).
+one failed, is in [MODEL_EVALUATION.md](MODEL_EVALUATION.md).
 
 | Behavior | Sonnet | Haiku | Gemini (`gemini-3.6-flash`) | Why it matters |
 |---|---|---|---|---|
-| `temperature` parameter | Rejects it outright — a 400 error if passed at all, even `0`. `llm_config.py` omits the kwarg entirely when `temperature=None`. | Accepts `temperature=0` fine. | Accepts the kwarg without erroring, but silently ignores it — the API warns that this model "uses fixed sampling defaults." | Three different behaviors (reject / honor / silently ignore) for the identical parameter. A single call site can't assume any of the three without checking the model first. |
-| Structured-output token budget | Reliably populates every required schema field at `max_tokens=3000`. | Same as Sonnet. | Silently dropped one required field out of five at `max_tokens=3000`; needed `6000` to populate all fields reliably. No error, no truncation warning — the response simply validated as incomplete. | A fixed `max_tokens` tuned against one provider is not a safe default for another. This is a real, reproduced failure, not a one-off. |
-| Operating Revenue tax list (Part 1) | Excludes "Statutory Boards' Contributions" — 11 items. | Includes it — 12 items. See [Interpretation calls](#interpretation-calls), row 6. | Included it — 12 items, matching Haiku. | Genuine disagreement about what counts as a "tax" under an ambiguous field name, not something a schema description alone resolved. |
-| Supervisor routing selectivity (Part 3) | Correctly delegates to exactly the agent(s) a query needs, after the routing-prompt fix described in Part 3's Architecture section. | Not run as supervisor/agent model in the verified trace (Part 3 defaults to Sonnet for both roles; see Part 3 Assumptions). | Over-routed on the expenditure-only demo query (GST Voucher Fund top-up): called both `revenue_agent` and `expenditure_agent` when only the latter was relevant. The answer content was still correct — the inefficiency is in which agents got called, not what they said. | Routing precision is itself model-dependent, not just a property of the prompt. The same `SUPERVISOR_PROMPT` produces tighter routing on Sonnet than on Gemini. |
+| `temperature` parameter | Rejects it outright: a 400 error if passed at all, even `0`. `llm_config.py` omits the kwarg entirely when `temperature=None`. | Accepts `temperature=0` fine. | Accepts the kwarg without erroring, but silently ignores it; the API warns that this model "uses fixed sampling defaults." | Three different behaviors (reject / honor / silently ignore) for the identical parameter. A single call site can't assume any of the three without checking the model first. |
+| Structured-output token budget | Reliably populates every required schema field at `max_tokens=3000`. | Same as Sonnet. | Silently dropped one required field out of five at `max_tokens=3000`; needed `6000` to populate all fields reliably. No error, no truncation warning: the response simply validated as incomplete. | A fixed `max_tokens` tuned against one provider is not a safe default for another. This is a real, reproduced failure, not a one-off. |
+| Operating Revenue tax list (Part 1) | Excludes "Statutory Boards' Contributions": 11 items. | Includes it: 12 items. See [Interpretation calls](#interpretation-calls), row 6. | Included it, 12 items, matching Haiku. | Genuine disagreement about what counts as a "tax" under an ambiguous field name, not something a schema description alone resolved. |
+| Supervisor routing selectivity (Part 3) | Correctly delegates to exactly the agent(s) a query needs, after the routing-prompt fix described in Part 3's Architecture section. | Not run as supervisor/agent model in the verified trace (Part 3 defaults to Sonnet for both roles; see Part 3 Assumptions). | Over-routed on the expenditure-only demo query (GST Voucher Fund top-up): called both `revenue_agent` and `expenditure_agent` when only the latter was relevant. The answer content was still correct; the inefficiency is in which agents got called, not what they said. | Routing precision is itself model-dependent, not just a property of the prompt. The same `SUPERVISOR_PROMPT` produces tighter routing on Sonnet than on Gemini. |
 
 ### Mitigations
 
 Four changes close most of this gap for every model, without a single per-model branch anywhere
-in the pipeline — a model that already gets it right on the first try (Sonnet, in every observed
+in the pipeline. A model that already gets it right on the first try (Sonnet, in every observed
 run) never triggers any of them and pays no extra cost:
 
 - **Generous, shared `max_tokens` headroom.** `max_tokens` is a cap, not a spend target, so raising
-  it everywhere (`extract.py` 3000→8000, `part2_pipeline.py` and `agents.py` similarly doubled)
-  costs nothing unless a model was actually being truncated — which is exactly what was happening
+  it everywhere (`extract.py` 3000->8000, `part2_pipeline.py` and `agents.py` similarly doubled)
+  costs nothing unless a model was actually being truncated, which is exactly what was happening
   to Gemini.
 - **A generic retry on structured-output failure**, `retry_utils.py`'s `invoke_with_retry()`. It
   retries the identical call unchanged on either of two failure shapes actually observed live: an
   `OutputParserException` (Gemini's dropped field) or an `openai.LengthFinishReasonError` (an
   OpenRouter free model, `liquid/lfm-2.5-2.6b:free`, non-deterministically spending its whole token
-  budget on hidden reasoning tokens before emitting any JSON — the same call succeeded cleanly
+  budget on hidden reasoning tokens before emitting any JSON; the same call succeeded cleanly
   moments earlier and failed this way the next time). It never inspects which model or which field
   failed, so it's schema-agnostic and model-agnostic by construction. Wired into every
   structured-output call site in Parts 1 and 2, plus the tool-call-count check in Part 2's date
   normalization.
 - **A worked example in the Part 1 extraction prompt** showing which items belong in
-  `operating_revenue_taxes` and which don't, plus an explicit "every field is required" line —
-  targets both the Gemini omission and the Haiku/Sonnet tax-count disagreement at once, since both
+  `operating_revenue_taxes` and which don't, plus an explicit "every field is required" line.
+  Targets both the Gemini omission and the Haiku/Sonnet tax-count disagreement at once, since both
   are really the same problem: an ambiguous rule stated in prose only, not demonstrated.
 - **A worked example in the Part 3 supervisor prompt** showing the exact routing boundary an
   expenditure-only query sits on, addressing the Gemini over-routing case directly.
@@ -448,6 +448,6 @@ Two further ideas exist as opt-in functions in `extract.py`, not defaults, since
 calls: `run_extraction_consistent(n=3)` runs the extraction `n` times and merges by majority vote,
 surfacing any per-field disagreement instead of silently picking one; `run_extraction_verified()`
 adds a second self-check pass where the model reviews its own draft against the source context.
-Neither changes any currently-documented result — they're available for a run where the extra cost
+Neither changes any currently-documented result; they're available for a run where the extra cost
 is worth the added robustness.
 
