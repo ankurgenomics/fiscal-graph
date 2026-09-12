@@ -9,7 +9,7 @@
   &nbsp;
   <img src="https://img.shields.io/badge/python-3.11-3776AB?logo=python&logoColor=white&style=flat-square" alt="Python 3.11" />
   &nbsp;
-  <img src="https://img.shields.io/badge/tests-18%20passing-22C55E?style=flat-square" alt="18 tests passing" />
+  <img src="https://img.shields.io/badge/tests-23%20passing-22C55E?style=flat-square" alt="23 tests passing" />
   &nbsp;
   <img src="https://img.shields.io/badge/LangGraph-multi--agent%20supervisor-FF6B35?style=flat-square" alt="LangGraph" />
   &nbsp;
@@ -23,7 +23,8 @@
   <a href="#part-1-document-extraction-and-prompt-engineering">Part 1</a> &nbsp;•&nbsp;
   <a href="#part-2-tool-calling-and-reasoning">Part 2</a> &nbsp;•&nbsp;
   <a href="#part-3-multi-agent-supervisor">Part 3</a> &nbsp;•&nbsp;
-  <a href="#interpretation-calls">Interpretation calls</a>
+  <a href="#interpretation-calls">Interpretation calls</a> &nbsp;•&nbsp;
+  <a href="#cross-model-behavior">Model evaluation</a>
 
 </div>
 
@@ -131,7 +132,10 @@ Haiku ($1 / $5 per million input/output tokens) for Parts 1 and 2, and Sonnet ($
 million tokens) for all of Part 3 and a set of Part 1 comparison runs (see row 6 of
 [Interpretation calls](#interpretation-calls)). Prompt sizes are small, a few thousand tokens at
 most per call, so any individual run costs a fraction of a cent. Total spend across every
-verified run and re-run during development stayed well under $1.
+verified run and re-run during development stayed well under $1. A separate, wider model
+comparison (8 models, including Gemini and 5 free OpenRouter models — see
+[MODEL_EVALUATION.md](MODEL_EVALUATION.md)) ran entirely on free tiers, at $0, and is not part of
+this cost total.
 
 ## Dependencies
 
@@ -253,6 +257,13 @@ drift apart from each other:
 - `tools/datetime_fallback.py`: the same logic as a plain LangChain `@tool`, used only if the MCP
   connection itself fails.
 
+**Built real, then proven real.** The first working version of this pipeline had Python calling
+`normalize_date` directly — MCP was wired up but sat unused, a prop rather than the actual path.
+That was caught and rewired so the LLM calls the tool itself through MCP as primary. The rewire
+immediately surfaced two real environment issues rather than zero: the `mcp` version pin above,
+and the Jupyter `fileno` issue below. Both were diagnosed and fixed rather than papered over, and
+the fallback path stayed in as a genuine second implementation, not a formality.
+
 The pipeline goes through MCP first, not the fallback, matching the task's own wording: "via
 local MCP... if you are not able to implement a local MCP, you may define as a function."
 `part2_pipeline.py`'s `_get_normalize_tool()` connects to the server as a real subprocess, binds
@@ -325,6 +336,14 @@ calls that make the trace worth reading. `create_supervisor()` returns an uncomp
 Both sub-agents and the supervisor run on Sonnet, chosen after comparing routing reliability
 against Haiku sub-agents on the graded query.
 
+**A routing bug, found and fixed.** The first version of `SUPERVISOR_PROMPT` missed
+`expenditure_agent` on the task's exact graded query — reproducibly, 3/3 runs — because Revenue
+Agent's own context happens to also mention the Future Energy Fund's dollar figure, and the
+supervisor treated that as sufficient. The fix was an explicit rule in the prompt: a fund's
+purpose or how it will be supported belongs to Expenditure Agent regardless of Revenue Agent's
+incidental overlap. Re-run 3/3 clean after the fix, and the four-query trace above is from the
+corrected prompt.
+
 ### Assumptions
 
 1. **Tool design.** Each agent's tool returns a fixed, pre-scoped block of page text rather than
@@ -352,15 +371,15 @@ final answer sounded right.
 |---|---|
 | The task's exact query (dual-agent) | Revenue Agent, Expenditure Agent |
 | Revenue-only ("largest single source of revenue?") | Revenue Agent only |
-| Expenditure-only ("GST Voucher Fund top-up?") | Revenue Agent, Expenditure Agent |
+| Expenditure-only ("GST Voucher Fund top-up?") | Expenditure Agent only |
 | A second dual-agent query, different phrasing | Revenue Agent, Expenditure Agent |
 
-The revenue-only row shows the supervisor isn't reflexively calling both agents on every query.
-The dual-agent rows show collaboration in depth: three different phrasings, three clean
-routes to both agents. The task's exact query gets the Future Energy Fund figure right, $5.0
-billion, sourced to "invest in critical infrastructure for the energy transition," the actual
-wording from page 18. It also names revenue streams that match Part 1's verified 12-item list,
-with nothing invented.
+The revenue-only and expenditure-only rows show the supervisor isn't reflexively calling both
+agents on every query, in either direction. The two dual-agent rows, different phrasings of a
+query that genuinely needs both, both route to both. The task's exact query gets the Future
+Energy Fund figure right, $5.0 billion, sourced to "invest in critical infrastructure for the
+energy transition," the actual wording from page 18. It also names revenue streams that match
+Part 1's verified 12-item list, with nothing invented.
 
 ## Interpretation calls
 
@@ -377,5 +396,58 @@ comparison, and is documented here for the first time.
 | 3 | Operating Revenue tax list scope (Part 1) | Narrative-only: 7 taxes named in running prose, pages 5-6 (only the ones whose collections moved enough to get a sentence) | Table row labels: 12 tax items, pages 8/16 (14 if "Fees and Charges" and "Others" are included) | **12-item table list** | The field is titled "list of taxes." Fees and Charges and Others aren't taxes. The narrative names an arbitrary subset, whatever moved that year, not the section's full scope. |
 | 4 | Estate duty date classification (Part 2) | Expired: the literal date, 15 Feb 2008, has passed | Ongoing: the policy state it describes ("does not apply to a person who dies after...") is still in effect today | **Expired** | The more literal reading of the date field itself, not the policy it describes. |
 | 5 | "Dates extracted in Part 1" (Part 2) | Reuse Part 1's literal output; none exists, Part 1 has no date fields | Extract both named dates directly in Part 2, using the same extraction pattern Part 1 established | **Extract directly in Part 2** | Part 1's 5 fields are all financial figures, never dates. A literal reuse is impossible, so this is read as a continuation that performs its own extraction rather than a broken dependency. |
-| 6 | Is "Statutory Boards' Contributions" a tax? (Part 1) | Exclude it: it's money a statutory board pays *to* government, not money government collects *from* taxpayers, the same category as the already-excluded "Fees and Charges" | Include it: it's listed under the same "OPERATING REVENUE" table header as every other tax row, and the field asks for what's "mentioned in" that section | **Include (12-item list, Haiku)** | Not a hypothetical: run twice on `claude-sonnet-5` with the same prompt and schema, both times excluding it (11 items) on the reasoning in Candidate A. `claude-haiku-4-5-20251001` includes it (12 items) both times. A documented model behavior difference, not a bug in either model. The 12-item Haiku answer is kept as primary because all existing ground truth and tests were built around it, not because the Sonnet reading is wrong. |
+| 6 | Is "Statutory Boards' Contributions" a tax? (Part 1) | Exclude it: it's money a statutory board pays *to* government, not money government collects *from* taxpayers, the same category as the already-excluded "Fees and Charges" | Include it: it's listed under the same "OPERATING REVENUE" table header as every other tax row, and the field asks for what's "mentioned in" that section | **Include (12-item list, Haiku)** | Not a hypothetical: run twice on `claude-sonnet-5` with the same prompt and schema, both times excluding it (11 items) on the reasoning in Candidate A. `claude-haiku-4-5-20251001` includes it (12 items) both times. Gemini (`gemini-3.6-flash`), run against the same prompt and schema, was inconsistent between the two readings across repeated calls (10 and 12-item lists) rather than settling on either — see [MODEL_EVALUATION.md](MODEL_EVALUATION.md) — which is itself evidence this is a genuine ambiguity, not an error in any one model. The 12-item Haiku answer is kept as primary because all existing ground truth and tests were built around it, not because the Sonnet reading is wrong. |
+
+## Cross-model behavior
+
+The pipeline runs unchanged against four model backends behind `llm_config.get_llm()`: Sonnet
+and Haiku direct via Anthropic, Gemini direct via Google, and any OpenRouter model (used as a
+free dev-tier stand-in during iteration). Same prompts, same schemas, same code path — model
+choice is a parameter, not a fork. Running the same pipeline across all four surfaced real,
+reproducible differences in how each provider's API and model behave, independent of prompt
+wording. Documented here rather than papered over with per-model branches in the pipeline code.
+
+The table below covers Sonnet, Haiku, and Gemini. A wider comparison across 8 models total —
+including 5 free open-weight models tried and rejected, with the specific, verifiable reason each
+one failed — is in [MODEL_EVALUATION.md](MODEL_EVALUATION.md).
+
+| Behavior | Sonnet | Haiku | Gemini (`gemini-3.6-flash`) | Why it matters |
+|---|---|---|---|---|
+| `temperature` parameter | Rejects it outright — a 400 error if passed at all, even `0`. `llm_config.py` omits the kwarg entirely when `temperature=None`. | Accepts `temperature=0` fine. | Accepts the kwarg without erroring, but silently ignores it — the API warns that this model "uses fixed sampling defaults." | Three different behaviors (reject / honor / silently ignore) for the identical parameter. A single call site can't assume any of the three without checking the model first. |
+| Structured-output token budget | Reliably populates every required schema field at `max_tokens=3000`. | Same as Sonnet. | Silently dropped one required field out of five at `max_tokens=3000`; needed `6000` to populate all fields reliably. No error, no truncation warning — the response simply validated as incomplete. | A fixed `max_tokens` tuned against one provider is not a safe default for another. This is a real, reproduced failure, not a one-off. |
+| Operating Revenue tax list (Part 1) | Excludes "Statutory Boards' Contributions" — 11 items. | Includes it — 12 items. See [Interpretation calls](#interpretation-calls), row 6. | Included it — 12 items, matching Haiku. | Genuine disagreement about what counts as a "tax" under an ambiguous field name, not something a schema description alone resolved. |
+| Supervisor routing selectivity (Part 3) | Correctly delegates to exactly the agent(s) a query needs, after the routing-prompt fix described in Part 3's Architecture section. | Not run as supervisor/agent model in the verified trace (Part 3 defaults to Sonnet for both roles; see Part 3 Assumptions). | Over-routed on the expenditure-only demo query (GST Voucher Fund top-up): called both `revenue_agent` and `expenditure_agent` when only the latter was relevant. The answer content was still correct — the inefficiency is in which agents got called, not what they said. | Routing precision is itself model-dependent, not just a property of the prompt. The same `SUPERVISOR_PROMPT` produces tighter routing on Sonnet than on Gemini. |
+
+### Mitigations
+
+Four changes close most of this gap for every model, without a single per-model branch anywhere
+in the pipeline — a model that already gets it right on the first try (Sonnet, in every observed
+run) never triggers any of them and pays no extra cost:
+
+- **Generous, shared `max_tokens` headroom.** `max_tokens` is a cap, not a spend target, so raising
+  it everywhere (`extract.py` 3000→8000, `part2_pipeline.py` and `agents.py` similarly doubled)
+  costs nothing unless a model was actually being truncated — which is exactly what was happening
+  to Gemini.
+- **A generic retry on structured-output failure**, `retry_utils.py`'s `invoke_with_retry()`. It
+  retries the identical call unchanged on either of two failure shapes actually observed live: an
+  `OutputParserException` (Gemini's dropped field) or an `openai.LengthFinishReasonError` (an
+  OpenRouter free model, `liquid/lfm-2.5-2.6b:free`, non-deterministically spending its whole token
+  budget on hidden reasoning tokens before emitting any JSON — the same call succeeded cleanly
+  moments earlier and failed this way the next time). It never inspects which model or which field
+  failed, so it's schema-agnostic and model-agnostic by construction. Wired into every
+  structured-output call site in Parts 1 and 2, plus the tool-call-count check in Part 2's date
+  normalization.
+- **A worked example in the Part 1 extraction prompt** showing which items belong in
+  `operating_revenue_taxes` and which don't, plus an explicit "every field is required" line —
+  targets both the Gemini omission and the Haiku/Sonnet tax-count disagreement at once, since both
+  are really the same problem: an ambiguous rule stated in prose only, not demonstrated.
+- **A worked example in the Part 3 supervisor prompt** showing the exact routing boundary an
+  expenditure-only query sits on, addressing the Gemini over-routing case directly.
+
+Two further ideas exist as opt-in functions in `extract.py`, not defaults, since each adds LLM
+calls: `run_extraction_consistent(n=3)` runs the extraction `n` times and merges by majority vote,
+surfacing any per-field disagreement instead of silently picking one; `run_extraction_verified()`
+adds a second self-check pass where the model reviews its own draft against the source context.
+Neither changes any currently-documented result — they're available for a run where the extra cost
+is worth the added robustness.
 
