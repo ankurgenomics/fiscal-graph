@@ -10,6 +10,7 @@ import sys
 from langgraph_supervisor import create_supervisor
 from agents import build_revenue_agent, build_expenditure_agent
 from llm_config import get_llm, SONNET_MODEL
+from observability import timed_call
 
 # Windows' default console codepage (cp1252) can't print characters models
 # commonly generate (arrows, smart quotes, em dashes). Reconfigure stdout to
@@ -97,8 +98,9 @@ def run_query(app, query: str):
     which would duplicate every message once per step it appeared in.
     """
     final_state = None
-    for step in app.stream({"messages": [{"role": "user", "content": query}]}):
-        final_state = step
+    with timed_call(f"part3_run_query[{query[:40]!r}]"):
+        for step in app.stream({"messages": [{"role": "user", "content": query}]}):
+            final_state = step
 
     last_node_output = list(final_state.values())[0]
     all_messages = last_node_output["messages"]

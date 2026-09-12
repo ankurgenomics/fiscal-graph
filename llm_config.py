@@ -27,7 +27,15 @@ SONNET_MODEL = "claude-sonnet-5"  # direct Anthropic model id
 GEMINI_MODEL = "gemini-3.6-flash"  # direct Google Gemini model id
 
 
-def get_llm(model: str | None = None, max_tokens: int = 1024, temperature: float | None = 0):
+DEFAULT_TIMEOUT_SECONDS = 60
+
+
+def get_llm(
+    model: str | None = None,
+    max_tokens: int = 1024,
+    temperature: float | None = 0,
+    timeout: float | None = DEFAULT_TIMEOUT_SECONDS,
+):
     """Routes to direct Anthropic for real Claude models (HAIKU_MODEL/SONNET_MODEL),
     direct Google for GEMINI_MODEL, OpenRouter for everything else (free/dev models).
     Model-agnostic: any OpenRouter model id works for the dev path with zero code changes.
@@ -35,6 +43,12 @@ def get_llm(model: str | None = None, max_tokens: int = 1024, temperature: float
     temperature=None omits the parameter entirely -- some newer Anthropic models
     (confirmed: claude-sonnet-5) reject `temperature` as deprecated/unsupported and
     error with a 400 if it's passed at all, even 0. Haiku 4.5 accepts it fine.
+
+    timeout bounds every network call so a hung provider can't hang the pipeline
+    indefinitely. Each provider names this field differently, confirmed by inspecting
+    each class's own pydantic model_fields rather than guessing: ChatAnthropic wants
+    `default_request_timeout`, ChatOpenAI wants `request_timeout`, ChatGoogleGenerativeAI
+    wants `timeout`. Pass timeout=None to disable the bound entirely.
     """
     model = model or DEV_MODEL
     if model in (HAIKU_MODEL, SONNET_MODEL):
@@ -43,6 +57,8 @@ def get_llm(model: str | None = None, max_tokens: int = 1024, temperature: float
         kwargs = {"api_key": _ANTHROPIC_KEY, "model": model, "max_tokens": max_tokens}
         if temperature is not None:
             kwargs["temperature"] = temperature
+        if timeout is not None:
+            kwargs["default_request_timeout"] = timeout
         return ChatAnthropic(**kwargs)
     if model == GEMINI_MODEL:
         if not _GEMINI_KEY:
@@ -50,6 +66,8 @@ def get_llm(model: str | None = None, max_tokens: int = 1024, temperature: float
         kwargs = {"google_api_key": _GEMINI_KEY, "model": model, "max_tokens": max_tokens}
         if temperature is not None:
             kwargs["temperature"] = temperature
+        if timeout is not None:
+            kwargs["timeout"] = timeout
         return ChatGoogleGenerativeAI(**kwargs)
     if not _OPENROUTER_KEY:
         raise RuntimeError("OPENROUTER_API_KEY not set in .env")
@@ -61,4 +79,6 @@ def get_llm(model: str | None = None, max_tokens: int = 1024, temperature: float
     }
     if temperature is not None:
         kwargs["temperature"] = temperature
+    if timeout is not None:
+        kwargs["request_timeout"] = timeout
     return ChatOpenAI(**kwargs)

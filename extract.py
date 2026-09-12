@@ -12,6 +12,7 @@ from parser import get_prose_text, get_table_text
 from schemas import RevenueExtraction
 from llm_config import get_llm
 from retry_utils import invoke_with_retry
+from observability import timed_call
 
 PDF = "data/source_budget.pdf"
 
@@ -55,6 +56,26 @@ def build_context() -> str:
     return "\n\n".join(parts)
 
 
+# Which page(s) back each field, fixed at code time rather than reported by the model.
+# This mirrors which page was actually fed for that field above, so it can't drift from
+# build_context() and carries none of the LLM's own hallucination risk -- a user checking
+# a number against the source PDF gets an exact page reference, not a model's guess at one.
+FIELD_SOURCE_PAGES: dict[str, list[int]] = {
+    "corp_income_tax_2024_billion": [16],
+    "corp_income_tax_yoy_pct": [16],
+    "total_topups_2024_billion": [20],
+    # Table row labels, not narrative -- see README's Interpretation calls, row 3.
+    "operating_revenue_taxes": [8, 16],
+    "latest_actual_fiscal_position_billion": [8],
+}
+
+
+def field_sources() -> dict[str, list[int]]:
+    """Returns a copy of the field-to-source-page mapping, for callers that want to
+    display a citation alongside each extracted value."""
+    return dict(FIELD_SOURCE_PAGES)
+
+
 def run_extraction(
     model: str | None = None, max_tokens: int = 8000, temperature: float | None = 0
 ) -> RevenueExtraction:
@@ -65,7 +86,8 @@ def run_extraction(
         ("human", "{context}"),
     ])
     chain = prompt | structured_llm
-    return invoke_with_retry(chain, {"context": build_context()})
+    with timed_call(f"run_extraction[{model or 'default'}]"):
+        return invoke_with_retry(chain, {"context": build_context()})
 
 
 SELF_CHECK_SYSTEM_PROMPT = """You are reviewing a draft structured extraction against its \
@@ -155,5 +177,8 @@ def run_extraction_consistent(
 
 
 if __name__ == "__main__":
+    import json
     result = run_extraction()
     print(result.model_dump_json(indent=2))
+    print("\nSource pages (fixed at code time, not model-reported):")
+    print(json.dumps(field_sources(), indent=2))

@@ -15,6 +15,7 @@ from llm_config import get_llm
 from tools.datetime_fallback import normalize_date as _fallback_normalize_date
 from tools.mcp_client import get_mcp_normalize_tool
 from retry_utils import invoke_with_retry
+from observability import timed_call
 
 PDF = "data/source_budget.pdf"
 REFERENCE_DATE = "2024-01-01"
@@ -157,18 +158,19 @@ async def run_pipeline(model: str | None = None, max_tokens: int = 2048) -> Clas
     """Async — call with `await run_pipeline(...)` in a notebook (Jupyter already
     runs an event loop; asyncio.run() would fail there). For scripts/CLI use, call
     run_pipeline_sync(...) instead."""
-    raw = extract_raw_dates(model=model, max_tokens=max_tokens)
-    raw_texts = [raw.distribution_date_text, raw.estate_duty_date_text]
+    with timed_call(f"part2_run_pipeline[{model or 'default'}]"):
+        raw = extract_raw_dates(model=model, max_tokens=max_tokens)
+        raw_texts = [raw.distribution_date_text, raw.estate_duty_date_text]
 
-    # Step 1 output, per the assignment's literal wording: "a list of these normalized dates"
-    normalized_dates = await normalize_dates_via_tool_calling_async(raw_texts, model=model, max_tokens=512)
-    print("Step 1 output (list of normalized dates):", normalized_dates)
+        # Step 1 output, per the assignment's literal wording: "a list of these normalized dates"
+        normalized_dates = await normalize_dates_via_tool_calling_async(raw_texts, model=model, max_tokens=1024)
+        print("Step 1 output (list of normalized dates):", normalized_dates)
 
-    paired = [
-        {"original_text": t, "normalized_date": d}
-        for t, d in zip(raw_texts, normalized_dates)
-    ]
-    return classify_dates(paired, model=model, max_tokens=max_tokens)
+        paired = [
+            {"original_text": t, "normalized_date": d}
+            for t, d in zip(raw_texts, normalized_dates)
+        ]
+        return classify_dates(paired, model=model, max_tokens=max_tokens)
 
 
 def run_pipeline_sync(model: str | None = None, max_tokens: int = 2048) -> ClassifiedDates:
