@@ -118,7 +118,19 @@ different pages per agent.
 Every LLM call goes through `llm_config.get_llm()`, which bounds each call to 60 seconds and
 retries once on a structured-output failure through `retry_utils.py`. Every extracted field in
 Part 1 carries a fixed source page, returned by `extract.py`'s `field_sources()`, so a value can
-be checked against the PDF directly.
+be checked against the PDF directly. Each call is also logged with elapsed time and outcome
+through `observability.py`.
+
+**Model choice.** The results in this document use Haiku for Parts 1 and 2 and Sonnet for Part 3,
+both direct through Anthropic. A separate, wider comparison across 8 models, including Gemini and
+5 free open-weight models through OpenRouter, is documented in
+[MODEL_EVALUATION.md](MODEL_EVALUATION.md).
+
+**Cost.** Development iteration ran on a free OpenRouter model at no cost. The results above used
+Haiku ($1 / $5 per million input/output tokens) for Parts 1 and 2, and Sonnet ($2 / $10 per
+million tokens) for Part 3. Prompt sizes are a few thousand tokens at most per call, so any
+individual run costs a fraction of a cent. Total spend across every run during development stayed
+well under $1.
 
 ## Dependencies
 
@@ -193,7 +205,10 @@ Verified against the source PDF, using `claude-sonnet-5`:
   header but are excluded, since neither is a tax.
 - Whether "Statutory Boards' Contributions" counts as a tax is genuinely ambiguous: it is listed
   under the same header as every other tax row, but it is money paid to government rather than
-  collected from taxpayers. It is included here.
+  collected from taxpayers. It is included here. This is not a hypothetical split: run repeatedly
+  on the same prompt and schema, Sonnet excludes it every time and Haiku includes it every time,
+  each holding its own reading consistently. Gemini, run the same way, was inconsistent between
+  the two readings across separate runs. See `MODEL_EVALUATION.md` for the full comparison.
 
 ## Part 2: Tool Calling and Reasoning
 
@@ -336,4 +351,4 @@ document alone. Each is resolved and stated here, in addition to the per-part as
 | 3 | Operating Revenue tax list scope | The 12-item table row list, not the narrative subset | The field is titled "list of taxes"; the narrative only names whichever items moved that year. |
 | 4 | Estate duty date classification | Expired | The literal date has passed, independent of the policy's current effect. |
 | 5 | "Dates extracted in Part 1" | Extracted directly in Part 2 | Part 1's five fields are all financial figures; there is no Part 1 date output to reuse. |
-| 6 | Whether "Statutory Boards' Contributions" is a tax | Included | It sits under the same table header as every other tax row; a stricter reading (money paid to, not collected from, government) would exclude it. Both are defensible; the inclusive reading is used. |
+| 6 | Whether "Statutory Boards' Contributions" is a tax | Included | It sits under the same table header as every other tax row; a stricter reading (money paid to, not collected from, government) would exclude it. Sonnet consistently excludes it and Haiku consistently includes it across repeated runs on the same prompt; the inclusive reading is used here. |
