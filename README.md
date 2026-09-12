@@ -96,6 +96,7 @@ curl -X POST localhost:8000/query -H "Content-Type: application/json" \
 | `extract.py` | Part 1: extraction, plus the fixed page citation for each field. |
 | `part1_extraction.ipynb` | Part 1 notebook, executed, with a verification table. |
 | `evaluate.py` | Runs Part 1 against a fixed set of known-correct values: `python evaluate.py`. |
+| `eval_discovery.py` | Compares Part 1 under the current prompt against a prompt with no page/column hints: `python eval_discovery.py`. |
 | `tools/datetime_core.py` | Part 2's date-normalization logic. |
 | `tools/datetime_mcp.py` | Part 2's local MCP server exposing that logic as a tool. |
 | `tools/datetime_fallback.py` | The same tool as a plain LangChain `@tool`, used if MCP is unavailable. |
@@ -105,6 +106,7 @@ curl -X POST localhost:8000/query -H "Content-Type: application/json" \
 | `agents.py` | Part 3's Revenue Agent and Expenditure Agent. |
 | `part3_supervisor.py` | Part 3's supervisor, trace capture, four demo queries. |
 | `part3_multiagent.ipynb` | Part 3 notebook, executed. |
+| `eval_routing_holdout.py` | Tests routing on 8 queries never seen in `SUPERVISOR_PROMPT` or the demo queries: `python eval_routing_holdout.py`. |
 | `trace.json` | Captured trace for all four Part 3 demo queries. |
 | `data/source_budget.pdf` | The source document. |
 | `tests/` | Unit tests for the parts of the pipeline that don't need a live LLM call. |
@@ -195,7 +197,7 @@ the response is type-checked rather than parsed from a raw string.
 
 ### Results
 
-Verified against the source PDF, using `claude-sonnet-5`:
+Verified against the source PDF, using `claude-haiku-4-5`:
 
 | Field | Value | Source |
 |---|---|---|
@@ -226,6 +228,14 @@ Verified against the source PDF, using `claude-sonnet-5`:
   on the same prompt and schema, Sonnet excludes it every time and Haiku includes it every time,
   each holding its own reading consistently. Gemini, run the same way, was inconsistent between
   the two readings across separate runs.
+- The extraction prompt names the exact page and column for the two fields above with more than
+  one candidate reading. `eval_discovery.py` checks what that's actually testing: it runs the
+  same five fields through a second prompt that gives the same page excerpts but never says which
+  page or column to use. On Haiku, both prompts return all five fields correctly, including the
+  fiscal position figure across three candidate columns and the twelve-item tax list, run twice
+  under the discovery prompt with no change in outcome. The model locates the right figures on
+  its own; the constrained prompt is a reliability choice for a known document, not a requirement
+  for getting the right answer.
 
 ## Part 2: Tool Calling and Reasoning
 
@@ -314,6 +324,16 @@ page 18's stated purpose: to invest in critical infrastructure for the energy tr
 The single-agent queries show the supervisor delegating only to the agent a query actually
 needs, in both directions. The two differently-phrased dual queries both route to both agents
 and synthesize a complete answer.
+
+### Held-out routing eval
+
+The four queries above appear in this document; two of their topics also appear as worked
+examples inside `SUPERVISOR_PROMPT` itself. `eval_routing_holdout.py` tests routing on 8 queries
+that appear in neither place: different funds (Public Transport Fund, Legal Aid Fund, Financial
+Sector Development Fund, National Research Fund, Edusave Endowment Fund, Majulah Package Fund),
+covering revenue-only, expenditure-only, and dual-agent phrasings. All 8 routed to exactly the
+expected agent or agents. This is what shows the routing rule generalizes, rather than the
+supervisor matching against queries or examples it has already seen.
 
 ### Assumptions
 

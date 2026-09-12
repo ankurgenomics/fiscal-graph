@@ -77,12 +77,15 @@ def field_sources() -> dict[str, list[int]]:
 
 
 def run_extraction(
-    model: str | None = None, max_tokens: int = 8000, temperature: float | None = 0
+    model: str | None = None,
+    max_tokens: int = 8000,
+    temperature: float | None = 0,
+    system_prompt: str = SYSTEM_PROMPT,
 ) -> RevenueExtraction:
     llm = get_llm(model=model, max_tokens=max_tokens, temperature=temperature)
     structured_llm = llm.with_structured_output(RevenueExtraction)
     prompt = ChatPromptTemplate.from_messages([
-        ("system", SYSTEM_PROMPT),
+        ("system", system_prompt),
         ("human", "{context}"),
     ])
     chain = prompt | structured_llm
